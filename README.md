@@ -1,5 +1,7 @@
 [![APCUPSD UPS Battery Monitoring Android application Promo Video](https://img.youtube.com/vi/N4PhGXOUyas/0.jpg)](https://www.youtube.com/watch?v=N4PhGXOUyas)
 
+Upper image is a video link.
+
 # APCUPSD Monitor
 
 Android app for monitoring APC UPS devices statuses and view events. 
