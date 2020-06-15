@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="first_level"
+    android:title="Settings">
+
+
+    <PreferenceCategory android:title="Configure displayed items">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_LOAD_EVENTS"
+            android:summary="Events wont be loaded and also its view wont visible if this is switched off"
+            android:title="Load events" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SET_UPS_AS_ACTIVITY_TITLE"
+            android:title="Set UPS name as activity title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_UPS_MODEL"
+            android:title="Show UPS model" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_LINE_VOLTAGE"
+            android:title="Show line voltage" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_BATTERY_VOLTAGE"
+            android:title="Show battery voltage" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_INTERNAL_TEMPERATURE"
+            android:title="Show internal temperature" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_LOAD_PERCENTAGE"
+            android:title="Show load percentage" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_PERCENT_BATTERY_CHARGE"
+            android:title="Show percent battery charge" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_LAST_TRANSFER_REASON"
+            android:title="Show last transfer reason" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_BATTERY_TIME_LEFT"
+            android:title="Show battery time left" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_BATTERY_DATE"
+            android:title="Show battery date" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_SHOW_FIRMWARE_VERSION"
+            android:title="Show firmware version" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="SP_SHOW_START_TIME"
+            android:title="Show start time" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Statistics">
+
+        <ListPreference
+            android:entries="@array/pref_application_statistic_date_format"
+            android:entryValues="@array/pref_application_statistic_date_format"
+            android:key="SP_STATISTICS_DATE_FORMAT"
+            android:summary="If your events has date format which is not specified here, please contact me via email so I can implement support for it."
+            android:title="Events date format" />
+
+        <ListPreference
+            android:entries="@array/pref_application_statistic_time_format"
+            android:entryValues="@array/pref_application_statistic_time_format"
+            android:key="SP_STATISTICS_TIME_FORMAT"
+            android:summary="If your events has time format which is not specified here, please contact me via email so I can implement support for it."
+            android:title="Events time format" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Tweaks">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_EVENTS_COLORING"
+            android:summary="False = Text colored, True = Background colored"
+            android:title="Events coloring" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Service">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="SP_ENABLE_SERVICE"
+            android:summary="Load UPS statuses at background"
+            android:title="Background service" />
+
+        <EditTextPreference
+            android:defaultValue="60"
+            android:inputType="number"
+            android:key="SP_SERVICE_REFRESH_INTERVAL"
+            android:summary="Load status information every X minutes. (Stock: every 60 minutes) This affects to widget."
+            android:title="Refresh interval" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

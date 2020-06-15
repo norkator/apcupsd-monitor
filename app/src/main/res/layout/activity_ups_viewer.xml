@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".UpsViewer">
+
+
+    <!-- Custom material style progressbar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-7dp"
+        android:layout_marginBottom="-7dp"
+        android:backgroundTint="@color/colorAccent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorAccent"
+        android:max="100"
+        android:visibility="gone" />
+
+
+    <!-- Main information view -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="4dp">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <!-- Details -->
+            <LinearLayout
+                android:id="@+id/upsDetailsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bootStrapSuccess"
+                    android:padding="5dp"
+                    android:text="@string/loading"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:baselineAligned="false"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            tools:ignore="UselessParent">
+
+
+                            <LinearLayout
+                                android:id="@+id/upsModelLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="M"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/model"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Model" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/lineVoltageLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="LV"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/lineVoltage"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Line voltage" />
+
+                                <TextView
+                                    android:id="@+id/lineVoltageOnly"
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="0.0"
+                                    android:textAlignment="center"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryVoltageLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="BV"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/batteryVoltage"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Battery voltage" />
+
+                                <TextView
+                                    android:id="@+id/batteryVoltageOnly"
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="0.0"
+                                    android:textAlignment="center"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/internalTemperatureLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="IT"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Internal temperature" />
+
+                                <TextView
+                                    android:id="@+id/internalTemperature"
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="N/A"
+                                    android:textAlignment="center"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryLoadPercentageLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="L%"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/loadPercent"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Load percentage" />
+
+                                <ProgressBar
+                                    android:id="@+id/loadPercentPB"
+                                    style="?android:progressBarStyleHorizontal"
+                                    android:layout_width="80dp"
+                                    android:layout_height="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:progressDrawable="@drawable/progressbar" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryChargeLevelLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="CL"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/batteryChargeLevel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Battery charge level" />
+
+                                <ProgressBar
+                                    android:id="@+id/chargePB"
+                                    style="?android:progressBarStyleHorizontal"
+                                    android:layout_width="80dp"
+                                    android:layout_height="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:progressDrawable="@drawable/progressbar" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/lastTransferReasonLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="TR"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/lastTransferReason"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Last transfer reason" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryTimeLeftLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="TL"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/batteryTimeLeft"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Battery time left" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryDateLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="BD"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/batteryDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Battery date" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/batteryFirmwareLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="FW"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/firmware"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Firmware version" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/startTimeLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="ST"
+                                    android:textAlignment="center"
+                                    android:textSize="@dimen/big_title_mark_size" />
+
+                                <TextView
+                                    android:id="@+id/startTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Start time" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Statistics -->
+            <LinearLayout
+                android:id="@+id/upsStatisticsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/returnFromStatisticsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/bootStrapPrimary"
+                    android:text="Return"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/statisticsNotEnoughData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bootStrapDanger"
+                    android:padding="5dp"
+                    android:text="@string/not_enough_data_yet"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        tools:ignore="UselessParent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:text="T"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/big_title_mark_size" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Total time out" />
+
+                            <TextView
+                                android:id="@+id/totalTimeOutTV"
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:text="A"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/big_title_mark_size" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Average time out" />
+
+                            <TextView
+                                android:id="@+id/averageTimeOutTV"
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Log reader -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/eventsCardView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:visibility="visible"
+        app:cardCornerRadius="1dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:id="@+id/eventsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/whiteColor"
+                android:padding="2dp"
+                android:text="Events" />
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Action buttons -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bootStrapPrimary"
+                android:text="Self test"
+                android:textColor="#ffffff"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bootStrapPrimary"
+                android:text="Action1"
+                android:textColor="#ffffff"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bootStrapPrimary"
+                android:text="Action2"
+                android:textColor="#ffffff"
+                tools:ignore="ButtonStyle" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

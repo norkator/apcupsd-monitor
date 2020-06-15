@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- App name -->
+    <string name="app_name">APCUPSD Monitor</string>
+
+    <!-- Translatable string -->
+    <string name="stats">Stats</string>
+    <string name="loading">LOADING</string>
+    <string name="error">Error</string>
+    <string name="donate">Donate</string>
+    <string name="not_enough_data_yet">Not enough data yet</string>
+
+</resources>

@@ -1,0 +1,175 @@
+package com.nitramite.apcupsdmonitor;
+
+import android.app.ActivityManager;
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.os.Build;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+
+public class Widget extends AppWidgetProvider {
+
+    //  Logging
+    private static final String TAG = "Widget";
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        Log.i(TAG, "Widget on receive event");
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), Widget.class.getName());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+        onUpdate(context, appWidgetManager, appWidgetIds);
+
+        // Check service
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPreferences.getBoolean(Constants.SP_ENABLE_SERVICE, false)) {
+            if (!isMyServiceRunning(StatusService.class, context)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Intent intent_ = new Intent(context, StatusService.class);
+                    intent_.putExtra("START_AS_FOREGROUND_SERVICE", true);
+                    context.startForegroundService(intent_);
+                } else {
+                    context.startService(new Intent(context, StatusService.class));
+                }
+            }
+        }
+    }
+
+    // onUpdate
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        for (int i = 0; i < appWidgetIds.length; i++) {
+            Intent intent = new Intent(context, MainMenu.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            DatabaseHelper databaseHelper = new DatabaseHelper(context);
+            ArrayList<UPS> upsArrayList = getUpsData(databaseHelper);
+
+            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
+            setBitmap(rv, R.id.upsStatusImage, createUpsViewBitmap(context, upsArrayList));
+
+
+            // On click refresh trigger method
+            Log.i(TAG, "Widget on update event");
+            Intent updateIntent = new Intent(context, Widget.class);
+            updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            PendingIntent pendingUpdate = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingUpdate);
+
+            // Finish
+            rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingIntent);
+            appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(appWidgetIds[i], rv);
+        }
+    }
+
+
+    /**
+     * Get ups data
+     *
+     * @param databaseHelper SQLite helper class
+     * @return arrayList
+     */
+    private ArrayList<UPS> getUpsData(DatabaseHelper databaseHelper) {
+        return databaseHelper.getAllUps(null);
+    }
+
+
+    private Bitmap createUpsViewBitmap(Context context, ArrayList<UPS> upsArrayList) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        LinearLayout mainLinearLayout = new LinearLayout(context);
+        mainLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                dpToPixels(context, 100), dpToPixels(context, 80)
+        );
+        mainLinearLayout.setLayoutParams(layoutParams);
+
+
+        for (int i = 0; i < upsArrayList.size(); i++) {
+            View inflatedLayout = inflater.inflate(R.layout.ups_item_widget, null, true);
+            TextView upsName = inflatedLayout.findViewById(R.id.upsName);
+            TextView percentageTv = inflatedLayout.findViewById(R.id.percentageTv);
+
+            // Ups name
+            upsName.setText(upsArrayList.get(i).getUPS_NAME());
+
+            // Set status color
+            if (upsArrayList.get(i).getSTATUS().contains("ONLINE")) {
+                upsName.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
+            } else {
+                upsName.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
+            }
+
+            CustomGauge chargePB = inflatedLayout.findViewById(R.id.chargePB);
+            chargePB.setValue(upsArrayList.get(i).getBatteryChargeLevelInteger());
+
+            percentageTv.setText(upsArrayList.get(i).getBatteryChargeLevelInteger() + "%");
+
+            mainLinearLayout.addView(inflatedLayout);
+        }
+
+        return getBitmapFromView(mainLinearLayout);
+    }
+
+
+    private static Bitmap getBitmapFromView(View view) {
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.draw(canvas);
+        return bitmap;
+    }
+
+
+    private int dpToPixels(Context context, int dps) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dps * scale + 0.5f);
+    }
+
+    private void setBitmap(RemoteViews views, int resId, Bitmap bitmap){
+        Bitmap proxy = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(proxy);
+        c.drawBitmap(bitmap, new Matrix(), null);
+        views.setImageViewBitmap(resId, proxy);
+    }
+
+
+    // Check if service is running
+    private boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+} // End of class

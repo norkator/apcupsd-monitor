@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Strings related to Settings -->
+    <string-array name="pref_application_statistic_date_format">
+        <item>yyyy-MM-dd</item>
+    </string-array>
+    <string-array name="pref_application_statistic_time_format">
+        <item>HH:mm:ss</item>
+    </string-array>
+
+</resources>

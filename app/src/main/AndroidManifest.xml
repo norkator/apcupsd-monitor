@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nitramite.apcupsdmonitor">
+
+    <!-- Required Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".UpsEditor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UpsViewer"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainMenu"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="Setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Settings" /> <!-- Service declarations -->
+        <receiver android:name=".Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <!-- Status service -->
+        <service
+            android:name=".StatusService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false" />
+        <!-- Receiver for service -->
+        <receiver
+            android:name=".StatusServiceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="RestartServiceWhenStopped">
+            <intent-filter>
+                <action android:name="com.nitramite.apcupsdmonitor.RestartService" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

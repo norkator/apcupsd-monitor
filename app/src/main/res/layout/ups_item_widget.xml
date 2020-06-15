@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:orientation="vertical"
+        android:background="#fafafa">
+
+        <TextView
+            android:id="@+id/upsName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bootStrapSuccess"
+            android:padding="5dp"
+            android:text="UPS NAME"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="12sp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.nitramite.apcupsdmonitor.CustomGauge
+                android:id="@+id/chargePB"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:gaugeEndValue="100"
+                app:gaugePointEndColor="@color/colorPrimary"
+                app:gaugePointStartColor="@color/colorPrimary"
+                app:gaugeStartAngle="135"
+                app:gaugeStartValue="0"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:id="@+id/percentageTv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="0%"
+                android:textColor="@color/materialGray"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
