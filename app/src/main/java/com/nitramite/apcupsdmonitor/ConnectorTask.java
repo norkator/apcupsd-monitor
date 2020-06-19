@@ -18,6 +18,7 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -253,7 +254,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             InputStream input = channel.getInputStream();
             channel.connect();
 
-            /* TEST INPUT STARTS FROM HERE */
+            /* APCUPSD TEST INPUT STARTS FROM HERE */
             /*
             String input_test =
                 "APC      : 001,037,0940\n" +
@@ -297,9 +298,46 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             InputStream testInputStream = new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
             */
 
+            /* SYNOLOGY NAS  TEST INPUT STARTS FROM HERE */
+            String input_test =
+                "battery.charge: 100\n" + 
+                "battery.charge.low: 10\n" + 
+                "battery.charge.warning: 50\n" + 
+                "battery.runtime: 5580\n" + 
+                "battery.runtime.low: 120\n" + 
+                "battery.type: PbAc\n" + 
+                "battery.voltage: 27.0\n" + 
+                "battery.voltage.nominal: 24.0\n" + 
+                "device.mfr: American Power Conversion\n" + 
+                "device.model: Smart-UPS 750\n" + 
+                "device.serial: AS1244114679 \n" + 
+                "device.type: ups\n" + 
+                "driver.name: usbhid-ups\n" + 
+                "driver.parameter.pollfreq: 30\n" + 
+                "driver.parameter.pollinterval: 5\n" + 
+                "driver.parameter.port: auto\n" + 
+                "driver.version: DSM6-2-25364-191230\n" + 
+                "driver.version.data: APC HID 0.95\n" + 
+                "driver.version.internal: 0.38\n" + 
+                "ups.beeper.status: disabled\n" + 
+                "ups.delay.shutdown: 20\n" + 
+                "ups.firmware: UPS 08.3 / ID=18\n" + 
+                "ups.mfr: American Power Conversion\n" + 
+                "ups.mfr.date: 2012/11/01\n" + 
+                "ups.model: Smart-UPS 750\n" + 
+                "ups.productid: 0003\n" + 
+                "ups.serial: AS1244114679 \n" + 
+                "ups.status: OL\n" + 
+                "ups.timer.reboot: -1\n" + 
+                "ups.timer.shutdown: -1\n" + 
+                "ups.vendorid: 051d\n";
+            InputStream testInputStream = new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
+
+
+
             /* TEST INPUT ENDS HERE */
 
-            InputStreamReader inputReader = new InputStreamReader(input); // Can be replaced by test string (/*input*/ testInputStream)
+            InputStreamReader inputReader = new InputStreamReader(/*input*/ testInputStream); // Can be replaced by test string (/*input*/ testInputStream)
             BufferedReader bufferedReader = new BufferedReader(inputReader);
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {

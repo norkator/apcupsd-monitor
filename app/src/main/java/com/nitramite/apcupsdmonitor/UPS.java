@@ -233,6 +233,8 @@ public class UPS {
         }
         String[] lines = UPS_STATUS_STR.split("\n");
         for (String line : lines) {
+
+            /* APCUPSD */
             if (line.contains("UPSNAME")) {
                 setUPS_NAME(this.getCleanLine(line, "UPSNAME"));
             } else if (line.contains("STARTTIME")) {
@@ -268,6 +270,22 @@ public class UPS {
             } else if (line.contains("ITEMP")) {
                 setITEMP(this.getCleanLine(line, "ITEMP"));
             }
+
+            /* SYNOLOGY UPSC UPS */
+            else if (line.contains("battery.charge") && !line.contains("battery.charge.")) {
+                setBATTERY_CHARGE_LEVEL(this.getCleanLine(line, "battery.charge"));
+            } else if (line.contains("battery.voltage") && !line.contains("battery.voltage.")) {
+                setBATTERY_VOLTAGE(this.getCleanLine(line, "battery.voltage"));
+            } else if (line.contains("device.mfr")) {
+                setUPS_NAME(this.getCleanLine(line, "device.mfr"));
+            } else if (line.contains("device.model")) {
+                setMODEL(this.getCleanLine(line, "device.model"));
+            } else if (line.contains("ups.firmware")) {
+                setFIRMWARE(this.getCleanLine(line, "ups.firmware"));
+            } else if (line.contains("ups.status")) {
+                setUPS_STATUS_STR(this.getCleanLine(line, "ups.status"));
+            }
+
         }
     }
 
