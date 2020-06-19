@@ -18,6 +18,7 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -132,7 +133,8 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 // APCUPSD SOCKET
                 if (validAPCUPSDRequirements()) {
                     if (connectSocketServer(upsArrayList.get(arrayPosition).UPS_ID, this.address, this.port)) {
-                        getUPSStatusAPCUPSD(upsArrayList.get(arrayPosition).UPS_ID);
+                        getUPSStatusAPCUPSD(upsArrayList.get(arrayPosition).UPS_ID,
+                                upsArrayList.get(arrayPosition).getUpsLoadEvents());
                     } else {
                         apcupsdInterface.onConnectionError();
                     }
@@ -143,7 +145,8 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 // SSH
                 if (validSSHRequirements()) {
                     if (connectSSHServer(upsArrayList.get(arrayPosition).UPS_ID)) {
-                        getUPSStatusSSH(upsArrayList.get(arrayPosition).UPS_ID);
+                        getUPSStatusSSH(upsArrayList.get(arrayPosition).UPS_ID,
+                                upsArrayList.get(arrayPosition).getUpsLoadEvents());
                     }
                 } else {
                     apcupsdInterface.onMissingPreferences();
@@ -242,7 +245,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
     // Get ups status
-    private void getUPSStatusSSH(final String upsId) {
+    private void getUPSStatusSSH(final String upsId, final boolean loadEvents) {
         try {
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -253,7 +256,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             InputStream input = channel.getInputStream();
             channel.connect();
 
-            /* TEST INPUT STARTS FROM HERE */
+            /* APCUPSD TEST INPUT STARTS FROM HERE */
             /*
             String input_test =
                 "APC      : 001,037,0940\n" +
@@ -297,6 +300,43 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             InputStream testInputStream = new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
             */
 
+            /* SYNOLOGY NAS  TEST INPUT STARTS FROM HERE */
+            /*
+            String input_test =
+                "battery.charge: 100\n" + 
+                "battery.charge.low: 10\n" + 
+                "battery.charge.warning: 50\n" + 
+                "battery.runtime: 5580\n" + 
+                "battery.runtime.low: 120\n" + 
+                "battery.type: PbAc\n" + 
+                "battery.voltage: 27.0\n" + 
+                "battery.voltage.nominal: 24.0\n" + 
+                "device.mfr: American Power Conversion\n" + 
+                "device.model: Smart-UPS 750\n" + 
+                "device.serial: AS1244114679 \n" + 
+                "device.type: ups\n" + 
+                "driver.name: usbhid-ups\n" + 
+                "driver.parameter.pollfreq: 30\n" + 
+                "driver.parameter.pollinterval: 5\n" + 
+                "driver.parameter.port: auto\n" + 
+                "driver.version: DSM6-2-25364-191230\n" + 
+                "driver.version.data: APC HID 0.95\n" + 
+                "driver.version.internal: 0.38\n" + 
+                "ups.beeper.status: disabled\n" + 
+                "ups.delay.shutdown: 20\n" + 
+                "ups.firmware: UPS 08.3 / ID=18\n" + 
+                "ups.mfr: American Power Conversion\n" + 
+                "ups.mfr.date: 2012/11/01\n" + 
+                "ups.model: Smart-UPS 750\n" + 
+                "ups.productid: 0003\n" + 
+                "ups.serial: AS1244114679 \n" + 
+                "ups.status: OL\n" +
+                "ups.timer.reboot: -1\n" + 
+                "ups.timer.shutdown: -1\n" + 
+                "ups.vendorid: 051d\n";
+            InputStream testInputStream = new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
+            */
+
             /* TEST INPUT ENDS HERE */
 
             InputStreamReader inputReader = new InputStreamReader(input); // Can be replaced by test string (/*input*/ testInputStream)
@@ -314,7 +354,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             databaseHelper.insertUpdateUps(upsId, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(upsId);
+                getUPSEvents(upsId, loadEvents);
             } else {
                 arrayPosition++;
                 upsTaskHelper();
@@ -327,7 +367,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     }
 
 
-    private void getUPSStatusAPCUPSD(final String upsId) {
+    private void getUPSStatusAPCUPSD(final String upsId, final boolean loadEvents) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
@@ -353,7 +393,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
             databaseHelper.insertUpdateUps(upsId, contentValues);
 
-            getUPSEventsAPCUPSD(upsId);
+            getUPSEventsAPCUPSD(upsId, loadEvents);
 
         } catch (UnknownHostException e) {
             Log.i(TAG, e.toString());
@@ -375,9 +415,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
     // Get ups events
-    private void getUPSEvents(final String upsId) {
+    private void getUPSEvents(final String upsId, final boolean loadEvents) {
         ArrayList<String> events = new ArrayList<>();
-        if (sharedPreferences.getBoolean(Constants.SP_LOAD_EVENTS, true)) {
+        if (loadEvents) {
             Log.i(TAG, "Loading events...");
             try {
                 ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
@@ -405,11 +445,11 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
 
-    private void getUPSEventsAPCUPSD(final String upsId) {
+    private void getUPSEventsAPCUPSD(final String upsId, final Boolean loadEvents) {
         ArrayList<String> events = new ArrayList<>();
         try {
 
-            if (sharedPreferences.getBoolean(Constants.SP_LOAD_EVENTS, true)) {
+            if (loadEvents) {
 
                 byte[] message = {0x00, 0x06, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73};
                 DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());

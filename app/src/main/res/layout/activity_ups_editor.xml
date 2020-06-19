@@ -248,6 +248,28 @@
                 android:nextFocusForward="@+id/eventsLocationET"
                 android:singleLine="true" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Load events"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="If switched off then events wont be loaded and also its view wont be visible"
+                android:textSize="12sp" />
+
+            <Switch
+                android:id="@+id/loadUpsEventsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:nextFocusForward="@+id/eventsLocationET"
+                android:singleLine="true"
+                android:checked="true"/>
 
             <TextView
                 android:layout_width="wrap_content"

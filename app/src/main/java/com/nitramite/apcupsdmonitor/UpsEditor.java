@@ -58,6 +58,7 @@ public class UpsEditor extends AppCompatActivity {
         final Switch strictHostKeyCheckingSwitch = findViewById(R.id.strictHostKeyCheckingSwitch);
 
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
+        final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
 
 
@@ -81,6 +82,7 @@ public class UpsEditor extends AppCompatActivity {
             strictHostKeyCheckingSwitch.setChecked(ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1"));
             statusCommandET.setText(ups.UPS_SERVER_STATUS_COMMAND);
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
+            loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
         }
 
 
@@ -134,6 +136,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING, strictHostKeyCheckingSwitch.isChecked() ? "1" : "0");
             contentValues.put(DatabaseHelper.UPS_SERVER_STATUS_COMMAND, statusCommandET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
+            contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
             databaseHelper.insertUpdateUps(upsId, contentValues);
             Toast.makeText(UpsEditor.this, "Saved", Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();

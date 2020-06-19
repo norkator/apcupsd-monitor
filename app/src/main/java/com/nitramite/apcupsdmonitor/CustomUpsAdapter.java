@@ -55,7 +55,7 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
         // Set status (Always shown)
         status.setText(upsArrayList.get(position).getSTATUS());
-        if (upsArrayList.get(position).getSTATUS().contains("ONLINE")) {
+        if (upsArrayList.get(position).isOnline()) {
             status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
         } else {
             status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));

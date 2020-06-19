@@ -1,5 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.util.Log;
+
 // UPS Object
 @SuppressWarnings("WeakerAccess")
 public class UPS {
@@ -21,6 +23,7 @@ public class UPS {
     public String UPS_SERVER_HOST_NAME = null;
     public String UPS_SERVER_HOST_FINGER_PRINT = null;
     public String UPS_SERVER_HOST_KEY = null;
+    public String UPS_LOAD_EVENTS = null;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
@@ -122,8 +125,6 @@ public class UPS {
         this.ITEMP = ITEMP;
     }
 
-
-
     public void setUPS_STATUS_STR(String UPS_STATUS_STR) {
         this.UPS_STATUS_STR = UPS_STATUS_STR;
         this.statusParser();
@@ -132,6 +133,14 @@ public class UPS {
 
     // ---------------------------------------------------------------------------------------------
     // Getters
+
+    public Boolean getUpsLoadEvents() {
+        if (this.UPS_LOAD_EVENTS == null) {
+            return false;
+        } else {
+            return this.UPS_LOAD_EVENTS.equals("1");
+        }
+    }
 
     public String getUPS_NAME() {
         return (this.UPS_NAME == null ? "N/A" : this.UPS_NAME);
@@ -145,6 +154,12 @@ public class UPS {
         return (this.STATUS == null ? "N/A" : "UPS " + this.STATUS.replace(" ", ""));
     }
 
+    public Boolean isOnline() {
+        Log.i("TAG", this.getSTATUS());
+        return this.getSTATUS().contains("ONLINE") ||   // APCUPSD
+                this.getSTATUS().equals("UPS OL") ||        // UPSC
+                this.getSTATUS().equals("UPS OL CHRG");     // UPSC
+    }
 
     public String getLineVoltageStr() {
         return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE + " line voltage");
@@ -233,6 +248,8 @@ public class UPS {
         }
         String[] lines = UPS_STATUS_STR.split("\n");
         for (String line : lines) {
+
+            /* APCUPSD */
             if (line.contains("UPSNAME")) {
                 setUPS_NAME(this.getCleanLine(line, "UPSNAME"));
             } else if (line.contains("STARTTIME")) {
@@ -268,6 +285,22 @@ public class UPS {
             } else if (line.contains("ITEMP")) {
                 setITEMP(this.getCleanLine(line, "ITEMP"));
             }
+
+            /* SYNOLOGY UPSC UPS */
+            else if (line.contains("battery.charge") && !line.contains("battery.charge.")) {
+                setBATTERY_CHARGE_LEVEL(this.getCleanLine(line, "battery.charge"));
+            } else if (line.contains("battery.voltage") && !line.contains("battery.voltage.")) {
+                setBATTERY_VOLTAGE(this.getCleanLine(line, "battery.voltage"));
+            } else if (line.contains("device.mfr")) {
+                setUPS_NAME(this.getCleanLine(line, "device.mfr"));
+            } else if (line.contains("device.model")) {
+                setMODEL(this.getCleanLine(line, "device.model"));
+            } else if (line.contains("ups.firmware")) {
+                setFIRMWARE(this.getCleanLine(line, "ups.firmware"));
+            } else if (line.contains("ups.status")) {
+                setSTATUS(this.getCleanLine(line, "ups.status"));
+            }
+
         }
     }
 
