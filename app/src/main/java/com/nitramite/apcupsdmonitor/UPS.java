@@ -1,5 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.util.Log;
+
 // UPS Object
 @SuppressWarnings("WeakerAccess")
 public class UPS {
@@ -145,6 +147,12 @@ public class UPS {
         return (this.STATUS == null ? "N/A" : "UPS " + this.STATUS.replace(" ", ""));
     }
 
+    public Boolean isOnline() {
+        Log.i("TAG", this.getSTATUS());
+        return this.getSTATUS().contains("ONLINE") ||   // APCUPSD
+                this.getSTATUS().equals("UPS OL") ||        // UPSC
+                this.getSTATUS().equals("UPS OL CHRG");     // UPSC
+    }
 
     public String getLineVoltageStr() {
         return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE + " line voltage");
@@ -283,7 +291,7 @@ public class UPS {
             } else if (line.contains("ups.firmware")) {
                 setFIRMWARE(this.getCleanLine(line, "ups.firmware"));
             } else if (line.contains("ups.status")) {
-                setUPS_STATUS_STR(this.getCleanLine(line, "ups.status"));
+                setSTATUS(this.getCleanLine(line, "ups.status"));
             }
 
         }

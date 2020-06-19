@@ -176,7 +176,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             // Set status (Always shown)
             TextView status = findViewById(R.id.status);
             status.setText(ups.getSTATUS());
-            if (ups.getSTATUS().contains("ONLINE")) {
+            if (ups.isOnline()) {
                 status.setBackgroundColor(ContextCompat.getColor(UpsViewer.this, R.color.bootStrapSuccess));
             } else {
                 status.setBackgroundColor(ContextCompat.getColor(UpsViewer.this, R.color.bootStrapDanger));
