@@ -24,8 +24,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean upgrade = false;
 
     // DATABASE VERSION
-    private static final int DATABASE_VERSION = 1;
-    // 1  = v1.1.5
+    private static final int DATABASE_VERSION = 2;
+    // 1 = v1.1.5
+    // 2 = v1.2.2, added ups load events boolean
 
 
     // DATABASE NAME
@@ -54,6 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String UPS_SERVER_HOST_FINGER_PRINT = "server_host_finger_print";
     static final String UPS_SERVER_HOST_KEY = "server_host_key";
     static final String UPS_STATUS_STR = "ups_status_str"; // status message containing all lines
+    static final String UPS_LOAD_EVENTS = "ups_load_events";
 
     // -------------------------------------------------------------------
 
@@ -80,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             columnsUps = GetColumns(db, UPS_TABLE);
             db.execSQL("ALTER TABLE " + UPS_TABLE + " RENAME TO TEMP_" + UPS_TABLE);
 
-            // Create images table if not exists
+            // Create events table if not exists
             db.execSQL("CREATE TABLE IF NOT EXISTS " + EVENTS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_id TEXT, event_str TEXT)");
         }
 
@@ -88,10 +90,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + UPS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_connection_type TEXT, server_address TEXT, server_port TEXT, server_username TEXT, " +
                 "server_password TEXT, server_use_private_key_auth TEXT, server_private_key_password TEXT, server_private_key_path TEXT, server_strict_host_key_checking TEXT, " +
                 "server_status_command TEXT, server_events_location TEXT, server_host_name TEXT, server_host_finger_print TEXT, server_host_key TEXT, " +
-                "ups_status_str TEXT)");
+                "ups_status_str TEXT, ups_load_events TEXT)");
 
         // Create events data table
-        db.execSQL("CREATE TABLE " + EVENTS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_id TEXT, event_str TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + EVENTS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_id TEXT, event_str TEXT)");
 
 
         // ***RESTORE***  Restore from old
@@ -103,10 +105,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE TEMP_" + UPS_TABLE);
 
             // Events
-            columnsEventsData.retainAll(GetColumns(db, EVENTS_TABLE));
-            String trackingCols = join(columnsEventsData, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM TEMP_%s", EVENTS_TABLE, trackingCols, trackingCols, EVENTS_TABLE));
-            db.execSQL("DROP TABLE TEMP_" + EVENTS_TABLE);
+            // columnsEventsData.retainAll(GetColumns(db, EVENTS_TABLE));
+            // String trackingCols = join(columnsEventsData, ",");
+            // db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM TEMP_%s", EVENTS_TABLE, trackingCols, trackingCols, EVENTS_TABLE));
+            // db.execSQL("DROP TABLE TEMP_" + EVENTS_TABLE);
         }
 
     }
@@ -174,6 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ups.UPS_SERVER_HOST_FINGER_PRINT = res.getString(13);
             ups.UPS_SERVER_HOST_KEY = res.getString(14);
             ups.setUPS_STATUS_STR(res.getString(15));
+            ups.UPS_LOAD_EVENTS = res.getString(16);
             upsArrayList.add(ups);
         }
         res.close();

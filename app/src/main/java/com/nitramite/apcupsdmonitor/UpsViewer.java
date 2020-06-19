@@ -106,7 +106,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             drawData(ups, ups.getUPS_STATUS_STR());
             rawStatusOutput = ups.getUPS_STATUS_STR();
             eventsArrayList = databaseHelper.getAllEvents(upsId);
-            drawEventsData(eventsArrayList);
+            drawEventsData(ups.getUpsLoadEvents(), eventsArrayList);
             closeProgressDialog();
         } catch (IndexOutOfBoundsException e) {
             UpsViewer.this.finish();
@@ -334,10 +334,10 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     }
 
 
-    private void drawEventsData(final ArrayList<String> eventsArray) {
+    private void drawEventsData(final boolean loadEvents, final ArrayList<String> eventsArray) {
         if (eventsArray != null) {
             CardView eventsCardView = findViewById(R.id.eventsCardView);
-            if (eventsArray.size() > 0 && sharedPreferences.getBoolean(Constants.SP_LOAD_EVENTS, true)) {
+            if (eventsArray.size() > 0 && loadEvents) {
                 eventsCardView.setVisibility(View.VISIBLE);
                 ListView eventsList = findViewById(R.id.eventsList);
                 CustomEventsAdapter customEventsAdapter = new CustomEventsAdapter(UpsViewer.this, eventsArray, sharedPreferences.getBoolean(Constants.SP_EVENTS_COLORING, true));

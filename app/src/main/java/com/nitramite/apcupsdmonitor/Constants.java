@@ -18,7 +18,6 @@ class Constants {
     final static String SP_UPS_EARLIER_STATUS = "SP_UPS_EARLIER_STATUS";
     final static String SP_ACTIVITY_RUNNING = "SP_ACTIVITY_RUNNING";
 
-    final static String SP_LOAD_EVENTS = "SP_LOAD_EVENTS";
     final static String SP_SET_UPS_AS_ACTIVITY_TITLE = "SP_SET_UPS_AS_ACTIVITY_TITLE";
     final static String SP_SHOW_UPS_MODEL = "SP_SHOW_UPS_MODEL";
     final static String SP_SHOW_LINE_VOLTAGE = "SP_SHOW_LINE_VOLTAGE";

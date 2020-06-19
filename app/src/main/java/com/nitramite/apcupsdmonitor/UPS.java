@@ -23,6 +23,7 @@ public class UPS {
     public String UPS_SERVER_HOST_NAME = null;
     public String UPS_SERVER_HOST_FINGER_PRINT = null;
     public String UPS_SERVER_HOST_KEY = null;
+    public String UPS_LOAD_EVENTS = null;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
@@ -124,8 +125,6 @@ public class UPS {
         this.ITEMP = ITEMP;
     }
 
-
-
     public void setUPS_STATUS_STR(String UPS_STATUS_STR) {
         this.UPS_STATUS_STR = UPS_STATUS_STR;
         this.statusParser();
@@ -134,6 +133,14 @@ public class UPS {
 
     // ---------------------------------------------------------------------------------------------
     // Getters
+
+    public Boolean getUpsLoadEvents() {
+        if (this.UPS_LOAD_EVENTS == null) {
+            return false;
+        } else {
+            return this.UPS_LOAD_EVENTS.equals("1");
+        }
+    }
 
     public String getUPS_NAME() {
         return (this.UPS_NAME == null ? "N/A" : this.UPS_NAME);

@@ -8,12 +8,6 @@
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="SP_LOAD_EVENTS"
-            android:summary="Events wont be loaded and also its view wont visible if this is switched off"
-            android:title="Load events" />
-
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="SP_SET_UPS_AS_ACTIVITY_TITLE"
             android:title="Set UPS name as activity title" />
 
