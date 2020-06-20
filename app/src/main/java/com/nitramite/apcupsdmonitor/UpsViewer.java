@@ -391,7 +391,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
 
                             long seconds = ((powerIsBackTime.getTime() - powerFailureTime.getTime()) / 1000);
 
-                            // Log.i(TAG, date + " had " + String.valueOf(seconds) + " seconds of power outage");
+                            // Log.i(TAG, date + " had " + seconds + " seconds of power outage");
                             outageEventObjs.add(new OutageEventObj(
                                     date, (int) seconds
                             ));
@@ -414,38 +414,44 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
      * @param outageEventObj individual events
      */
     private void drawOutageEventStatistics(final ArrayList<OutageEventObj> outageEventObj) {
+        Log.i(TAG, "=== drawOutageEventStatistics ===");
 
         barEntries = new ArrayList<>();
         barLabels = new ArrayList<>();
 
-        Integer totalSeconds = 0;
+        int totalSeconds = 0;
 
-        String currentYearMothPart = null;
-        Integer monthSeconds = 0;
+        String currentYearMonthPart = null;
+        int monthSeconds = 0;
 
         int entryCount = 0;
 
         for (int i = 0; i < outageEventObj.size(); i++) {
+            Log.i(TAG, String.valueOf(outageEventObj.get(i).getOutageSeconds()));
 
             // Set base
-            if (currentYearMothPart == null) {
-                currentYearMothPart = outageEventObj.get(i).getYearMonthPart();
+            if (currentYearMonthPart == null) {
+                currentYearMonthPart = outageEventObj.get(i).getYearMonthPart();
             }
 
-            if (outageEventObj.get(i).getYearMonthPart().equals(currentYearMothPart)) {
+            if (outageEventObj.get(i).getYearMonthPart().equals(currentYearMonthPart) && outageEventObj.size() > 1) {
                 monthSeconds = monthSeconds + outageEventObj.get(i).getOutageSeconds();
             } else {
+
+                if (outageEventObj.size() == 1) {
+                    monthSeconds = outageEventObj.get(i).getOutageSeconds();
+                }
 
                 // Add month seconds point
                 barEntries.add(new BarEntry(entryCount, monthSeconds));
                 entryCount++; // Increment entry count
-                barLabels.add(currentYearMothPart);
+                barLabels.add(currentYearMonthPart);
                 totalSeconds = totalSeconds + monthSeconds;
 
-                Log.i(TAG, currentYearMothPart + " " + monthSeconds);
+                Log.i(TAG, currentYearMonthPart + " " + monthSeconds);
 
                 // Reset for next month
-                currentYearMothPart = outageEventObj.get(i).getYearMonthPart();
+                currentYearMonthPart = outageEventObj.get(i).getYearMonthPart();
                 monthSeconds = outageEventObj.get(i).getOutageSeconds();
             }
 
