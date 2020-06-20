@@ -4,20 +4,22 @@
     package="com.nitramite.apcupsdmonitor">
 
     <!-- Required Permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:targetApi="q">
         <activity
             android:name=".UpsEditor"
             android:screenOrientation="portrait" />
@@ -47,12 +49,6 @@
                 android:resource="@xml/widget_info" />
         </receiver>
         <!-- Status service -->
-        <service
-            android:name=".StatusService"
-            android:enabled="true"
-            android:exported="false"
-            android:stopWithTask="false" />
-        <!-- Receiver for service -->
         <receiver
             android:name=".StatusServiceBroadcastReceiver"
             android:enabled="true"
@@ -62,6 +58,12 @@
                 <action android:name="com.nitramite.apcupsdmonitor.RestartService" />
             </intent-filter>
         </receiver>
+        <!-- Receiver for service -->
+        <service
+            android:name=".StatusService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false" />
 
     </application>
 
