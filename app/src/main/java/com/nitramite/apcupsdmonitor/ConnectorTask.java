@@ -330,7 +330,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 "ups.model: Smart-UPS 750\n" + 
                 "ups.productid: 0003\n" + 
                 "ups.serial: AS1244114679 \n" + 
-                "ups.status: OL\n" +
+                "ups.status: OLCHRG\n" +
                 "ups.timer.reboot: -1\n" + 
                 "ups.timer.shutdown: -1\n" + 
                 "ups.vendorid: 051d\n";

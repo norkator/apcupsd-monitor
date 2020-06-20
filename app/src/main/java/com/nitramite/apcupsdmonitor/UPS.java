@@ -158,6 +158,7 @@ public class UPS {
         Log.i("TAG", this.getSTATUS());
         return this.getSTATUS().contains("ONLINE") ||   // APCUPSD
                 this.getSTATUS().equals("UPS OL") ||        // UPSC
+                this.getSTATUS().equals("UPS OLCHRG") ||        // UPSC
                 this.getSTATUS().equals("UPS OL CHRG");     // UPSC
     }
 
