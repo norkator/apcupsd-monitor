@@ -1,6 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
-class Constants {
+public class Constants {
 
     // In app products
     static String IAP_ITEM_SKU_DONATE_MEDIUM = "iap_donate_medium";
@@ -36,5 +36,7 @@ class Constants {
 
     final static String SP_AUTO_OPEN_UPS_ID = "SP_AUTO_OPEN_UPS_ID";
 
+    public final static String SP_UPDATE_INTERVAL = "SP_UPDATE_INTERVAL";
+    public final static String SP_LAST_PUSH_UPDATE = "SP_LAST_PUSH_UPDATE";
 
 }
