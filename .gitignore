@@ -24,7 +24,6 @@ output.json
 .DS_Store
 /build
 /captures
-gradle/
 
 #NDK
 obj/
