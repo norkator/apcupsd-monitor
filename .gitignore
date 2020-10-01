@@ -32,3 +32,4 @@ obj/
 # In some projects we dont want these
 app/release/app-release.apk
 app/app-release.apk
+app/google-services.json
