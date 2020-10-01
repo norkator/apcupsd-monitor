@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.nitramite.apcupsdmonitor.Constants;
+import com.nitramite.apcupsdmonitor.StatusService;
 
 import org.joda.time.Duration;
 import org.joda.time.Interval;
@@ -22,6 +23,7 @@ import java.util.Objects;
 public class PushService extends FirebaseMessagingService {
 
     private String TAG = this.getClass().getSimpleName();
+
 
     @SuppressWarnings("HardCodedStringLiteral")
     @Override
@@ -64,8 +66,8 @@ public class PushService extends FirebaseMessagingService {
      * Doing so we defend the Google's Doze, because it doesn't allow anyone to start a service here
      */
     public void startCheck() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        /* Todo, implement update logic */
+        StatusService statusService = new StatusService();
+        statusService.getUpdaterThread(this).start();
     }
 
 
