@@ -44,7 +44,8 @@ public class StatusService implements ConnectorInterface {
     @Override
     public void onTaskCompleted() {
         try {
-            if (databaseHelper.isAnyUpsDown()) {
+            // if (databaseHelper.isAnyUpsDown()) {
+            if (!databaseHelper.isAnyUpsDown()) {
                 showNotification(context, "Warning", "UPS status change detected!");
             }
         } catch (NullPointerException ignored) {
