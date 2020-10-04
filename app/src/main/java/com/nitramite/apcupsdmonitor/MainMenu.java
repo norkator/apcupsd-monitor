@@ -330,10 +330,12 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public void onConnectionError() {
         runOnUiThread(() -> {
             closeProgressDialog();
-            genericErrorDialog(getString(R.string.error), "Connection error. Verify your address, port, username, password/private key.\n\n" +
-                    "If target is remove server, ensure that it has specified port available (port forwarding).\n\n" +
-                    "Target server has apcupsd daemon running and for example command '" + sharedPreferences.getString(Constants.SP_STATUS_COMMAND, "sudo apcaccess status") + "' is working.\n\n" +
-                    "In case you are using direct APCUPSD TCP port connection, see setup tutorial for testing connection."
+            genericErrorDialog(getString(R.string.error),
+                    getString(R.string.connection_error_one) + "\n\n" +
+                            getString(R.string.connection_error_two) + "\n\n" +
+                            getString(R.string.connection_error_three) + " '" + sharedPreferences.getString(Constants.SP_STATUS_COMMAND, "sudo apcaccess status") + "' " +
+                            getString(R.string.connection_error_four) +
+                            getString(R.string.connection_error_five)
             );
         });
     }
