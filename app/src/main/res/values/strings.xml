@@ -109,5 +109,36 @@
     <string name="delete">DELETE</string>
     <string name="edit">EDIT</string>
 
+    <!-- Preferences -->
+    <string name="prefs_title">Settings</string>
+    <string name="prefs_configure_display_items">Configure displayed items</string>
+    <string name="prefs_ups_nam_title">Set UPS name as activity title</string>
+    <string name="prefs_ups_model">Show UPS model</string>
+    <string name="prefs_line_voltage">Show line voltage</string>
+    <string name="prefs_batt_voltage">Show battery voltage</string>
+    <string name="prefs_internal_temp">Show internal temperature</string>
+    <string name="prefs_load_percentage">Show load percentage</string>
+    <string name="prefs_percent_batt_charge">Show percent battery charge</string>
+    <string name="prefs_last_transfer_reason">Show last transfer reason</string>
+    <string name="prefs_batt_time_left">Show battery time left</string>
+    <string name="prefs_batt_date">Show battery date</string>
+    <string name="prefs_firmware_version">Show firmware version</string>
+    <string name="prefs_start_time">Show start time</string>
+    <string name="prefs_statistics">Statistics</string>
+    <string name="prefs_events_date_format">Events date format</string>
+    <string name="prefs_events_time_format">Events time format</string>
+    <string name="prefs_events_date_format_summary">If your events has date format which is not specified here, please contact me via email so I can implement support for it.</string>
+    <string name="prefs_events_time_format_summary">If your events has time format which is not specified here, please contact me via email so I can implement support for it.</string>
+    <string name="prefs_events_coloring">Events coloring</string>
+    <string name="prefs_events_coloring_summary">False = Text colored, True = Background colored</string>
+    <string name="prefs_service">Service</string>
+    <string name="prefs_notification_service">Notification service</string>
+    <string name="prefs_notification_service_summary">Check UPS statuses in the background</string>
+    <string name="prefs_service_refresh_interval">Refresh interval</string>
+    <string name="prefs_service_refresh_interval_summary">Load status information every X minutes. Zero means smallest possible value five minutes.</string>
+
+    <!-- Status service -->
+    <string name="warning">Warning</string>
+    <string name="non_online_status_change_detected">Non online status change detected!</string>
 
 </resources>

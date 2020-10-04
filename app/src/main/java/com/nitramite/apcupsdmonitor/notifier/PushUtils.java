@@ -14,4 +14,5 @@ public class PushUtils {
     public static void unsubscribeFromTopic(String topic) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
+
 }

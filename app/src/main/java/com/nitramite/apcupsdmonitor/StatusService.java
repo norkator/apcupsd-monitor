@@ -50,7 +50,7 @@ public class StatusService implements ConnectorInterface {
         Log.i(TAG, "onTaskCompleted");
         try {
             if (databaseHelper.isAnyUpsDown()) {
-                showNotification(context, "Warning", "Non online status change detected!");
+                showNotification(context, context.getString(R.string.warning), context.getString(R.string.non_online_status_change_detected));
             }
         } catch (NullPointerException ignored) {
         }
