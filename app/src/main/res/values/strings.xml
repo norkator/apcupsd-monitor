@@ -69,5 +69,45 @@
     <string name="saved">Saved</string>
     <string name="path">Path</string>
 
+    <!-- UpsViewer -->
+    <string name="m">M</string>
+    <string name="model">Model</string>
+    <string name="lv">LV</string>
+    <string name="line_voltage">Line voltage</string>
+    <string name="bv">BV</string>
+    <string name="battery_voltage">Battery voltage</string>
+    <string name="it">IT</string>
+    <string name="internal_temperature">Internal temperature</string>
+    <string name="lpercent">L%</string>
+    <string name="load_percentage">Load percentage</string>
+    <string name="cl">CL</string>
+    <string name="battery_charge_level">Battery charge level</string>
+    <string name="tr">TR</string>
+    <string name="last_transfer_reason">Last transfer reason</string>
+    <string name="tl">TL</string>
+    <string name="battery_time_left">Battery time left</string>
+    <string name="bd">BD</string>
+    <string name="battery_date">Battery date</string>
+    <string name="fw">FW</string>
+    <string name="firmware_version">Firmware version</string>
+    <string name="st">ST</string>
+    <string name="start_time">Start time</string>
+    <string name="strreturn">Return</string>
+    <string name="t">T</string>
+    <string name="total_time_out">Total time out</string>
+    <string name="a">A</string>
+    <string name="average_time_out">Average time out</string>
+    <string name="events">Events</string>
+    <string name="self_test">Self test</string>
+    <string name="seconds_month">Seconds /month</string>
+    <string name="showing_power_autage_total_seconds">Showing power outage total seconds for each available month</string>
+    <string name="you_dont_have_events_to_use">You don\'t yet have events to use for calculating statistics.</string>
+    <string name="debug_output">Debug output</string>
+    <string name="debug_output_is_null">Debug output is null</string>
+
+    <!-- Swipe adapter -->
+    <string name="delete">DELETE</string>
+    <string name="edit">EDIT</string>
+
 
 </resources>

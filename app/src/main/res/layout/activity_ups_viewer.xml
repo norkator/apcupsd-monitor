@@ -91,7 +91,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="M"
+                                    android:text="@string/m"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -99,7 +99,7 @@
                                     android:id="@+id/model"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Model" />
+                                    android:text="@string/model" />
                             </LinearLayout>
 
 
@@ -113,7 +113,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="LV"
+                                    android:text="@string/lv"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -122,7 +122,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Line voltage" />
+                                    android:text="@string/line_voltage" />
 
                                 <TextView
                                     android:id="@+id/lineVoltageOnly"
@@ -146,7 +146,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="BV"
+                                    android:text="@string/bv"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -155,7 +155,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Battery voltage" />
+                                    android:text="@string/battery_voltage" />
 
                                 <TextView
                                     android:id="@+id/batteryVoltageOnly"
@@ -179,7 +179,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="IT"
+                                    android:text="@string/it"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -187,7 +187,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Internal temperature" />
+                                    android:text="@string/internal_temperature" />
 
                                 <TextView
                                     android:id="@+id/internalTemperature"
@@ -212,7 +212,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="L%"
+                                    android:text="@string/lpercent"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -221,7 +221,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Load percentage" />
+                                    android:text="@string/load_percentage" />
 
                                 <ProgressBar
                                     android:id="@+id/loadPercentPB"
@@ -244,7 +244,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="CL"
+                                    android:text="@string/cl"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -253,7 +253,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Battery charge level" />
+                                    android:text="@string/battery_charge_level" />
 
                                 <ProgressBar
                                     android:id="@+id/chargePB"
@@ -276,7 +276,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="TR"
+                                    android:text="@string/tr"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -284,7 +284,7 @@
                                     android:id="@+id/lastTransferReason"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Last transfer reason" />
+                                    android:text="@string/last_transfer_reason" />
                             </LinearLayout>
 
 
@@ -298,7 +298,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="TL"
+                                    android:text="@string/tl"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -306,7 +306,7 @@
                                     android:id="@+id/batteryTimeLeft"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Battery time left" />
+                                    android:text="@string/battery_time_left" />
                             </LinearLayout>
 
 
@@ -320,7 +320,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="BD"
+                                    android:text="@string/bd"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -328,7 +328,7 @@
                                     android:id="@+id/batteryDate"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Battery date" />
+                                    android:text="@string/battery_date" />
                             </LinearLayout>
 
 
@@ -342,7 +342,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="FW"
+                                    android:text="@string/fw"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -350,7 +350,7 @@
                                     android:id="@+id/firmware"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Firmware version" />
+                                    android:text="@string/firmware_version" />
                             </LinearLayout>
 
 
@@ -365,7 +365,7 @@
                                 <TextView
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:text="ST"
+                                    android:text="@string/st"
                                     android:textAlignment="center"
                                     android:textSize="@dimen/big_title_mark_size" />
 
@@ -373,7 +373,7 @@
                                     android:id="@+id/startTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Start time" />
+                                    android:text="@string/start_time" />
                             </LinearLayout>
 
 
@@ -398,7 +398,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/bootStrapPrimary"
-                    android:text="Return"
+                    android:text="@string/strreturn"
                     android:textColor="#ffffff" />
 
                 <TextView
@@ -435,7 +435,7 @@
                             <TextView
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
-                                android:text="T"
+                                android:text="@string/t"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/big_title_mark_size" />
 
@@ -443,7 +443,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Total time out" />
+                                android:text="@string/total_time_out" />
 
                             <TextView
                                 android:id="@+id/totalTimeOutTV"
@@ -466,7 +466,7 @@
                             <TextView
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
-                                android:text="A"
+                                android:text="@string/a"
                                 android:textAlignment="center"
                                 android:textSize="@dimen/big_title_mark_size" />
 
@@ -474,7 +474,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Average time out" />
+                                android:text="@string/average_time_out" />
 
                             <TextView
                                 android:id="@+id/averageTimeOutTV"
@@ -534,7 +534,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/whiteColor"
                 android:padding="2dp"
-                android:text="Events" />
+                android:text="@string/events" />
 
         </FrameLayout>
 
@@ -562,7 +562,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/bootStrapPrimary"
-                android:text="Self test"
+                android:text="@string/self_test"
                 android:textColor="#ffffff"
                 tools:ignore="ButtonStyle" />
 

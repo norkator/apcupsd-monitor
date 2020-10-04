@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:gravity="center"
-        android:text="DELETE"
+        android:text="@string/delete"
         android:textSize="20sp"
         android:layout_marginStart="10dp" />
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -90,7 +89,6 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         chart.setNoDataTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         statisticsNotEnoughData = findViewById(R.id.statisticsNotEnoughData);
         statisticsNotEnoughData.setVisibility(View.GONE);
-
 
 
         Button returnFromStatisticsBtn = findViewById(R.id.returnFromStatisticsBtn);
@@ -198,8 +196,6 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             LinearLayout lineVoltageLayout = findViewById(R.id.lineVoltageLayout);
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_LINE_VOLTAGE, true)) {
                 lineVoltageLayout.setVisibility(View.VISIBLE);
-                // TextView lineVoltage = (TextView) findViewById(R.id.lineVoltage);
-                // lineVoltage.setText(ups.getLineVoltageStr());
                 TextView lineVoltageOnly = (TextView) findViewById(R.id.lineVoltageOnly);
                 lineVoltageOnly.setText(ups.getLineVoltageOnlyStr());
             } else {
@@ -211,8 +207,6 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             LinearLayout batteryVoltageLayout = findViewById(R.id.batteryVoltageLayout);
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_BATTERY_VOLTAGE, true)) {
                 batteryVoltageLayout.setVisibility(View.VISIBLE);
-                // TextView batteryVoltage = (TextView) findViewById(R.id.batteryVoltage);
-                // batteryVoltage.setText(ups.getBatteryVoltageStr());
                 TextView batteryVoltageOnly = (TextView) findViewById(R.id.batteryVoltageOnly);
                 batteryVoltageOnly.setText(ups.getBatteryVoltageOnlyStr());
             } else {
@@ -470,13 +464,13 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         }
 
         // Set chart data
-        barDataSet = new BarDataSet(barEntries, "Seconds /month");
+        barDataSet = new BarDataSet(barEntries, getString(R.string.seconds_month));
         barDataSet.setColor(ContextCompat.getColor(this, R.color.bootStrapDanger));
         barData = new BarData(barDataSet);
         chart.setData(barData);
         barDataSet.setValueTextSize(18f);
         chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(barLabels));
-        chart.getDescription().setText("Showing power outage total seconds for each available month");
+        chart.getDescription().setText(getString(R.string.showing_power_autage_total_seconds));
 
         // No data warning if no data
         if (barEntries.size() == 0) {
@@ -501,7 +495,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
                 upsStatisticsView.setVisibility(View.GONE);
             }
         } else {
-            genericErrorDialog("Note", "You don't yet have events to use for calculating statistics.");
+            genericErrorDialog(getString(R.string.note), getString(R.string.you_dont_have_events_to_use));
         }
     }
 
@@ -512,21 +506,17 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         new AlertDialog.Builder(UpsViewer.this)
                 .setTitle(title)
                 .setMessage(description)
-                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                .setPositiveButton(getString(R.string.close), (dialog, which) -> {
                 })
-                .setNeutralButton("Copy content", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("", description);
-                            assert clipboard != null;
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(UpsViewer.this, "Content copied to clipboard", Toast.LENGTH_SHORT).show();
-                        } catch (IndexOutOfBoundsException e) {
-                            Toast.makeText(UpsViewer.this, "There was nothing to copy", Toast.LENGTH_LONG).show();
-                        }
+                .setNeutralButton(getString(R.string.copy_content), (dialog, which) -> {
+                    try {
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("", description);
+                        assert clipboard != null;
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(UpsViewer.this, getString(R.string.content_copied), Toast.LENGTH_SHORT).show();
+                    } catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(UpsViewer.this, getString(R.string.nothing_to_copy), Toast.LENGTH_LONG).show();
                     }
                 })
                 .setIcon(R.drawable.ic_error_small)
@@ -556,9 +546,9 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         }
         if (id == R.id.action_debug_output) {
             if (rawStatusOutput != null) {
-                genericErrorDialog("Debug output", rawStatusOutput);
+                genericErrorDialog(getString(R.string.debug_output), rawStatusOutput);
             } else {
-                Toast.makeText(this, "Debug output is null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.debug_output_is_null, Toast.LENGTH_SHORT).show();
             }
             return true;
         }
