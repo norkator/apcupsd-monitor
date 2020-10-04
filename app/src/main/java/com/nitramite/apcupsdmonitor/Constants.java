@@ -1,6 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
-class Constants {
+public class Constants {
 
     // In app products
     static String IAP_ITEM_SKU_DONATE_MEDIUM = "iap_donate_medium";
@@ -13,8 +13,6 @@ class Constants {
     final static String SP_STATUS_COMMAND = "SP_STATUS_COMMAND";
     final static String SP_EVENTS_LOCATION = "SP_EVENTS_LOCATION";
     final static String SP_EVENTS_COLORING = "SP_EVENTS_COLORING";
-    final static String SP_ENABLE_SERVICE = "SP_ENABLE_SERVICE";
-    final static String SP_SERVICE_REFRESH_INTERVAL = "SP_SERVICE_REFRESH_INTERVAL";
     final static String SP_UPS_EARLIER_STATUS = "SP_UPS_EARLIER_STATUS";
     final static String SP_ACTIVITY_RUNNING = "SP_ACTIVITY_RUNNING";
 
@@ -36,5 +34,8 @@ class Constants {
 
     final static String SP_AUTO_OPEN_UPS_ID = "SP_AUTO_OPEN_UPS_ID";
 
+    public final static String SP_NOTIFICATIONS_ENABLED = "SP_NOTIFICATIONS_ENABLED";
+    public final static String SP_UPDATE_INTERVAL = "SP_UPDATE_INTERVAL";
+    public final static String SP_LAST_PUSH_UPDATE = "SP_LAST_PUSH_UPDATE";
 
 }

@@ -38,6 +38,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nitramite.apcupsdmonitor.notifier.PushUtils;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
 
@@ -82,17 +83,15 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public void onDestroy() {
         super.onDestroy();
         setAppActivityRunning(false);
-        // Check for service
-        if (sharedPreferences.getBoolean(Constants.SP_ENABLE_SERVICE, false)) {
-            if (!isMyServiceRunning(StatusService.class)) {
-                Intent intent = new Intent(MainMenu.this, StatusService.class);
-                intent.putExtra("START_AS_FOREGROUND_SERVICE", true);
-                startService(intent);
+        try {
+            if (sharedPreferences != null) {
+                if (sharedPreferences.getBoolean(Constants.SP_NOTIFICATIONS_ENABLED, true)) {
+                    PushUtils.subscribeToTopic(PushUtils.TOPIC_UPDATE);
+                } else
+                    PushUtils.unsubscribeFromTopic(PushUtils.TOPIC_UPDATE);
+
             }
-        } else {
-            if (isMyServiceRunning(StatusService.class)) {
-                stopService(new Intent(MainMenu.this, StatusService.class));
-            }
+        } catch (RuntimeException ignored) {
         }
     }
 
@@ -109,12 +108,6 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setAppActivityRunning(true);
 
-        // Check for service is not running if required to stop
-        if (!sharedPreferences.getBoolean(Constants.SP_ENABLE_SERVICE, false)) {
-            if (isMyServiceRunning(StatusService.class)) {
-                stopService(new Intent(MainMenu.this, StatusService.class));
-            }
-        }
 
         // Floating action buttons
         FloatingActionButton floatingAddUpsBtn = findViewById(R.id.floatingAddNewUpsBtn);

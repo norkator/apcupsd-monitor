@@ -7,12 +7,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,20 +37,6 @@ public class Widget extends AppWidgetProvider {
         ComponentName thisAppWidget = new ComponentName(context.getPackageName(), Widget.class.getName());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
         onUpdate(context, appWidgetManager, appWidgetIds);
-
-        // Check service
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (sharedPreferences.getBoolean(Constants.SP_ENABLE_SERVICE, false)) {
-            if (!isMyServiceRunning(StatusService.class, context)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Intent intent_ = new Intent(context, StatusService.class);
-                    intent_.putExtra("START_AS_FOREGROUND_SERVICE", true);
-                    context.startForegroundService(intent_);
-                } else {
-                    context.startService(new Intent(context, StatusService.class));
-                }
-            }
-        }
     }
 
     // onUpdate
@@ -150,7 +133,7 @@ public class Widget extends AppWidgetProvider {
         return (int) (dps * scale + 0.5f);
     }
 
-    private void setBitmap(RemoteViews views, int resId, Bitmap bitmap){
+    private void setBitmap(RemoteViews views, int resId, Bitmap bitmap) {
         Bitmap proxy = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(proxy);
         c.drawBitmap(bitmap, new Matrix(), null);

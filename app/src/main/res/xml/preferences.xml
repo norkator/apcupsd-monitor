@@ -103,15 +103,15 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="SP_ENABLE_SERVICE"
-            android:summary="Load UPS statuses at background"
-            android:title="Background service" />
+            android:key="SP_NOTIFICATIONS_ENABLED"
+            android:summary="Check UPS statuses in the background"
+            android:title="Notification service" />
 
         <EditTextPreference
-            android:defaultValue="60"
-            android:inputType="number"
-            android:key="SP_SERVICE_REFRESH_INTERVAL"
-            android:summary="Load status information every X minutes. (Stock: every 60 minutes) This affects to widget."
+            android:defaultValue="0.0"
+            android:inputType="numberDecimal"
+            android:key="SP_UPDATE_INTERVAL"
+            android:summary="Load status information every X minutes. Zero means smallest possible value five minutes."
             android:title="Refresh interval" />
 
     </PreferenceCategory>
