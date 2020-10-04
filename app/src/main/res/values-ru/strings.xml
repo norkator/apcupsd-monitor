@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App name -->
+    <string name="app_name">APCUPSD Monitor</string>
+
+    <!-- Generic -->
+    <string name="stats">Статистика</string>
+    <string name="loading">ЗАГРУЗКА</string>
+    <string name="error">ошибка</string>
+    <string name="close">Закрыть</string>
+    <string name="yes">да</string>
+    <string name="no">Нет</string>
+    <string name="note">Запись</string>
+    <string name="donate">Пожертвовать</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+
+    <!-- MainMenu -->
+    <string name="not_enough_data_yet">Пока недостаточно данных</string>
+    <string name="delete_item">Удалить пункт</string>
+    <string name="delete_item_message">Вы уверены, что хотите удалить этот элемент ИБП?</string>
+    <string name="no_ups_devices_title">Нет ИБП</string>
+    <string name="no_ups_devices_message">Чтобы настроить первое устройство ИБП, закройте это диалоговое окно и нажмите в правом нижнем углу плавающую кнопку добавления ИБП.</string>
+    <string name="trust_host">Доверительный хост</string>
+    <string name="with_following_key_fingerprint">со следующим отпечатком ключевого пальца:</string>
+    <string name="host_fingerprint_message">Вы должны либо принять отпечаток хоста, либо отключить строгую проверку ключа хоста в настройках приложения.</string>
+    <string name="missing_settings">Отсутствуют настройки</string>
+    <string name="ssh_connection_properties_not_set_message">Свойства соединения SSH еще не установлены или установлены неправильно. Проверьте свои предпочтения. Вы должны предоставить как минимум адрес сервера, имя пользователя и пароль или закрытый ключ в зависимости от настроек ssh вашего сервера.</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="command_error_result">Ошибка команды. Результат:</string>
+    <string name="copy_content">Копировать контент</string>
+    <string name="content_copied">Контент скопирован в буфер обмена</string>
+    <string name="nothing_to_copy">Копировать было нечего</string>
+    <string name="connection_error_one">Ошибка соединения. Подтвердите свой адрес, порт, имя пользователя, пароль / закрытый ключ.</string>
+    <string name="connection_error_two">Если целью является сервер удаления, убедитесь, что он имеет указанный доступный порт (перенаправление портов).</string>
+    <string name="connection_error_three">На целевом сервере запущен демон apcupsd и, например, команда</string>
+    <string name="connection_error_four">работает.\n\n</string>
+    <string name="connection_error_five">Если вы используете прямое соединение TCP-порта APCUPSD, см. Руководство по настройке для тестирования соединения.</string>
+
+    <!-- UpsEditor -->
+    <string name="click_here_for_setup_tutorial">Щелкните здесь, чтобы просмотреть руководство по установке</string>
+    <string name="connection_type">Тип соединения</string>
+    <string name="off_ssh_on_apcupsd_tcp_port">Выкл. = SSH, Вкл. = TCP-ПОРТ APCUPSD</string>
+    <string name="server_address">Адрес сервера</string>
+    <string name="server_ip_or_domain_address">IP-адрес сервера или адрес домена</string>
+    <string name="server_port">Порт сервера</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551.</string>
+    <string name="port_to_use_for_connection">Порт для подключения</string>
+    <string name="server_username_ssh">Имя пользователя сервера (SSH)</string>
+    <string name="ssh_server_username">Имя пользователя SSH-сервера</string>
+    <string name="server_password_ssh">Пароль сервера (SSH)</string>
+    <string name="ssh_server_password">Пароль сервера SSH</string>
+    <string name="private_key_authentication_ssh">Аутентификация с закрытым ключом (SSH)</string>
+    <string name="if_enabled_ssh_connection_uses_private_key">Если включено, ssh-соединение использует закрытый ключ вместо пароля. Это гораздо более безопасный вариант</string>
+    <string name="private_key_passphrase_ssh">Парольная фраза закрытого ключа (SSH)</string>
+    <string name="if_key_has_password_otherwise_leave_blank">Если у ключа есть пароль, в противном случае оставьте поле пустым</string>
+    <string name="give_your_private_key_passphrase">Укажите кодовую фразу для личного ключа</string>
+    <string name="private_key_location_ssh">Расположение закрытого ключа (SSH)</string>
+    <string name="path_to_your_private_key_stored_on_your_phones_memory">Путь к вашему секретному ключу, хранящемуся в памяти вашего телефона</string>
+    <string name="select_file">Выберите файл</string>
+    <string name="strict_host_key_checking_ssh">Строгая проверка ключа хоста (SSH)</string>
+    <string name="asks_user_to_verify_connection_host_at_first_time">Просит пользователя проверить хост подключения в первый раз перед подключением. В целях безопасности оставьте включенным</string>
+    <string name="status_command_ssh">Статусная команда (SSH)</string>
+    <string name="load_events">Загрузить события</string>
+    <string name="if_switched_off_then_events_wont_be_loaded">Если выключено, то события не будут загружаться, а также его вид не будет виден.</string>
+    <string name="events_location_ssh">Место проведения (SSH)</string>
+    <string name="open_automatically">Открывать автоматически</string>
+    <string name="open_detailed_info_view_automatically">Автоматически открывать подробную информацию об этом ИБП после обновления статуса. Включение переопределит предыдущий выбор ИБП.</string>
+    <string name="saved">Сохранено</string>
+    <string name="path">Дорожка</string>
+    <string name="ups_editor_create_new">Редактор ИБП (Создать новый)</string>
+    <string name="ups_editor_update_existing">Редактор ИБП (обновить существующие)</string>
+
+    <!-- UpsViewer -->
+    <string name="m">M</string>
+    <string name="model">Модель</string>
+    <string name="lv">LV</string>
+    <string name="line_voltage">Напряжение сети</string>
+    <string name="bv">BV</string>
+    <string name="battery_voltage">Напряжение батареи</string>
+    <string name="it">ЭТО</string>
+    <string name="internal_temperature">Внутренняя температура</string>
+    <string name="lpercent">L%</string>
+    <string name="load_percentage">Процент нагрузки</string>
+    <string name="cl">CL</string>
+    <string name="battery_charge_level">Уровень заряда аккумулятора</string>
+    <string name="tr">TR</string>
+    <string name="last_transfer_reason">Причина последней передачи</string>
+    <string name="tl">TL</string>
+    <string name="battery_time_left">Оставшееся время работы от батареи</string>
+    <string name="bd">BD</string>
+    <string name="battery_date">Дата батареи</string>
+    <string name="fw">FW</string>
+    <string name="firmware_version">Версия прошивки</string>
+    <string name="st">ST</string>
+    <string name="start_time">Начальное время</string>
+    <string name="strreturn">Возвращение</string>
+    <string name="t">Т</string>
+    <string name="total_time_out">Общее время ожидания</string>
+    <string name="a">А</string>
+    <string name="average_time_out">Среднее время ожидания</string>
+    <string name="events">События</string>
+    <string name="self_test">Самооценочный тест</string>
+    <string name="seconds_month">Секунд / месяц</string>
+    <string name="showing_power_autage_total_seconds">Отображение общего количества секунд отключения электроэнергии для каждого доступного месяца</string>
+    <string name="you_dont_have_events_to_use">У вас еще нет событий, которые можно использовать для расчета статистики.</string>
+    <string name="debug_output">Вывод отладки</string>
+    <string name="debug_output_is_null">Вывод отладки равен нулю</string>
+
+    <!-- Swipe adapter -->
+    <string name="delete">УДАЛЯТЬ</string>
+    <string name="edit">РЕДАКТИРОВАТЬ</string>
+
+    <!-- Preferences -->
+    <string name="prefs_title">Настройки</string>
+    <string name="prefs_configure_display_items">Настроить отображаемые элементы</string>
+    <string name="prefs_ups_nam_title">Установить имя ИБП в качестве названия деятельности</string>
+    <string name="prefs_ups_model">Показать модель ИБП</string>
+    <string name="prefs_line_voltage">Показать линейное напряжение</string>
+    <string name="prefs_batt_voltage">Показать напряжение батареи</string>
+    <string name="prefs_internal_temp">Показать внутреннюю температуру</string>
+    <string name="prefs_load_percentage">Показать процент загрузки</string>
+    <string name="prefs_percent_batt_charge">Показать процент заряда батареи</string>
+    <string name="prefs_last_transfer_reason">Показать причину последнего переноса</string>
+    <string name="prefs_batt_time_left">Показать оставшееся время работы от батареи</string>
+    <string name="prefs_batt_date">Показать дату батареи</string>
+    <string name="prefs_firmware_version">Показать версию прошивки</string>
+    <string name="prefs_start_time">Показать время начала</string>
+    <string name="prefs_statistics">Статистика</string>
+    <string name="prefs_events_date_format">Формат даты событий</string>
+    <string name="prefs_events_time_format">Формат времени событий</string>
+    <string name="prefs_events_date_format_summary">Если ваши мероприятия имеют формат даты, который здесь не указан, свяжитесь со мной по электронной почте, чтобы я мог реализовать для него поддержку.</string>
+    <string name="prefs_events_time_format_summary">Если ваши мероприятия имеют формат времени, который здесь не указан, свяжитесь со мной по электронной почте, чтобы я мог реализовать для них поддержку.</string>
+    <string name="prefs_events_coloring">Раскраска событий</string>
+    <string name="prefs_events_coloring_summary">False = цветной текст, True = цветной фон</string>
+    <string name="prefs_service">обслуживание</string>
+    <string name="prefs_notification_service">Служба уведомлений</string>
+    <string name="prefs_notification_service_summary">Проверять статусы ИБП в фоновом режиме</string>
+    <string name="prefs_service_refresh_interval">Интервал обновления</string>
+    <string name="prefs_service_refresh_interval_summary">Загружать информацию о статусе каждые X минут. Ноль означает минимально возможное значение пять минут.</string>
+
+    <!-- Status service -->
+    <string name="warning">Предупреждение</string>
+    <string name="non_online_status_change_detected">Обнаружено изменение статуса не онлайн!</string>
+
+    <!-- Top bar menus -->
+    <string name="menu_refresh">Обновить</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_rate_app">Оценить приложение</string>
+    <string name="menu_ups_viewer_refresh">Обновить</string>
+    <string name="menu_ups_viewer_statistics">Статистика</string>
+    <string name="menu_ups_viewer_debug_output">Вывод отладки</string>
+
+    <!-- UPS Object -->
+    <string name="ups_line_voltage">линейное напряжение</string>
+    <string name="ups_volts_line_voltage">Напряжение сети вольт</string>
+    <string name="ups_not_available">Недоступно</string>
+    <string name="ups_of_load">нагрузки</string>
+    <string name="ups_na_charge_level">N/A Уровень заряда</string>
+    <string name="ups_battery_charge">заряд батареи</string>
+    <string name="ups_battery_time_left_na">Оставшееся время работы от аккумулятора N/A</string>
+    <string name="ups_battery_time_left">Оставшееся время работы от батареи</string>
+    <string name="ups_last_transfer_reason_na">Причина последнего переноса N/A</string>
+    <string name="ups_last">Последний</string>
+    <string name="ups_battery_date_na">Дата батареи Нет</string>
+    <string name="ups_battery_date">Дата батареи</string>
+    <string name="ups_start_time_na">Время начала N/A</string>
+    <string name="ups_start_time">Начальное время</string>
+
+</resources>

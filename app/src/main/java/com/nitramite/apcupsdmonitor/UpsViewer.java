@@ -197,7 +197,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_LINE_VOLTAGE, true)) {
                 lineVoltageLayout.setVisibility(View.VISIBLE);
                 TextView lineVoltageOnly = (TextView) findViewById(R.id.lineVoltageOnly);
-                lineVoltageOnly.setText(ups.getLineVoltageOnlyStr());
+                lineVoltageOnly.setText(ups.getLineVoltageOnlyStr(this));
             } else {
                 lineVoltageLayout.setVisibility(View.GONE);
             }
@@ -208,7 +208,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_BATTERY_VOLTAGE, true)) {
                 batteryVoltageLayout.setVisibility(View.VISIBLE);
                 TextView batteryVoltageOnly = (TextView) findViewById(R.id.batteryVoltageOnly);
-                batteryVoltageOnly.setText(ups.getBatteryVoltageOnlyStr());
+                batteryVoltageOnly.setText(ups.getBatteryVoltageOnlyStr(this));
             } else {
                 batteryVoltageLayout.setVisibility(View.GONE);
             }
@@ -230,7 +230,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_LOAD_PERCENTAGE, true)) {
                 batteryLoadPercentageLayout.setVisibility(View.VISIBLE);
                 TextView loadPercent = (TextView) findViewById(R.id.loadPercent);
-                loadPercent.setText(ups.getLoadPercentStr());
+                loadPercent.setText(ups.getLoadPercentStr(this));
                 ProgressBar loadPercentPB = (ProgressBar) findViewById(R.id.loadPercentPB);
                 if (ups.getLoadPercentInteger() != null) {
                     loadPercentPB.setProgress(ups.getLoadPercentInteger());
@@ -248,7 +248,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_PERCENT_BATTERY_CHARGE, true)) {
                 batteryChargeLevelLayout.setVisibility(View.VISIBLE);
                 TextView batteryChargeLevel = (TextView) findViewById(R.id.batteryChargeLevel);
-                batteryChargeLevel.setText(ups.getBatteryChargeLevelStr());
+                batteryChargeLevel.setText(ups.getBatteryChargeLevelStr(this));
                 ProgressBar chargePB = (ProgressBar) findViewById(R.id.chargePB);
                 if (ups.getBatteryChargeLevelInteger() != null) {
                     chargePB.setVisibility(View.VISIBLE);
@@ -266,7 +266,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_LAST_TRANSFER_REASON, true)) {
                 lastTransferReasonLayout.setVisibility(View.VISIBLE);
                 TextView lastTransferReason = (TextView) findViewById(R.id.lastTransferReason);
-                lastTransferReason.setText(ups.getLastTransferReasonStr());
+                lastTransferReason.setText(ups.getLastTransferReasonStr(this));
             } else {
                 lastTransferReasonLayout.setVisibility(View.GONE);
             }
@@ -277,7 +277,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_BATTERY_TIME_LEFT, true)) {
                 batteryTimeLeftLayout.setVisibility(View.VISIBLE);
                 TextView batteryTimeLeft = (TextView) findViewById(R.id.batteryTimeLeft);
-                batteryTimeLeft.setText(ups.getBATTERY_TIME_LEFT());
+                batteryTimeLeft.setText(ups.getBATTERY_TIME_LEFT(this));
             } else {
                 batteryTimeLeftLayout.setVisibility(View.GONE);
             }
@@ -288,7 +288,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_BATTERY_DATE, true)) {
                 batteryDateLayout.setVisibility(View.VISIBLE);
                 TextView batteryDate = (TextView) findViewById(R.id.batteryDate);
-                batteryDate.setText(ups.getBATTERY_DATE());
+                batteryDate.setText(ups.getBATTERY_DATE(this));
             } else {
                 batteryDateLayout.setVisibility(View.GONE);
             }
@@ -310,7 +310,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (sharedPreferences.getBoolean(Constants.SP_SHOW_START_TIME, false)) {
                 startTimeLayout.setVisibility(View.VISIBLE);
                 TextView startTime = (TextView) findViewById(R.id.startTime);
-                startTime.setText(ups.getSTART_TIME());
+                startTime.setText(ups.getSTART_TIME(this));
             } else {
                 startTimeLayout.setVisibility(View.GONE);
             }

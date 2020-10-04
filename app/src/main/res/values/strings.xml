@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- App name -->
@@ -68,6 +69,8 @@
     <string name="open_detailed_info_view_automatically">Open detailed info view automatically for this UPS after status update. Toggle on will override earlier UPS selection.</string>
     <string name="saved">Saved</string>
     <string name="path">Path</string>
+    <string name="ups_editor_create_new">UPS Editor (Create new)</string>
+    <string name="ups_editor_update_existing">UPS Editor (Update existing)</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
@@ -140,5 +143,29 @@
     <!-- Status service -->
     <string name="warning">Warning</string>
     <string name="non_online_status_change_detected">Non online status change detected!</string>
+
+    <!-- Top bar menus -->
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_rate_app">Rate app</string>
+    <string name="menu_ups_viewer_refresh">Refresh</string>
+    <string name="menu_ups_viewer_statistics">Statistics</string>
+    <string name="menu_ups_viewer_debug_output">Debug output</string>
+
+    <!-- UPS Object -->
+    <string name="ups_line_voltage">line voltage</string>
+    <string name="ups_volts_line_voltage">Volts line voltage</string>
+    <string name="ups_not_available">Not available</string>
+    <string name="ups_of_load">of load</string>
+    <string name="ups_na_charge_level">N/A Charge level</string>
+    <string name="ups_battery_charge">battery charge</string>
+    <string name="ups_battery_time_left_na">Battery time left N/A</string>
+    <string name="ups_battery_time_left">Battery time left</string>
+    <string name="ups_last_transfer_reason_na">Last transfer reason N/A</string>
+    <string name="ups_last">Last</string>
+    <string name="ups_battery_date_na">Battery date N/A</string>
+    <string name="ups_battery_date">Battery date</string>
+    <string name="ups_start_time_na">Start time N/A</string>
+    <string name="ups_start_time">Start time</string>
 
 </resources>

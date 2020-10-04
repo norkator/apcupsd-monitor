@@ -49,8 +49,8 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         name.setText(upsArrayList.get(position).getUPS_NAME());
 
         model.setText(upsArrayList.get(position).getMODEL());
-        lineVoltageOnly.setText(upsArrayList.get(position).getLineVoltageOnlyStr());
-        batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr());
+        lineVoltageOnly.setText(upsArrayList.get(position).getLineVoltageOnlyStr(rowView.getContext()));
+        batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr(rowView.getContext()));
 
         // Set status (Always shown)
         status.setText(upsArrayList.get(position).getSTATUS());
@@ -63,7 +63,8 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
         // Set battery charge level
         chargePB.setValue(upsArrayList.get(position).getBatteryChargeLevelInteger());
-        percentageTv.setText(String.valueOf(upsArrayList.get(position).getBatteryChargeLevelInteger()) + "%");
+        String getBatteryChargeLevelInteger = upsArrayList.get(position).getBatteryChargeLevelInteger() + "%";
+        percentageTv.setText(getBatteryChargeLevelInteger);
 
         return rowView;
     }
