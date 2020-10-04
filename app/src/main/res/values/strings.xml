@@ -9,5 +9,23 @@
     <string name="error">Error</string>
     <string name="donate">Donate</string>
     <string name="not_enough_data_yet">Not enough data yet</string>
+    <string name="delete_item">Delete item</string>
+    <string name="delete_item_message">Are you sure you want to delete this UPS item?</string>
+    <string name="no_ups_devices_title">No UPS devices</string>
+    <string name="no_ups_devices_message">To configure your first UPS device, close this dialog and click right bottom corner add UPS floating button.</string>
+    <string name="close">Close</string>
+    <string name="trust_host">Trust host</string>
+    <string name="with_following_key_fingerprint">with following key finger print:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="note">Note</string>
+    <string name="host_fingerprint_message">You must either accept host fingerprint or disable strict host key checking from app settings</string>
+    <string name="missing_settings">Missing settings</string>
+    <string name="ssh_connection_properties_not_set_message">SSH Connection properties are not set yet or not set properly. Check your preferences. You must provide at least server address, username and either password or private key depending on your server ssh setup.</string>
+    <string name="open_settings">Open settings</string>
+    <string name="command_error_result">Command error. Result:</string>
+    <string name="copy_content">Copy content</string>
+    <string name="content_copied">Content copied to clipboard</string>
+    <string name="nothing_to_copy">There was nothing to copy</string>
 
 </resources>
