@@ -1,89 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="first_level"
-    android:title="Settings">
+    android:title="@string/prefs_title">
 
 
-    <PreferenceCategory android:title="Configure displayed items">
+    <PreferenceCategory android:title="@string/prefs_configure_display_items">
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SET_UPS_AS_ACTIVITY_TITLE"
-            android:title="Set UPS name as activity title" />
+            android:title="@string/prefs_ups_nam_title" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_UPS_MODEL"
-            android:title="Show UPS model" />
+            android:title="@string/prefs_ups_model" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_LINE_VOLTAGE"
-            android:title="Show line voltage" />
+            android:title="@string/prefs_line_voltage" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_BATTERY_VOLTAGE"
-            android:title="Show battery voltage" />
+            android:title="@string/prefs_batt_voltage" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_INTERNAL_TEMPERATURE"
-            android:title="Show internal temperature" />
+            android:title="@string/prefs_internal_temp" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_LOAD_PERCENTAGE"
-            android:title="Show load percentage" />
+            android:title="@string/prefs_load_percentage" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_PERCENT_BATTERY_CHARGE"
-            android:title="Show percent battery charge" />
+            android:title="@string/prefs_percent_batt_charge" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_LAST_TRANSFER_REASON"
-            android:title="Show last transfer reason" />
+            android:title="@string/prefs_last_transfer_reason" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_BATTERY_TIME_LEFT"
-            android:title="Show battery time left" />
+            android:title="@string/prefs_batt_time_left" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_BATTERY_DATE"
-            android:title="Show battery date" />
+            android:title="@string/prefs_batt_date" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_SHOW_FIRMWARE_VERSION"
-            android:title="Show firmware version" />
+            android:title="@string/prefs_firmware_version" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="SP_SHOW_START_TIME"
-            android:title="Show start time" />
+            android:title="@string/prefs_start_time" />
 
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Statistics">
+    <PreferenceCategory android:title="@string/prefs_statistics">
 
         <ListPreference
             android:entries="@array/pref_application_statistic_date_format"
             android:entryValues="@array/pref_application_statistic_date_format"
             android:key="SP_STATISTICS_DATE_FORMAT"
-            android:summary="If your events has date format which is not specified here, please contact me via email so I can implement support for it."
-            android:title="Events date format" />
+            android:summary="@string/prefs_events_date_format_summary"
+            android:title="@string/prefs_events_date_format" />
 
         <ListPreference
             android:entries="@array/pref_application_statistic_time_format"
             android:entryValues="@array/pref_application_statistic_time_format"
             android:key="SP_STATISTICS_TIME_FORMAT"
-            android:summary="If your events has time format which is not specified here, please contact me via email so I can implement support for it."
-            android:title="Events time format" />
+            android:summary="@string/prefs_events_time_format_summary"
+            android:title="@string/prefs_events_time_format" />
 
     </PreferenceCategory>
 
@@ -93,26 +93,26 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="SP_EVENTS_COLORING"
-            android:summary="False = Text colored, True = Background colored"
-            android:title="Events coloring" />
+            android:summary="@string/prefs_events_coloring_summary"
+            android:title="@string/prefs_events_coloring" />
 
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Service">
+    <PreferenceCategory android:title="@string/prefs_service">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="SP_NOTIFICATIONS_ENABLED"
-            android:summary="Check UPS statuses in the background"
-            android:title="Notification service" />
+            android:summary="@string/prefs_notification_service_summary"
+            android:title="@string/prefs_notification_service" />
 
         <EditTextPreference
             android:defaultValue="0.0"
             android:inputType="numberDecimal"
             android:key="SP_UPDATE_INTERVAL"
-            android:summary="Load status information every X minutes. Zero means smallest possible value five minutes."
-            android:title="Refresh interval" />
+            android:summary="@string/prefs_service_refresh_interval_summary"
+            android:title="@string/prefs_service_refresh_interval" />
 
     </PreferenceCategory>
 

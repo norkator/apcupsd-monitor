@@ -214,20 +214,14 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     private void deleteItemConfirmationDialog(final int swipePosition) {
         new AlertDialog.Builder(MainMenu.this)
-                .setTitle("Delete item")
-                .setMessage("Are you sure you want to delete this UPS item?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        databaseHelper.deleteUps(upsArrayList.get(swipePosition).UPS_ID);
-                        MainMenu.this.getUpsData();
-                    }
+                .setTitle(R.string.delete_item)
+                .setMessage(R.string.delete_item_message)
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    databaseHelper.deleteUps(upsArrayList.get(swipePosition).UPS_ID);
+                    MainMenu.this.getUpsData();
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Return
-                    }
+                .setNegativeButton(android.R.string.no, (dialog, which) -> {
+                    // Return
                 })
                 .setIcon(R.mipmap.logo)
                 .show();
@@ -242,9 +236,9 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         runOnUiThread(() -> {
             closeProgressDialog();
             new AlertDialog.Builder(MainMenu.this)
-                    .setTitle("No UPS devices")
-                    .setMessage("To configure your first UPS device, close this dialog and click right bottom corner add UPS floating button.")
-                    .setNegativeButton("Close", (dialogInterface, i) -> {
+                    .setTitle(R.string.no_ups_devices_title)
+                    .setMessage(R.string.no_ups_devices_message)
+                    .setNegativeButton(R.string.close, (dialogInterface, i) -> {
                     })
                     .setIcon(R.mipmap.logo)
                     .show();
@@ -259,23 +253,18 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                 closeProgressDialog();
                 new AlertDialog.Builder(MainMenu.this)
                         .setIcon(R.mipmap.logo)
-                        .setMessage("Trust host " + hostName + " with following key finger print: " + "\n\n" + hostFingerPrint)
+                        .setMessage(getString(R.string.trust_host) + " " + hostName + " " + getString(R.string.with_following_key_fingerprint) + "\n\n" + hostFingerPrint)
                         .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                ContentValues contentValues = new ContentValues();
-                                contentValues.put(DatabaseHelper.UPS_SERVER_HOST_NAME, hostName);
-                                contentValues.put(DatabaseHelper.UPS_SERVER_HOST_FINGER_PRINT, hostFingerPrint);
-                                contentValues.put(DatabaseHelper.UPS_SERVER_HOST_KEY, hostKey);
-                                databaseHelper.insertUpdateUps(upsId, contentValues);
-                                startConnectorTask(); // Load again
-                            }
+                        .setPositiveButton(R.string.yes, (dialog, id) -> {
+                            ContentValues contentValues = new ContentValues();
+                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_NAME, hostName);
+                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_FINGER_PRINT, hostFingerPrint);
+                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_KEY, hostKey);
+                            databaseHelper.insertUpdateUps(upsId, contentValues);
+                            startConnectorTask(); // Load again
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                genericSuccessDialog("Note", "You must either accept host fingerprint or disable strict host key checking from app settings");
-                            }
-                        })
+                        .setNegativeButton(R.string.no, (dialog, id) ->
+                                genericSuccessDialog(getString(R.string.note), getString(R.string.host_fingerprint_message)))
                         .show();
             }
         });
@@ -314,18 +303,10 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     // Generic use success dialog
     private void checkYourPreferencesDialog() {
         new AlertDialog.Builder(MainMenu.this)
-                .setTitle("Missing settings")
-                .setMessage("SSH Connection properties are not set yet or not set properly. Check your preferences. " +
-                        "You must provide at least server address, username and either password or private key depending on your server ssh setup.")
-                .setPositiveButton("Open settings", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(MainMenu.this, Preferences.class), 200);
-                    }
-                })
-                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setTitle(R.string.missing_settings)
+                .setMessage(R.string.ssh_connection_properties_not_set_message)
+                .setPositiveButton(R.string.open_settings, (dialog, which) -> startActivityForResult(new Intent(MainMenu.this, Preferences.class), 200))
+                .setNegativeButton(R.string.close, (dialogInterface, i) -> {
                 })
                 .setIcon(R.mipmap.logo)
                 .show();
@@ -347,27 +328,23 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     @Override
     public void onConnectionError() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                closeProgressDialog();
-                genericErrorDialog("Error", "Connection error. Verify your address, port, username, password/private key.\n\n" +
-                        "If target is remove server, ensure that it has specified port available (port forwarding).\n\n" +
-                        "Target server has apcupsd daemon running and for example command '" + sharedPreferences.getString(Constants.SP_STATUS_COMMAND, "sudo apcaccess status") + "' is working.\n\n" +
-                        "In case you are using direct APCUPSD TCP port connection, see setup tutorial for testing connection."
-                );
-            }
+        runOnUiThread(() -> {
+            closeProgressDialog();
+            genericErrorDialog(getString(R.string.error),
+                    getString(R.string.connection_error_one) + "\n\n" +
+                            getString(R.string.connection_error_two) + "\n\n" +
+                            getString(R.string.connection_error_three) + " '" + sharedPreferences.getString(Constants.SP_STATUS_COMMAND, "sudo apcaccess status") + "' " +
+                            getString(R.string.connection_error_four) +
+                            getString(R.string.connection_error_five)
+            );
         });
     }
 
     @Override
     public void onCommandError(final String errorStr) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                closeProgressDialog();
-                genericErrorDialog("Error", "Command error. Result: " + errorStr);
-            }
+        runOnUiThread(() -> {
+            closeProgressDialog();
+            genericErrorDialog(getString(R.string.error), getString(R.string.command_error_result) + " " + errorStr);
         });
     }
 
@@ -397,7 +374,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         new AlertDialog.Builder(MainMenu.this)
                 .setTitle(title)
                 .setMessage(description)
-                .setPositiveButton("Close", (dialog, which) -> {
+                .setPositiveButton(R.string.close, (dialog, which) -> {
                 })
                 .setIcon(R.mipmap.ic_launcher_round)
                 .show();
@@ -409,21 +386,17 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         new AlertDialog.Builder(MainMenu.this)
                 .setTitle(title)
                 .setMessage(description)
-                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                .setPositiveButton(R.string.close, (dialog, which) -> {
                 })
-                .setNeutralButton("Copy content", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("", description);
-                            assert clipboard != null;
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(MainMenu.this, "Content copied to clipboard", Toast.LENGTH_SHORT).show();
-                        } catch (IndexOutOfBoundsException e) {
-                            Toast.makeText(MainMenu.this, "There was nothing to copy", Toast.LENGTH_LONG).show();
-                        }
+                .setNeutralButton(R.string.copy_content, (dialog, which) -> {
+                    try {
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("", description);
+                        assert clipboard != null;
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(MainMenu.this, R.string.content_copied, Toast.LENGTH_SHORT).show();
+                    } catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(MainMenu.this, R.string.nothing_to_copy, Toast.LENGTH_LONG).show();
                     }
                 })
                 .setIcon(R.drawable.ic_error_small)

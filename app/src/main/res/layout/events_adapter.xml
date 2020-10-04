@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/event"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="Example text on my super adapter"
-    android:textSize="14sp" >
-</TextView>
+    android:textSize="14sp" />

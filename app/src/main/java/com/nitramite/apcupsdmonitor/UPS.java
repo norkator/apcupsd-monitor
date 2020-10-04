@@ -1,5 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.content.Context;
 import android.util.Log;
 
 // UPS Object
@@ -162,17 +163,17 @@ public class UPS {
                 this.getSTATUS().equals("UPS OL CHRG");     // UPSC
     }
 
-    public String getLineVoltageStr() {
-        return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE + " line voltage");
+    public String getLineVoltageStr(Context context) {
+        return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE + " " + context.getString(R.string.ups_line_voltage));
     }
 
-    public String getLineVoltageOnlyStr() {
-        return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE.replace("Volts line voltage", "").replace("Volts", "").replace(" ", "") + "V");
+    public String getLineVoltageOnlyStr(Context context) {
+        return (this.LINE_VOLTAGE == null ? "-" : this.LINE_VOLTAGE.replace(context.getString(R.string.ups_volts_line_voltage), "").replace("Volts", "").replace(" ", "") + "V");
     }
 
 
-    public String getLoadPercentStr() {
-        return (this.LOAD_PERCENT == null ? "Not available" : LOAD_PERCENT + " of load");
+    public String getLoadPercentStr(Context context) {
+        return (this.LOAD_PERCENT == null ? context.getString(R.string.ups_not_available) : LOAD_PERCENT + " " + context.getString(R.string.ups_of_load));
     }
 
     public Integer getLoadPercentInteger() {
@@ -180,8 +181,8 @@ public class UPS {
     }
 
 
-    public String getBatteryChargeLevelStr() {
-        return (this.BATTERY_CHARGE_LEVEL == null ? "N/A Charge level" : BATTERY_CHARGE_LEVEL + " battery charge");
+    public String getBatteryChargeLevelStr(Context context) {
+        return (this.BATTERY_CHARGE_LEVEL == null ? context.getString(R.string.ups_na_charge_level) : BATTERY_CHARGE_LEVEL + " " + context.getString(R.string.ups_battery_charge));
     }
 
     public Integer getBatteryChargeLevelInteger() {
@@ -189,30 +190,30 @@ public class UPS {
     }
 
 
-    public String getBATTERY_TIME_LEFT() {
-        return (this.BATTERY_TIME_LEFT == null ? "Battery time left N/A" : "Battery time left: " + this.BATTERY_TIME_LEFT);
+    public String getBATTERY_TIME_LEFT(Context context) {
+        return (this.BATTERY_TIME_LEFT == null ? context.getString(R.string.ups_battery_time_left_na) : context.getString(R.string.ups_battery_time_left) + ": " + this.BATTERY_TIME_LEFT);
     }
 
 
-    public String getLastTransferReasonStr() {
-        return (this.LAST_TRANSFER_REASON == null ? "Last transfer reason N/A" : "Last: " + this.LAST_TRANSFER_REASON);
+    public String getLastTransferReasonStr(Context context) {
+        return (this.LAST_TRANSFER_REASON == null ? context.getString(R.string.ups_last_transfer_reason_na) : context.getString(R.string.ups_last) + ": " + this.LAST_TRANSFER_REASON);
     }
 
 
-    public String getBatteryVoltageOnlyStr() {
+    public String getBatteryVoltageOnlyStr(Context context) {
         return (BATTERY_VOLTAGE == null ? "N/A" : BATTERY_VOLTAGE.replace("Volts", "").replace(" ", "") + "V");
     }
 
-    public String getBATTERY_DATE() {
-        return (BATTERY_DATE == null ? "Battery date N/A" : "Battery date " + BATTERY_DATE);
+    public String getBATTERY_DATE(Context context) {
+        return (BATTERY_DATE == null ? context.getString(R.string.ups_battery_date_na) : context.getString(R.string.ups_battery_date) + " " + BATTERY_DATE);
     }
 
     public String getFIRMWARE() {
         return (this.FIRMWARE == null ? "N/A" : this.FIRMWARE);
     }
 
-    public String getSTART_TIME() {
-        return (this.START_TIME == null ? "Start time N/A" : "Start time: " + this.START_TIME);
+    public String getSTART_TIME(Context context) {
+        return (this.START_TIME == null ? context.getString(R.string.ups_start_time_na) : context.getString(R.string.ups_start_time) + ": " + this.START_TIME);
     }
 
     public String getLAST_SECONDS_ON_BATTERY() {

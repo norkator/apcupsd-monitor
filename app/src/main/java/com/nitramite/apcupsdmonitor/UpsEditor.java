@@ -11,15 +11,16 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.nitramite.ui.FileDialog;
+
 import java.io.File;
 
 public class UpsEditor extends AppCompatActivity {
@@ -64,12 +65,12 @@ public class UpsEditor extends AppCompatActivity {
 
         // Set values
         if (upsId == null) {
-            setTitle("UPS Editor (Create new)");
+            setTitle(getString(R.string.ups_editor_create_new));
             // Defaults
             statusCommandET.setText(Constants.STATUS_COMMAND);
             eventsLocationET.setText(Constants.EVENTS_LOCATION);
         } else {
-            setTitle("UPS Editor (Update existing)");
+            setTitle(getString(R.string.ups_editor_update_existing));
             UPS ups = databaseHelper.getAllUps(upsId).get(0);
             connectionTypeSwitch.setChecked(ups.UPS_CONNECTION_TYPE.equals("1"));
             serverAddressET.setText(ups.UPS_SERVER_ADDRESS);
@@ -87,33 +88,27 @@ public class UpsEditor extends AppCompatActivity {
 
 
         Button tutorialBtn = findViewById(R.id.tutorialBtn);
-        tutorialBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String url = "http://www.nitramite.com/apcupsdmonitor.html";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
+        tutorialBtn.setOnClickListener(view -> {
+            String url = "http://www.nitramite.com/apcupsdmonitor.html";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
         });
 
         Button selectPrivateKeyLocationBtn = findViewById(R.id.selectPrivateKeyLocationBtn);
-        selectPrivateKeyLocationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (hasPermissions(UpsEditor.this, new String[]{ permissionReadStorage })) {
-                    File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
-                    final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
-                    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                        public void fileSelected(File file) {
-                            Toast.makeText(UpsEditor.this, "Path: " + file.toString(), Toast.LENGTH_SHORT).show();
-                            privateKeyLocationET.setText(file.toString());
-                        }
-                    });
-                    fileDialog.showDialog();
-                } else {
-                    ActivityCompat.requestPermissions(UpsEditor.this, new String[]{ permissionReadStorage }, READ_EXTERNAL_STORAGE_REQUEST_CODE);
-                }
+        selectPrivateKeyLocationBtn.setOnClickListener(view -> {
+            if (hasPermissions(UpsEditor.this, new String[]{permissionReadStorage})) {
+                File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
+                final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
+                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                    public void fileSelected(File file) {
+                        Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
+                        privateKeyLocationET.setText(file.toString());
+                    }
+                });
+                fileDialog.showDialog();
+            } else {
+                ActivityCompat.requestPermissions(UpsEditor.this, new String[]{permissionReadStorage}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
             }
         });
 
@@ -138,7 +133,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
             databaseHelper.insertUpdateUps(upsId, contentValues);
-            Toast.makeText(UpsEditor.this, "Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();
         });
 
@@ -163,9 +158,6 @@ public class UpsEditor extends AppCompatActivity {
 
 
     } // End of onCreate();
-
-
-
 
 
     // Check for required permissions
