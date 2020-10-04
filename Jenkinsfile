@@ -59,13 +59,13 @@ pipeline {
         // Archive the APKs so that they can be downloaded from Jenkins
         // archiveArtifacts '**/*.apk'
 
-        // Sign unsigned apk
-        // signAndroidApks (
-        //     keyStoreId: "apcupsd-monitor-signing-key",
-        //     keyAlias: "Nitramite",
-        //     apksToSign: "**/*-unsigned.apk",
-        //     skipZipalign: true
-        // )
+        Sign unsigned apk
+        signAndroidApks (
+            keyStoreId: "apcupsd-monitor-signing-key",
+            keyAlias: "Nitramite",
+            apksToSign: "**/*-unsigned.apk",
+            skipZipalign: true
+        )
 
       }
     }
