@@ -530,7 +530,11 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (Purchase purchase : purchases) {
-                if (purchase.getSku().equals(Constants.IAP_ITEM_SKU_DONATE_MEDIUM)) {
+                /*if (purchase.getSku().equals(Constants.IAP_ITEM_SKU_DONATE_MEDIUM)) {
+                    acknowledgePurchase(purchase);
+                }*/
+                // Also run acknowledgePurchase here
+                if (!purchase.isAcknowledged()) {
                     acknowledgePurchase(purchase);
                 }
             }
