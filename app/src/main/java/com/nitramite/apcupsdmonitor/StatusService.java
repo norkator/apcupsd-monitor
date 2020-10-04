@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -23,6 +24,7 @@ public class StatusService implements ConnectorInterface {
 
     public Thread getUpdaterThread(Context context_) {
         return new Thread(() -> {
+            Log.i(TAG, "Run getUpdaterThread");
             context = context_;
             databaseHelper = new DatabaseHelper(context);
             new ConnectorTask(this, context, TaskMode.MODE_SERVICE, null);
@@ -31,10 +33,12 @@ public class StatusService implements ConnectorInterface {
 
     @Override
     public void noUpsConfigured() {
+        Log.i(TAG, "noUpsConfigured");
     }
 
     @Override
     public void onAskToTrustKey(String upsId, String hostName, String hostFingerPrint, String hostKey) {
+        Log.i(TAG, "onAskToTrustKey");
     }
 
     @Override
@@ -43,9 +47,10 @@ public class StatusService implements ConnectorInterface {
 
     @Override
     public void onTaskCompleted() {
+        Log.i(TAG, "onTaskCompleted");
         try {
             if (databaseHelper.isAnyUpsDown()) {
-                showNotification(context, "Warning", "UPS status change detected!");
+                showNotification(context, "Warning", "Non online status change detected!");
             }
         } catch (NullPointerException ignored) {
         }
@@ -53,17 +58,17 @@ public class StatusService implements ConnectorInterface {
 
     @Override
     public void onMissingPreferences() {
-
+        Log.i(TAG, "onMissingPreferences");
     }
 
     @Override
     public void onConnectionError() {
-
+        Log.e(TAG, "onConnectionError");
     }
 
     @Override
     public void onCommandError(String errorStr) {
-
+        Log.e(TAG, "onCommandError " + errorStr);
     }
 
     // Creates notification

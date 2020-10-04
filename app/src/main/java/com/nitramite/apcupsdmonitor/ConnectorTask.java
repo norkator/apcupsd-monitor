@@ -231,6 +231,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         try {
             InetAddress serverAddress = InetAddress.getByName(ip);
             socket = new Socket(serverAddress, port);
+            socket.setSoTimeout(10 * 1000);
             return true;
         } catch (UnknownHostException e1) {
             e1.printStackTrace();
@@ -442,7 +443,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         arrayPosition++;
         upsTaskHelper();
     }
-
 
 
     private void getUPSEventsAPCUPSD(final String upsId, final Boolean loadEvents) {

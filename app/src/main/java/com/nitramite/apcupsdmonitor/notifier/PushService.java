@@ -2,6 +2,7 @@ package com.nitramite.apcupsdmonitor.notifier;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -66,6 +67,8 @@ public class PushService extends FirebaseMessagingService {
      * Doing so we defend the Google's Doze, because it doesn't allow anyone to start a service here
      */
     public void startCheck() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         StatusService statusService = new StatusService();
         statusService.getUpdaterThread(this).start();
     }
