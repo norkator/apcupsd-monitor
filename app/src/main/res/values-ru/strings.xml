@@ -139,6 +139,8 @@
     <string name="prefs_notification_service_summary">Проверять статусы ИБП в фоновом режиме</string>
     <string name="prefs_service_refresh_interval">Интервал обновления</string>
     <string name="prefs_service_refresh_interval_summary">Загружать информацию о статусе каждые X минут. Ноль означает минимально возможное значение пять минут.</string>
+    <string name="prefs_dark_theme_title">Темная тема</string>
+    <string name="prefs_dark_theme_description">После изменения перезапустите приложение</string>
 
     <!-- Status service -->
     <string name="warning">Предупреждение</string>

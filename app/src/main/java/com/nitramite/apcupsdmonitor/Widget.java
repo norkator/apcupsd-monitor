@@ -1,15 +1,16 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,9 @@ public class Widget extends AppWidgetProvider {
 
 
     private Bitmap createUpsViewBitmap(Context context, ArrayList<UPS> upsArrayList) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean useDarkTheme = sharedPreferences.getBoolean(Constants.SP_USE_DARK_THEME, false);
+
         LayoutInflater inflater = LayoutInflater.from(context);
 
         LinearLayout mainLinearLayout = new LinearLayout(context);
@@ -88,7 +92,6 @@ public class Widget extends AppWidgetProvider {
                 dpToPixels(context, 100), dpToPixels(context, 80)
         );
         mainLinearLayout.setLayoutParams(layoutParams);
-
 
         for (int i = 0; i < upsArrayList.size(); i++) {
             View inflatedLayout = inflater.inflate(R.layout.ups_item_widget, null, true);
@@ -107,6 +110,13 @@ public class Widget extends AppWidgetProvider {
 
             CustomGauge chargePB = inflatedLayout.findViewById(R.id.chargePB);
             chargePB.setValue(upsArrayList.get(i).getBatteryChargeLevelInteger());
+
+            if (useDarkTheme) {
+                chargePB.setBackgroundColor(ContextCompat.getColor(context, R.color.widget_background));
+                percentageTv.setTextColor(ContextCompat.getColor(context, R.color.whiteColor));
+            } else {
+                chargePB.setBackgroundColor(ContextCompat.getColor(context, R.color.whiteColor));
+            }
 
             percentageTv.setText(upsArrayList.get(i).getBatteryChargeLevelInteger() + "%");
 
@@ -139,20 +149,5 @@ public class Widget extends AppWidgetProvider {
         c.drawBitmap(bitmap, new Matrix(), null);
         views.setImageViewBitmap(resId, proxy);
     }
-
-
-    // Check if service is running
-    private boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        if (manager != null) {
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
 } // End of class
