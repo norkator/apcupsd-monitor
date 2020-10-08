@@ -11,9 +11,13 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +53,7 @@ public class UpsEditor extends AppCompatActivity {
 
         final Switch connectionTypeSwitch = findViewById(R.id.connectionTypeSwitch);
 
+        // Editable views
         final EditText serverAddressET = findViewById(R.id.serverAddressET);
         final EditText serverPortET = findViewById(R.id.serverPortET);
         final EditText serverUsernameET = findViewById(R.id.serverUsernameET);
@@ -57,10 +62,19 @@ public class UpsEditor extends AppCompatActivity {
         final EditText privateKeyPassphraseET = findViewById(R.id.privateKeyPassphraseET);
         final EditText privateKeyLocationET = findViewById(R.id.privateKeyLocationET);
         final Switch strictHostKeyCheckingSwitch = findViewById(R.id.strictHostKeyCheckingSwitch);
-
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
+
+        final LinearLayout sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
+
+        connectionTypeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                sshOptionsLayout.setVisibility(View.GONE);
+            } else {
+                sshOptionsLayout.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         // Set values
@@ -100,11 +114,9 @@ public class UpsEditor extends AppCompatActivity {
             if (hasPermissions(UpsEditor.this, new String[]{permissionReadStorage})) {
                 File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
                 final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
-                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                    public void fileSelected(File file) {
-                        Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
-                        privateKeyLocationET.setText(file.toString());
-                    }
+                fileDialog.addFileListener(file -> {
+                    Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
+                    privateKeyLocationET.setText(file.toString());
                 });
                 fileDialog.showDialog();
             } else {

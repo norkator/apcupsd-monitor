@@ -97,198 +97,206 @@
                 android:singleLine="true" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/server_username_ssh"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/serverUsernameET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/ssh_server_username"
-                android:nextFocusForward="@+id/serverPasswordET"
-                android:singleLine="true" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/server_password_ssh"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/serverPasswordET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/ssh_server_password"
-                android:inputType="textPassword"
-                android:nextFocusForward="@+id/privateKeyAuthSwitch"
-                android:singleLine="true" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="@string/private_key_authentication_ssh"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/if_enabled_ssh_connection_uses_private_key"
-                android:textSize="12sp" />
-
-            <Switch
-                android:id="@+id/privateKeyAuthSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:nextFocusForward="@+id/privateKeyPassphraseET"
-                android:singleLine="true"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/private_key_passphrase_ssh"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/if_key_has_password_otherwise_leave_blank"
-                android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/privateKeyPassphraseET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/give_your_private_key_passphrase"
-                android:inputType="textPassword"
-                android:nextFocusForward="@+id/privateKeyLocationET"
-                android:singleLine="true" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/private_key_location_ssh"
-                android:textSize="18sp" />
-
             <LinearLayout
+                android:id="@+id/sshOptionsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/privateKeyLocationET"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:enabled="false"
-                    android:hint="@string/path_to_your_private_key_stored_on_your_phones_memory"
-                    android:nextFocusForward="@+id/strictHostKeyCheckingSwitch"
-                    android:singleLine="true" />
 
-                <Button
-                    android:id="@+id/selectPrivateKeyLocationBtn"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/select_file"
-                    android:textColor="@color/bootStrapPrimary"
-                    android:textSize="15sp" />
+                    android:layout_marginTop="15dp"
+                    android:text="@string/server_username_ssh"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/serverUsernameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ssh_server_username"
+                    android:nextFocusForward="@+id/serverPasswordET"
+                    android:singleLine="true" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/server_password_ssh"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/serverPasswordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ssh_server_password"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@+id/privateKeyAuthSwitch"
+                    android:singleLine="true" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/private_key_authentication_ssh"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/if_enabled_ssh_connection_uses_private_key"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/privateKeyAuthSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:nextFocusForward="@+id/privateKeyPassphraseET"
+                    android:singleLine="true"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/private_key_passphrase_ssh"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/if_key_has_password_otherwise_leave_blank"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/privateKeyPassphraseET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/give_your_private_key_passphrase"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@+id/privateKeyLocationET"
+                    android:singleLine="true" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/private_key_location_ssh"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/privateKeyLocationET"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/path_to_your_private_key_stored_on_your_phones_memory"
+                        android:nextFocusForward="@+id/strictHostKeyCheckingSwitch"
+                        android:singleLine="true" />
+
+                    <Button
+                        android:id="@+id/selectPrivateKeyLocationBtn"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_file"
+                        android:textColor="@color/bootStrapPrimary"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/strict_host_key_checking_ssh"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/asks_user_to_verify_connection_host_at_first_time"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/strictHostKeyCheckingSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:checked="true"
+                    android:nextFocusForward="@+id/statusCommandET"
+                    android:singleLine="true"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/status_command_ssh"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/statusCommandET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nextFocusForward="@+id/eventsLocationET"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/load_events"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/if_switched_off_then_events_wont_be_loaded"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/loadUpsEventsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:nextFocusForward="@+id/eventsLocationET"
+                    android:singleLine="true"
+                    android:checked="true"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/events_location_ssh"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/eventsLocationET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nextFocusForward="@+id/positiveBtn"
+                    android:singleLine="true" />
 
             </LinearLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/strict_host_key_checking_ssh"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/asks_user_to_verify_connection_host_at_first_time"
-                android:textSize="12sp" />
-
-            <Switch
-                android:id="@+id/strictHostKeyCheckingSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:checked="true"
-                android:nextFocusForward="@+id/statusCommandET"
-                android:singleLine="true"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="@string/status_command_ssh"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/statusCommandET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nextFocusForward="@+id/eventsLocationET"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/load_events"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/if_switched_off_then_events_wont_be_loaded"
-                android:textSize="12sp" />
-
-            <Switch
-                android:id="@+id/loadUpsEventsSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:nextFocusForward="@+id/eventsLocationET"
-                android:singleLine="true"
-                android:checked="true"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/events_location_ssh"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/eventsLocationET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nextFocusForward="@+id/positiveBtn"
-                android:singleLine="true" />
-
 
             <TextView
                 android:layout_width="wrap_content"
