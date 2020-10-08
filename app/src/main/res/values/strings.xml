@@ -139,6 +139,8 @@
     <string name="prefs_notification_service_summary">Check UPS statuses in the background</string>
     <string name="prefs_service_refresh_interval">Refresh interval</string>
     <string name="prefs_service_refresh_interval_summary">Load status information every X minutes. Zero means smallest possible value five minutes.</string>
+    <string name="prefs_dark_theme_title">Dark theme</string>
+    <string name="prefs_dark_theme_description">After change, please restart the application</string>
 
     <!-- Status service -->
     <string name="warning">Warning</string>

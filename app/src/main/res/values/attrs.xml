@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <attr name="eventsTextBackgroundColor" format="reference|color"/>
+
     <declare-styleable name="CustomGauge">
         <attr name="gaugePointSize" format="integer" />
         <attr name="gaugePointStartColor" format="color" />

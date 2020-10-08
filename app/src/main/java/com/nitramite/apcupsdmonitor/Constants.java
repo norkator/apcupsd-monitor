@@ -10,6 +10,8 @@ public class Constants {
     final static String EVENTS_LOCATION = "/var/log/apcupsd.events";
 
     // Shared preferences
+    public final static String SP_USE_DARK_THEME = "SP_USE_DARK_THEME";
+
     final static String SP_STATUS_COMMAND = "SP_STATUS_COMMAND";
     final static String SP_EVENTS_LOCATION = "SP_EVENTS_LOCATION";
     final static String SP_EVENTS_COLORING = "SP_EVENTS_COLORING";

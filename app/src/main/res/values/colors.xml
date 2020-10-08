@@ -8,6 +8,10 @@
     <color name="whiteColor">#ffffff</color>
     <color name="prefsEditTextColor">#000000</color>
     <color name="materialGray">#546e7a</color>
+    <color name="black">#374046</color>
+    <color name="color_white">#f9f9f9</color>
+    <color name="background_darker">#303030</color>
+    <color name="widget_background">#292929</color>
 
     <!-- Bootstrap like color -->
     <color name="bootStrapPrimary">#347bb7</color>

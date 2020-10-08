@@ -9,12 +9,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import com.nitramite.utils.ThemeUtils;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -97,6 +102,19 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Set theme
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if (ThemeUtils.Theme.isDarkThemeForced(getBaseContext())) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.BLACK);
+        } else if (ThemeUtils.Theme.isAutoTheme(getBaseContext())) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
@@ -104,10 +122,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // Shared preferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setAppActivityRunning(true);
-
 
         // Floating action buttons
         FloatingActionButton floatingAddUpsBtn = findViewById(R.id.floatingAddNewUpsBtn);
