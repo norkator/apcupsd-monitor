@@ -104,17 +104,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     protected void onCreate(Bundle savedInstanceState) {
         // Set theme
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        if (ThemeUtils.Theme.isDarkThemeForced(getBaseContext())) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.BLACK);
-        } else if (ThemeUtils.Theme.isAutoTheme(getBaseContext())) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 

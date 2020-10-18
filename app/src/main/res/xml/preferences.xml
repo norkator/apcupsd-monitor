@@ -90,11 +90,13 @@
 
     <PreferenceCategory android:title="Tweaks">
 
+        <!--
         <SwitchPreference
             android:defaultValue="false"
             android:key="SP_USE_DARK_THEME"
             android:summary="@string/prefs_dark_theme_description"
             android:title="@string/prefs_dark_theme_title" />
+        -->
 
         <SwitchPreference
             android:defaultValue="true"
