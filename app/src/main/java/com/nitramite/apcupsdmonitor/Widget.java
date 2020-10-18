@@ -6,11 +6,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,8 +80,10 @@ public class Widget extends AppWidgetProvider {
 
 
     private Bitmap createUpsViewBitmap(Context context, ArrayList<UPS> upsArrayList) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean useDarkTheme = sharedPreferences.getBoolean(Constants.SP_USE_DARK_THEME, false);
+        boolean useDarkTheme = false;
+        if ((context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+            useDarkTheme = true;
+        }
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
