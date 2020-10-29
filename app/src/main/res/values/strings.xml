@@ -169,9 +169,11 @@
     <string name="ups_battery_date">Battery date</string>
     <string name="ups_start_time_na">Start time N/A</string>
     <string name="ups_start_time">Start time</string>
-    <string name="apcupsd">APCUPSD</string>
-    <string name="synology">Synology</string>
-    <string name="apc_nc">APC NC</string>
     <string name="use_below_selector_to_select_suitable_command">Use below selector to select suitable command</string>
+    <string name="click_to_select">Click to select…</string>
+    <string name="apcupsd_daemon_software">APCUPSD Daemon software</string>
+    <string name="apcupsd_daemon_software_no_sudo">APCUPSD Daemon software (No sudo)</string>
+    <string name="synology_upsc">Synology UPSC</string>
+    <string name="apc_network_management_card_aos">APC Network Management Card AOS</string>
 
 </resources>

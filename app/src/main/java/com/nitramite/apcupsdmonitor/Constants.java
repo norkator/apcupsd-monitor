@@ -6,7 +6,8 @@ public class Constants {
     static String IAP_ITEM_SKU_DONATE_MEDIUM = "iap_donate_medium";
 
     // Commands
-    final static String STATUS_COMMAND = "sudo apcaccess status";
+    final static String STATUS_COMMAND_APCUPSD = "sudo apcaccess status";
+    final static String STATUS_COMMAND_APCUPSD_NO_SUDO = "apcaccess status";
     final static String STATUS_COMMAND_SYNOLOGY = "upsc ups";
     final static String STATUS_COMMAND_APC_NETWORK_CARD = "detstatus -all";
     final static String EVENTS_LOCATION = "/var/log/apcupsd.events";

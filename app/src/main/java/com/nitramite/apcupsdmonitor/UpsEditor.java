@@ -74,10 +74,11 @@ public class UpsEditor extends AppCompatActivity {
 
         final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
         List<String> cmdPresetOptions = new ArrayList<>();
-        cmdPresetOptions.add("Click to select...");
-        cmdPresetOptions.add("APCUPSD Daemon software");
-        cmdPresetOptions.add("Synology UPSC");
-        cmdPresetOptions.add("APC Network Management Card ADS / APC HUB");
+        cmdPresetOptions.add(getString(R.string.click_to_select));
+        cmdPresetOptions.add(getString(R.string.apcupsd_daemon_software));
+        cmdPresetOptions.add(getString(R.string.apcupsd_daemon_software_no_sudo));
+        cmdPresetOptions.add(getString(R.string.synology_upsc));
+        cmdPresetOptions.add(getString(R.string.apc_network_management_card_aos));
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cmdPresetOptions);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cmdPresetSelection.setAdapter(dataAdapter);
@@ -88,14 +89,18 @@ public class UpsEditor extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        statusCommandET.setText(Constants.STATUS_COMMAND);
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
                         loadUpsEventsSwitch.setChecked(true);
                         break;
                     case 2:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD_NO_SUDO);
+                        loadUpsEventsSwitch.setChecked(true);
+                        break;
+                    case 3:
                         statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
                         loadUpsEventsSwitch.setChecked(false);
                         break;
-                    case 3:
+                    case 4:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
                         loadUpsEventsSwitch.setChecked(false);
                         break;
@@ -124,7 +129,7 @@ public class UpsEditor extends AppCompatActivity {
         if (upsId == null) {
             setTitle(getString(R.string.ups_editor_create_new));
             // Defaults
-            statusCommandET.setText(Constants.STATUS_COMMAND);
+            statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
             eventsLocationET.setText(Constants.EVENTS_LOCATION);
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
