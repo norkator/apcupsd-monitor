@@ -12,19 +12,40 @@ See license and contribution rules below.
 
 Table of contents
 =================
+* [Images](#images)
+* [Features](#features)
 * [Requirements](#requirements)
 * [Contributions](#contributions)
 * [Authors](#authors)
 * [Contributors](#contributors)
 * [License](#license)
 
-<br>
+
+Images
+============
+Example of dark theme widget
+[widget](graphics/widget.jpg)
+
+Example of events
+[events](graphics/events.jpg)
+
+
+Features
+============
+* Basic status details viewer.
+* Event logs viewer.
+* Supports parsing data via SSH, APCUPSD Daemon NIS, Synology UPS, APC Network Management Card.
+* Firebase based status check triggering and monitoring with notifications.
+* Front screen widget support.
+* Light and dark themes automatically following Android OS system theme.  
+
 
 Requirements
 ============
 1. Download and install Android Studio: https://developer.android.com/studio
 2. You need virtual or physical phone.
 3. Follow IDE instructions.
+4. Open issue if something is unclear.
 
 
 Contributions
@@ -32,7 +53,9 @@ Contributions
 
 * Feel free to add new features and fix bugs. I review pull requests and make releases when required.
 * If you are planning to make new feature or bigger change, open issue and let's talk about it first.
-Because it needs to serve everyone. 
+Because it needs to serve everyone.
+* If you feel my code is horrible, feel free to tell me about it. No hard feelings, lets improve together.
+* Have huge need to write tests? you are really welcome to do so. Jenkinsfile has unit tests disabled because we have none.
 
 
 Authors
