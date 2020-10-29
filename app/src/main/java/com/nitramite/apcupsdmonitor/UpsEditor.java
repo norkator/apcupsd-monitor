@@ -1,6 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +13,13 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,8 @@ import androidx.core.app.ActivityCompat;
 import com.nitramite.ui.FileDialog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpsEditor extends AppCompatActivity {
 
@@ -38,6 +42,7 @@ public class UpsEditor extends AppCompatActivity {
     private String upsId = null;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +71,49 @@ public class UpsEditor extends AppCompatActivity {
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
 
+
+        final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
+        List<String> cmdPresetOptions = new ArrayList<>();
+        cmdPresetOptions.add(getString(R.string.click_to_select));
+        cmdPresetOptions.add(getString(R.string.apcupsd_daemon_software));
+        cmdPresetOptions.add(getString(R.string.apcupsd_daemon_software_no_sudo));
+        cmdPresetOptions.add(getString(R.string.synology_upsc));
+        cmdPresetOptions.add(getString(R.string.apc_network_management_card_aos));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cmdPresetOptions);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cmdPresetSelection.setAdapter(dataAdapter);
+        cmdPresetSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
+                        loadUpsEventsSwitch.setChecked(true);
+                        break;
+                    case 2:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD_NO_SUDO);
+                        loadUpsEventsSwitch.setChecked(true);
+                        break;
+                    case 3:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
+                        loadUpsEventsSwitch.setChecked(false);
+                        break;
+                    case 4:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
+                        loadUpsEventsSwitch.setChecked(false);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         final LinearLayout sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
 
         connectionTypeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -81,7 +129,7 @@ public class UpsEditor extends AppCompatActivity {
         if (upsId == null) {
             setTitle(getString(R.string.ups_editor_create_new));
             // Defaults
-            statusCommandET.setText(Constants.STATUS_COMMAND);
+            statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
             eventsLocationET.setText(Constants.EVENTS_LOCATION);
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
