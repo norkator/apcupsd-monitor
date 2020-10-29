@@ -89,12 +89,15 @@ public class UpsEditor extends AppCompatActivity {
                         break;
                     case 1:
                         statusCommandET.setText(Constants.STATUS_COMMAND);
+                        loadUpsEventsSwitch.setChecked(true);
                         break;
                     case 2:
                         statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
+                        loadUpsEventsSwitch.setChecked(false);
                         break;
                     case 3:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
+                        loadUpsEventsSwitch.setChecked(false);
                         break;
                 }
             }
