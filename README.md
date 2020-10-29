@@ -24,10 +24,10 @@ Table of contents
 Images
 ============
 Example of dark theme widget
-[widget](graphics/widget.jpg)
+![widget](graphics/widget.jpg)
 
 Example of events
-[events](graphics/events.jpg)
+![events](graphics/events.jpg)
 
 
 Features
