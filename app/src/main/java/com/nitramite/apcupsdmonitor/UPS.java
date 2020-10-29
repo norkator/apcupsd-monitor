@@ -331,7 +331,7 @@ public class UPS {
     // Helper to clean results
     private String getCleanLine(final String line, final String containing) {
         String[] split = line.split(": "); // See : and space, important
-        return split[1]; //.substring(1, split[1].length()); // Does not get simpler than this
+        return split.length > 0 ? split[1] : "";
     }
 
 
