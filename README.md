@@ -23,11 +23,9 @@ Table of contents
 
 Images
 ============
-Example of dark theme widget
-![widget](graphics/widget.jpg)
-
-Example of events
-![events](graphics/events.jpg)
+Example of dark theme widget             |  Example of events
+:-------------------------:|:-------------------------:
+![widget](graphics/widget.jpg)   |  ![events](graphics/events.jpg)
 
 
 Features
