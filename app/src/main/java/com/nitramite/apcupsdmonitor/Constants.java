@@ -7,6 +7,8 @@ public class Constants {
 
     // Commands
     final static String STATUS_COMMAND = "sudo apcaccess status";
+    final static String STATUS_COMMAND_SYNOLOGY = "upsc ups";
+    final static String STATUS_COMMAND_APC_NETWORK_CARD = "detstatus -all";
     final static String EVENTS_LOCATION = "/var/log/apcupsd.events";
 
     // Shared preferences

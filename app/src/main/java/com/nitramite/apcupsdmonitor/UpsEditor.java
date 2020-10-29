@@ -1,6 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +13,13 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,8 @@ import androidx.core.app.ActivityCompat;
 import com.nitramite.ui.FileDialog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpsEditor extends AppCompatActivity {
 
@@ -38,6 +42,7 @@ public class UpsEditor extends AppCompatActivity {
     private String upsId = null;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +70,41 @@ public class UpsEditor extends AppCompatActivity {
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
+
+
+        final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
+        List<String> cmdPresetOptions = new ArrayList<>();
+        cmdPresetOptions.add("Click to select...");
+        cmdPresetOptions.add("APCUPSD Daemon software");
+        cmdPresetOptions.add("Synology UPSC");
+        cmdPresetOptions.add("APC Network Management Card ADS / APC HUB");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cmdPresetOptions);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cmdPresetSelection.setAdapter(dataAdapter);
+        cmdPresetSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        statusCommandET.setText(Constants.STATUS_COMMAND);
+                        break;
+                    case 2:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
+                        break;
+                    case 3:
+                        statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         final LinearLayout sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
 

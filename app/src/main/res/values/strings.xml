@@ -169,5 +169,9 @@
     <string name="ups_battery_date">Battery date</string>
     <string name="ups_start_time_na">Start time N/A</string>
     <string name="ups_start_time">Start time</string>
+    <string name="apcupsd">APCUPSD</string>
+    <string name="synology">Synology</string>
+    <string name="apc_nc">APC NC</string>
+    <string name="use_below_selector_to_select_suitable_command">Use below selector to select suitable command</string>
 
 </resources>
