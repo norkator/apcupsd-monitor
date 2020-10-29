@@ -7,6 +7,7 @@ import android.util.Log;
 @SuppressWarnings("WeakerAccess")
 public class UPS {
 
+    private static final String TAG = "UPS";
 
     // Variables | for connection
     public String UPS_ID = null;
@@ -156,11 +157,11 @@ public class UPS {
     }
 
     public Boolean isOnline() {
-        Log.i("TAG", this.getSTATUS());
-        return this.getSTATUS().contains("ONLINE") ||   // APCUPSD
-                this.getSTATUS().equals("UPS OL") ||        // UPSC
-                this.getSTATUS().equals("UPS OLCHRG") ||        // UPSC
-                this.getSTATUS().equals("UPS OL CHRG");     // UPSC
+        Log.i(TAG, this.getSTATUS());
+        return this.getSTATUS().contains("ONLINE") || // APCUPSD
+                this.getSTATUS().equals("UPS OL") || // UPSC
+                this.getSTATUS().equals("UPS OLCHRG") || // UPSC
+                this.getSTATUS().contains("OnLine,NoAlarmsPresent"); // APC NETWORK CARD
     }
 
     public String getLineVoltageStr(Context context) {
@@ -301,6 +302,26 @@ public class UPS {
                 setFIRMWARE(this.getCleanLine(line, "ups.firmware"));
             } else if (line.contains("ups.status")) {
                 setSTATUS(this.getCleanLine(line, "ups.status"));
+            }
+
+            /* APC NETWORK MANAGEMENT CARD */
+            else if (line.contains("Status of UPS")) {
+                setSTATUS(this.getCleanLine(line, ""));
+                setUPS_NAME("APC NMC AOS");
+            } else if (line.contains("Last Transfer")) {
+                setLAST_TRANSFER_REASON(this.getCleanLine(line, ""));
+            } else if (line.contains("Runtime Remaining")) {
+                setBATTERY_TIME_LEFT(this.getCleanLine(line, ""));
+            } else if (line.contains("Battery State Of Charge")) {
+                setBATTERY_CHARGE_LEVEL(this.getCleanLine(line, "").replace("%", ""));
+            } else if (line.contains("Output Watts Percent")) {
+                setLOAD_PERCENT(this.getCleanLine(line, "").replace("%", ""));
+            } else if (line.contains("Input Voltage")) {
+                setLINE_VOLTAGE(this.getCleanLine(line, "").replace("VAC", ""));
+            } else if (line.contains("Battery Voltage")) {
+                setBATTERY_VOLTAGE(this.getCleanLine(line, "").replace("VDC", ""));
+            } else if (line.contains("Internal Temperature")) {
+                setITEMP(this.getCleanLine(line, ""));
             }
 
         }
