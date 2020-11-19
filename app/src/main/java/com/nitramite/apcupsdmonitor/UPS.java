@@ -298,10 +298,16 @@ public class UPS {
                 setUPS_NAME(this.getCleanLine(line, "device.mfr"));
             } else if (line.contains("device.model")) {
                 setMODEL(this.getCleanLine(line, "device.model"));
-            } else if (line.contains("ups.firmware")) {
-                setFIRMWARE(this.getCleanLine(line, "ups.firmware"));
             } else if (line.contains("ups.status")) {
                 setSTATUS(this.getCleanLine(line, "ups.status"));
+            } else if (line.contains("driver.version") && !line.contains(".data") && !line.contains(".internal")) {
+                setFIRMWARE(this.getCleanLine(line, ""));
+            } else if (line.contains("input.voltage")) {
+                setLINE_VOLTAGE(this.getCleanLine(line, ""));
+            } else if (line.contains("ups.load")) {
+                setLOAD_PERCENT(this.getCleanLine(line, ""));
+            } else if (line.contains("battery.runtime")) {
+                setBATTERY_TIME_LEFT(this.getCleanLine(line, ""));
             }
 
             /* APC NETWORK MANAGEMENT CARD */

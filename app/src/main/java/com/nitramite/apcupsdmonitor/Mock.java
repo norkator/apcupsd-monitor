@@ -55,40 +55,49 @@ public class Mock {
 
     /**
      * Synology NAS Mock data
+     * command: upsc ups
      */
     public static InputStream SynologyMockData() {
         String input_test =
             "battery.charge: 100\n" +
             "battery.charge.low: 10\n" +
-            "battery.charge.warning: 50\n" +
-            "battery.runtime: 5580\n" +
-            "battery.runtime.low: 120\n" +
-            "battery.type: PbAc\n" +
-            "battery.voltage: 27.0\n" +
-            "battery.voltage.nominal: 24.0\n" +
-            "device.mfr: American Power Conversion\n" +
-            "device.model: Smart-UPS 750\n" +
-            "device.serial: AS1244114679 \n" +
+            "battery.charge.warning: 20\n" +
+            "battery.mfr.date: CPS\n" +
+            "battery.runtime: 1620\n" +
+            "battery.runtime.low: 300\n" +
+            "battery.type: PbAcid\n" +
+            "battery.voltage: 16.0\n" +
+            "battery.voltage.nominal: 24\n" +
+            "device.mfr: CPS\n" +
+            "device.model: CP900EPFCLCD\n" +
+            "device.serial: 000000000000\n" +
             "device.type: ups\n" +
             "driver.name: usbhid-ups\n" +
             "driver.parameter.pollfreq: 30\n" +
             "driver.parameter.pollinterval: 5\n" +
             "driver.parameter.port: auto\n" +
             "driver.version: DSM6-2-25364-191230\n" +
-            "driver.version.data: APC HID 0.95\n" +
+            "driver.version.data: CyberPower HID 0.3\n" +
             "driver.version.internal: 0.38\n" +
-            "ups.beeper.status: disabled\n" +
+            "input.transfer.high: 260\n" +
+            "input.transfer.low: 170\n" +
+            "input.voltage: 228.0\n" +
+            "input.voltage.nominal: 230\n" +
+            "output.voltage: 260.0\n" +
+            "ups.beeper.status: enabled\n" +
             "ups.delay.shutdown: 20\n" +
-            "ups.firmware: UPS 08.3 / ID=18\n" +
-            "ups.mfr: American Power Conversion\n" +
-            "ups.mfr.date: 2012/11/01\n" +
-            "ups.model: Smart-UPS 750\n" +
-            "ups.productid: 0003\n" +
-            "ups.serial: AS1244114679 \n" +
-            "ups.status: OLCHRG\n" +
-            "ups.timer.reboot: -1\n" +
-            "ups.timer.shutdown: -1\n" +
-            "ups.vendorid: 051d\n";
+            "ups.delay.start: 30\n" +
+            "ups.load: 24\n" +
+            "ups.mfr: CPS\n" +
+            "ups.model: CP900EPFCLCD\n" +
+            "ups.productid: 0501\n" +
+            "ups.realpower.nominal: 540\n" +
+            "ups.serial: 000000000000\n" +
+            "ups.status: OL\n" +
+            "ups.test.result: No test initiated\n" +
+            "ups.timer.shutdown: -60\n" +
+            "ups.timer.start: -60\n" +
+            "ups.vendorid: 0764\n";
         return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
     }
 
