@@ -7,7 +7,7 @@ import android.util.Log;
 @SuppressWarnings("WeakerAccess")
 public class UPS {
 
-    private static final String TAG = "UPS";
+    private static final String TAG = UPS.class.getSimpleName();
 
     // Variables | for connection
     public String UPS_ID = null;
@@ -306,8 +306,8 @@ public class UPS {
                 setLINE_VOLTAGE(this.getCleanLine(line, ""));
             } else if (line.contains("ups.load")) {
                 setLOAD_PERCENT(this.getCleanLine(line, ""));
-            } else if (line.contains("battery.runtime")) {
-                setBATTERY_TIME_LEFT(this.getCleanLine(line, ""));
+            } else if (line.contains("battery.runtime") && !line.contains(".low")) {
+                setBATTERY_TIME_LEFT(parseUpscRuntime(this.getCleanLine(line, "")));
             }
 
             /* APC NETWORK MANAGEMENT CARD */
@@ -338,6 +338,17 @@ public class UPS {
     private String getCleanLine(final String line, final String containing) {
         String[] split = line.split(": "); // See : and space, important
         return split.length > 0 ? split[1] : "";
+    }
+
+
+    private String parseUpscRuntime(String input) {
+        try {
+            int value = Integer.parseInt(input);
+            return String.valueOf(value / 60) + " " + "minutes";
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+            return "N/A (Parsing failed)";
+        }
     }
 
 
