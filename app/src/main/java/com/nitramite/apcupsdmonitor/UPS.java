@@ -302,7 +302,7 @@ public class UPS {
                 setSTATUS(this.getCleanLine(line, "ups.status"));
             } else if (line.contains("driver.version") && !line.contains(".data") && !line.contains(".internal")) {
                 setFIRMWARE(this.getCleanLine(line, ""));
-            } else if (line.contains("input.voltage")) {
+            } else if (line.contains("input.voltage") && !line.contains(".nominal")) {
                 setLINE_VOLTAGE(this.getCleanLine(line, ""));
             } else if (line.contains("ups.load")) {
                 setLOAD_PERCENT(this.getCleanLine(line, ""));
