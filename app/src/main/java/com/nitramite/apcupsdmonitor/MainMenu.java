@@ -13,8 +13,10 @@ import android.net.Uri;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -392,24 +394,28 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     // Generic use error dialog
     private void genericErrorDialog(final String title, final String description) {
-        new AlertDialog.Builder(MainMenu.this)
-                .setTitle(title)
-                .setMessage(description)
-                .setPositiveButton(R.string.close, (dialog, which) -> {
-                })
-                .setNeutralButton(R.string.copy_content, (dialog, which) -> {
-                    try {
-                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("", description);
-                        assert clipboard != null;
-                        clipboard.setPrimaryClip(clip);
-                        Toast.makeText(MainMenu.this, R.string.content_copied, Toast.LENGTH_SHORT).show();
-                    } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(MainMenu.this, R.string.nothing_to_copy, Toast.LENGTH_LONG).show();
-                    }
-                })
-                .setIcon(R.drawable.ic_error_small)
-                .show();
+        try {
+            new AlertDialog.Builder(MainMenu.this)
+                    .setTitle(title)
+                    .setMessage(description)
+                    .setPositiveButton(R.string.close, (dialog, which) -> {
+                    })
+                    .setNeutralButton(R.string.copy_content, (dialog, which) -> {
+                        try {
+                            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("", description);
+                            assert clipboard != null;
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(MainMenu.this, R.string.content_copied, Toast.LENGTH_SHORT).show();
+                        } catch (IndexOutOfBoundsException e) {
+                            Toast.makeText(MainMenu.this, R.string.nothing_to_copy, Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setIcon(R.drawable.ic_error_small)
+                    .show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
 

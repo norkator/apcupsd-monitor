@@ -67,7 +67,7 @@ public class Widget extends AppWidgetProvider {
 
                 AppWidgetManager.getInstance(context).updateAppWidget(appWidgetIds[i], rv);
             } catch (Exception e) {
-                Log.i(TAG, e.toString());
+                Log.e(TAG, e.toString());
             }
         }
     }
