@@ -34,7 +34,7 @@ dependencies {
     // Third part
     implementation 'com.fnp:material-preferences:0.1.4'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.billingclient:billing:3.0.1'
+    implementation 'com.android.billingclient:billing:3.0.2'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'joda-time:joda-time:2.10.5'
