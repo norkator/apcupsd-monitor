@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class Widget extends AppWidgetProvider {
 
     //  Logging
-    private static final String TAG = "Widget";
+    private static final String TAG = Widget.class.getSimpleName();
 
 
     @Override
@@ -42,28 +42,33 @@ public class Widget extends AppWidgetProvider {
     // onUpdate
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+        //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < appWidgetIds.length; i++) {
-            Intent intent = new Intent(context, MainMenu.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            DatabaseHelper databaseHelper = new DatabaseHelper(context);
-            ArrayList<UPS> upsArrayList = getUpsData(databaseHelper);
+            try {
+                Intent intent = new Intent(context, MainMenu.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                DatabaseHelper databaseHelper = new DatabaseHelper(context);
+                ArrayList<UPS> upsArrayList = getUpsData(databaseHelper);
 
-            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
-            setBitmap(rv, R.id.upsStatusImage, createUpsViewBitmap(context, upsArrayList));
+                RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
+                setBitmap(rv, R.id.upsStatusImage, createUpsViewBitmap(context, upsArrayList));
 
 
-            // On click refresh trigger method
-            Log.i(TAG, "Widget on update event");
-            Intent updateIntent = new Intent(context, Widget.class);
-            updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            PendingIntent pendingUpdate = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingUpdate);
+                // On click refresh trigger method
+                Log.i(TAG, "Widget on update event");
+                Intent updateIntent = new Intent(context, Widget.class);
+                updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                PendingIntent pendingUpdate = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingUpdate);
 
-            // Finish
-            rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingIntent);
-            appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
+                // Finish
+                rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingIntent);
+                appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
 
-            AppWidgetManager.getInstance(context).updateAppWidget(appWidgetIds[i], rv);
+                AppWidgetManager.getInstance(context).updateAppWidget(appWidgetIds[i], rv);
+            } catch (Exception e) {
+                Log.i(TAG, e.toString());
+            }
         }
     }
 
@@ -149,7 +154,7 @@ public class Widget extends AppWidgetProvider {
         return (int) (dps * scale + 0.5f);
     }
 
-    private void setBitmap(RemoteViews views, int resId, Bitmap bitmap) {
+    private void setBitmap(RemoteViews views, int resId, Bitmap bitmap) throws RuntimeException {
         Bitmap proxy = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(proxy);
         c.drawBitmap(bitmap, new Matrix(), null);
