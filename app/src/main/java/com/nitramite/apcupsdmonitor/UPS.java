@@ -143,6 +143,7 @@ public class UPS {
     }
 
     public void setUPS_REACHABLE_STATUS(String UPS_REACHABLE_STATUS) {
+
         if (UPS_REACHABLE_STATUS != null) {
             this.UPS_IS_REACHABLE = UPS_REACHABLE_STATUS.equals(UPS_REACHABLE);
         }

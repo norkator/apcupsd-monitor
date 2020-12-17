@@ -332,6 +332,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             }
 
             ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
             databaseHelper.insertUpdateUps(upsId, contentValues);
 
