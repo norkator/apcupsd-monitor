@@ -134,7 +134,7 @@ public class UpsEditor extends AppCompatActivity {
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
             UPS ups = databaseHelper.getAllUps(upsId).get(0);
-            connectionTypeSwitch.setChecked(ups.UPS_CONNECTION_TYPE.equals("1"));
+            connectionTypeSwitch.setChecked(ups.UPS_CONNECTION_TYPE.equals(UPS.UPS_CONNECTION_TYPE_NIS));
             serverAddressET.setText(ups.UPS_SERVER_ADDRESS);
             serverPortET.setText(ups.UPS_SERVER_PORT);
             serverUsernameET.setText(ups.UPS_SERVER_USERNAME);
@@ -180,7 +180,8 @@ public class UpsEditor extends AppCompatActivity {
         Button positiveBtn = findViewById(R.id.positiveBtn);
         positiveBtn.setOnClickListener(view -> {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE, connectionTypeSwitch.isChecked() ? "1" : "0");
+            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE,
+                    connectionTypeSwitch.isChecked() ? UPS.UPS_CONNECTION_TYPE_NIS : UPS.UPS_CONNECTION_TYPE_SSH);
             contentValues.put(DatabaseHelper.UPS_SERVER_ADDRESS, serverAddressET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_PORT, serverPortET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_USERNAME, serverUsernameET.getText().toString());

@@ -7,7 +7,12 @@ import android.util.Log;
 @SuppressWarnings("WeakerAccess")
 public class UPS {
 
+    // Logging
     private static final String TAG = UPS.class.getSimpleName();
+
+    // Supported connection types
+    public static final String UPS_CONNECTION_TYPE_SSH = "0";
+    public static final String UPS_CONNECTION_TYPE_NIS = "1";
 
     // Variables | for connection
     public String UPS_ID = null;

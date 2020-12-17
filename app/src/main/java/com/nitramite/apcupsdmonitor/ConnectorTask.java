@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // Logging
-    private final static String TAG = "ConnectorTask";
+    private final static String TAG = ConnectorTask.class.getSimpleName();
 
     // Command variables
     private String statusCommand = Constants.STATUS_COMMAND_APCUPSD;
@@ -74,7 +74,8 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // Constructor
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
-        Log.i(TAG, "Connector provided ups id: " + upsId_);
+        Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
+                (upsId_ == null ? "all ups statuses" : "one ups status"));
         taskMode = taskMode_;
         this.upsId = upsId_;
         databaseHelper = new DatabaseHelper(context);
@@ -85,18 +86,25 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        upsArrayList.clear();
-        arrayPosition = 0;
-        upsArrayList = databaseHelper.getAllUps(this.upsId);
-        if (upsArrayList.size() > 0) {
-            upsTaskHelper();
-        } else {
-            apcupsdInterface.noUpsConfigured();
+        try {
+            upsArrayList.clear();
+            arrayPosition = 0;
+            upsArrayList = databaseHelper.getAllUps(this.upsId);
+            if (upsArrayList.size() > 0) {
+                upsTaskHelper();
+            } else {
+                apcupsdInterface.noUpsConfigured();
+            }
+        } catch (RuntimeException e) {
+            Log.i(TAG, e.toString());
         }
         return null;
     }
 
 
+    /**
+     * Goes thru added ups devices and load statuses and events
+     */
     private void upsTaskHelper() {
         if (arrayPosition < upsArrayList.size()) {
             if (arrayPosition > 0) {
@@ -124,7 +132,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
             // Determine connection type
-            if (connectionType.equals("1")) {
+            if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_NIS)) {
                 // APCUPSD SOCKET
                 if (validAPCUPSDRequirements()) {
                     if (connectSocketServer(upsArrayList.get(arrayPosition).UPS_ID, this.address, this.port)) {
@@ -136,7 +144,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 } else {
                     apcupsdInterface.onMissingPreferences();
                 }
-            } else {
+            } else if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_SSH)) {
                 // SSH
                 if (validSSHRequirements()) {
                     if (connectSSHServer(upsArrayList.get(arrayPosition).UPS_ID)) {
@@ -146,6 +154,8 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 } else {
                     apcupsdInterface.onMissingPreferences();
                 }
+            } else {
+                Log.w(TAG, "Unsupported UPS connection type");
             }
         } else {
             apcupsdInterface.onTaskCompleted();
