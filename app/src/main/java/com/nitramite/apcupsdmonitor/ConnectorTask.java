@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -139,7 +140,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                         getUPSStatusAPCUPSD(upsArrayList.get(arrayPosition).UPS_ID,
                                 upsArrayList.get(arrayPosition).getUpsLoadEvents());
                     } else {
-                        apcupsdInterface.onConnectionError();
+                        onConnectionError(upsArrayList.get(arrayPosition).UPS_ID);
                     }
                 } else {
                     apcupsdInterface.onMissingPreferences();
@@ -150,6 +151,8 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     if (connectSSHServer(upsArrayList.get(arrayPosition).UPS_ID)) {
                         getUPSStatusSSH(upsArrayList.get(arrayPosition).UPS_ID,
                                 upsArrayList.get(arrayPosition).getUpsLoadEvents());
+                    } else {
+                        onConnectionError(upsArrayList.get(arrayPosition).UPS_ID);
                     }
                 } else {
                     apcupsdInterface.onMissingPreferences();
@@ -162,6 +165,15 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         }
     }
 
+
+    private void onConnectionError(final String upsId) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_NOT_REACHABLE);
+        databaseHelper.insertUpdateUps(upsId, contentValues);
+        apcupsdInterface.onConnectionError(upsId);
+        arrayPosition++;
+        upsTaskHelper();
+    }
 
     @Override
     protected void onPostExecute(String param) {
@@ -218,12 +230,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                         session.getHostKey().getFingerPrint(sshClient),
                         session.getHostKey().getKey()
                 );
-            } else {
-                apcupsdInterface.onConnectionError();
             }
             return false;
         } catch (NullPointerException e) {
-            apcupsdInterface.onConnectionError();
             return false;
         }
     }
@@ -282,6 +291,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             channel.disconnect();
 
             ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
             databaseHelper.insertUpdateUps(upsId, contentValues);
 

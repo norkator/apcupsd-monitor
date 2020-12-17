@@ -145,7 +145,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     }
 
     @Override
-    public void onConnectionError() {
+    public void onConnectionError(final String upsId) {
     }
 
     @Override

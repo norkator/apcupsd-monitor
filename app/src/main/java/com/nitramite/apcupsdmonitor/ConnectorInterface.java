@@ -12,7 +12,7 @@ public interface ConnectorInterface {
 
     void onMissingPreferences(); // Navigate to preferences page
 
-    void onConnectionError();
+    void onConnectionError(final String upsId);
 
     void onCommandError(final String errorStr);
 

@@ -10,6 +10,10 @@ public class UPS {
     // Logging
     private static final String TAG = UPS.class.getSimpleName();
 
+    // Statuses
+    public static final String UPS_NOT_REACHABLE = "0";
+    public static final String UPS_REACHABLE = "1";
+
     // Supported connection types
     public static final String UPS_CONNECTION_TYPE_SSH = "0";
     public static final String UPS_CONNECTION_TYPE_NIS = "1";
@@ -35,6 +39,7 @@ public class UPS {
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
     private String UPS_EVENT_STRING = null;
+    private boolean UPS_IS_REACHABLE = true;
 
     // Variables | know names
     private String UPS_NAME = null;                     // UPSNAME
@@ -137,6 +142,11 @@ public class UPS {
         this.statusParser();
     }
 
+    public void setUPS_REACHABLE_STATUS(String UPS_REACHABLE_STATUS) {
+        if (UPS_REACHABLE_STATUS != null) {
+            this.UPS_IS_REACHABLE = UPS_REACHABLE_STATUS.equals(UPS_REACHABLE);
+        }
+    }
 
     // ---------------------------------------------------------------------------------------------
     // Getters
@@ -244,6 +254,10 @@ public class UPS {
 
     public String getUPS_STATUS_STR() {
         return UPS_STATUS_STR;
+    }
+
+    public boolean upsIsReachable() {
+        return this.UPS_IS_REACHABLE;
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +25,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean upgrade = false;
 
     // DATABASE VERSION
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     // 1 = v1.1.5
     // 2 = v1.2.2, added ups load events boolean
+    // 3 = v1.8.7, added ups_reachable boolean
 
 
     // DATABASE NAME
@@ -56,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String UPS_SERVER_HOST_KEY = "server_host_key";
     static final String UPS_STATUS_STR = "ups_status_str"; // status message containing all lines
     static final String UPS_LOAD_EVENTS = "ups_load_events";
+    static final String UPS_REACHABLE = "ups_reachable";
 
     // -------------------------------------------------------------------
 
@@ -90,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + UPS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_connection_type TEXT, server_address TEXT, server_port TEXT, server_username TEXT, " +
                 "server_password TEXT, server_use_private_key_auth TEXT, server_private_key_password TEXT, server_private_key_path TEXT, server_strict_host_key_checking TEXT, " +
                 "server_status_command TEXT, server_events_location TEXT, server_host_name TEXT, server_host_finger_print TEXT, server_host_key TEXT, " +
-                "ups_status_str TEXT, ups_load_events TEXT)");
+                "ups_status_str TEXT, ups_load_events TEXT, ups_reachable TEXT)");
 
         // Create events data table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + EVENTS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_id TEXT, event_str TEXT)");
@@ -177,6 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ups.UPS_SERVER_HOST_KEY = res.getString(14);
             ups.setUPS_STATUS_STR(res.getString(15));
             ups.UPS_LOAD_EVENTS = res.getString(16);
+            ups.setUPS_REACHABLE_STATUS(res.getString(17));
             upsArrayList.add(ups);
         }
         res.close();
@@ -192,7 +196,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(EVENTS_TABLE, EVENT_UPS_ID + " = ?", new String[]{upsId});
         db.close();
     }
-
 
 
     void insertEvents(String upsId, ArrayList<String> events) {
@@ -211,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     ArrayList<String> getAllEvents(final String upsId) {
         ArrayList<String> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + EVENTS_TABLE +  " WHERE " + EVENT_UPS_ID + " = ?" +
+        Cursor res = db.rawQuery("SELECT * FROM " + EVENTS_TABLE + " WHERE " + EVENT_UPS_ID + " = ?" +
                 " ORDER BY " + EVENT_ID + " ASC", new String[]{upsId});
         while (res.moveToNext()) {
             events.add(res.getString(2));

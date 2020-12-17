@@ -338,7 +338,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     }
 
     @Override
-    public void onConnectionError() {
+    public void onConnectionError(final String upsId) {
         runOnUiThread(() -> {
             closeProgressDialog();
             genericErrorDialog(getString(R.string.error),

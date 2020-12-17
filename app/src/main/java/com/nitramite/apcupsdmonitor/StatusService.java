@@ -62,7 +62,7 @@ public class StatusService implements ConnectorInterface {
     }
 
     @Override
-    public void onConnectionError() {
+    public void onConnectionError(final String upsId) {
         Log.e(TAG, "onConnectionError");
     }
 

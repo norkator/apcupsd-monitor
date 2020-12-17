@@ -53,11 +53,16 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr(rowView.getContext()));
 
         // Set status (Always shown)
-        status.setText(upsArrayList.get(position).getSTATUS());
-        if (upsArrayList.get(position).isOnline()) {
-            status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
+        if (upsArrayList.get(position).upsIsReachable()) {
+            status.setText(upsArrayList.get(position).getSTATUS());
+            if (upsArrayList.get(position).isOnline()) {
+                status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
+            } else {
+                status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
+            }
         } else {
-            status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
+            status.setText(context.getString(R.string.ups_unreachable));
+            status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapWarning));
         }
 
 
