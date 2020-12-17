@@ -27,4 +27,10 @@
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
 
+    <item
+        android:id="@+id/action_project_github"
+        android:title="@string/project_on_github"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
+
 </menu>

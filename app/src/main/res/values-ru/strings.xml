@@ -175,5 +175,6 @@
     <string name="apcupsd_daemon_software_no_sudo">APCUPSD Daemon software (No sudo)</string>
     <string name="synology_upsc">Synology UPSC</string>
     <string name="apc_network_management_card_aos">APC Network Management Card AOS</string>
+    <string name="project_on_github">Project on Github</string>
 
 </resources>

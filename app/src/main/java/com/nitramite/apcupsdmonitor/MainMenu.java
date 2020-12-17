@@ -462,6 +462,13 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
             startActivity(i);
             return true;
         }
+        if (id == R.id.action_project_github) {
+            String url = "https://github.com/norkator/apcupsd-monitor";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+            return true;
+        }
         if (id == R.id.donateBtn) {
             donateDialog();
             return true;
