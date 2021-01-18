@@ -21,7 +21,6 @@ output.json
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
 /build
 /captures
 
@@ -31,5 +30,6 @@ obj/
 
 # In some projects we dont want these
 app/release/app-release.apk
+/app/release/app-release.aab
 app/app-release.apk
 app/google-services.json

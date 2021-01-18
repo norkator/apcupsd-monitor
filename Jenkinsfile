@@ -5,6 +5,7 @@ pipeline {
     JAVA_HOME = "C:/Program Files/Android/Android Studio/jre"
     ANDROID_SDK_ROOT = "C:/Android/Sdk"
     GRADLE_USER_HOME = "C:/gradle-cache"
+    KEYSTORE_LOCATION = credentials('apcupsd-monitor-keystore-location')
   }
   options {
     // Stop the build early in case of compile or test failures
@@ -53,19 +54,17 @@ pipeline {
         branch 'master'
       }
       steps {
-        // Build the app in release mode
-        bat './gradlew assembleRelease'
 
-        // Archive the APKs so that they can be downloaded from Jenkins
-        // archiveArtifacts '**/*.apk'
+        // Execute bundle release build
+        bat './gradlew :app:bundleRelease'
 
-        // Sign unsigned apk
-        signAndroidApks (
-            keyStoreId: "apcupsd-monitor-signing-key",
-            keyAlias: "Nitramite",
-            apksToSign: "**/*-unsigned.apk",
-            skipZipalign: true
-        )
+        // Sign bundle
+        withCredentials([string(credentialsId: 'apcupsd-monitor-signing-password', variable: 'apcupsd-monitor-signing-password')]) {
+            bat 'jarsigner -verbose -keystore %KEYSTORE_LOCATION% %WORKSPACE%\\app\\build\\outputs\\bundle\\release\\app-release.aab Nitramite --storepass "%apcupsd-monitor-signing-password%"'
+        }
+
+        // Archive the AAB (Android App Bundle) so that it can be downloaded from Jenkins
+        archiveArtifacts '**/bundle/release/*.aab'
 
       }
     }
