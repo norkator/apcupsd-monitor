@@ -12,6 +12,52 @@ public class Mock {
      */
     public static InputStream ApcupsdMockData() {
         String input_test =
+            "APC : 001,044,1035\n" +
+            "DATE : 2021-02-16 19:18:03 +0100\n" +
+            "HOSTNAME : proxmox\n" +
+            "VERSION : 3.14.14 (31 May 2016) debian\n" +
+            "UPSNAME : APCUPS\n" +
+            "CABLE : Ethernet Link\n" +
+            "DRIVER : SNMP UPS Driver\n" +
+            "UPSMODE : Stand Alone\n" +
+            "STARTTIME: 2021-02-16 15:06:17 +0100\n" +
+            "MODEL : Smart-UPS 1000\n" +
+            "STATUS : ONLINE\n" +
+            "LINEV : 233.0 Volts\n" +
+            "LOADPCT : 18.0 Percent\n" +
+            "BCHARGE : 100.0 Percent\n" +
+            "TIMELEFT : 47.0 Minutes\n" +
+            "MBATTCHG : 40 Percent\n" +
+            "MINTIMEL : 5 Minutes\n" +
+            "MAXTIME : 0 Seconds\n" +
+            "MAXLINEV : 233.0 Volts\n" +
+            "MINLINEV : 230.0 Volts\n" +
+            "OUTPUTV : 233.0 Volts\n" +
+            "SENSE : High\n" +
+            "DWAKE : 1000 Seconds\n" +
+            "DSHUTD : 480 Seconds\n" +
+            "DLOWBATT : 2 Minutes\n" +
+            "LOTRANS : 207.0 Volts\n" +
+            "HITRANS : 253.0 Volts\n" +
+            "ITEMP : 30.0 C\n" +
+            "ALARMDEL : 30 Seconds\n" +
+            "BATTV : 27.0 Volts\n" +
+            "LINEFREQ : 50.0 Hz\n" +
+            "LASTXFER : Automatic or explicit self test\n" +
+            "NUMXFERS : 0\n" +
+            "TONBATT : 0 Seconds\n" +
+            "CUMONBATT: 0 Seconds\n" +
+            "XOFFBATT : N/A\n" +
+            "SELFTEST : NG\n" +
+            "STESTI : OFF\n" +
+            "STATFLAG : 0x05000008\n" +
+            "MANDATE : 11/06/2013\n" +
+            "SERIALNO : AS1345222226\n" +
+            "BATTDATE : 08/15/2014\n" +
+            "NOMOUTV : 230 Volts\n" +
+            "FIRMWARE : UPS 08.8 (ID18)\n" +
+            "END APC : 2021-02-16 19:18:32 +0100\n";
+            /*
             "APC      : 001,037,0940\n" +
             "DATE     : 2019-09-20 09:10:34 +0200\n" +
             "HOSTNAME : nebula\n" +
@@ -50,6 +96,7 @@ public class Mock {
             "NOMPOWER : 480 Watts\n" +
             "FIRMWARE : 925.T2 .I USB FW:T2\n" +
             "END APC  : 2019-09-20 09:10:35 +0200\n";
+             */
         return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
     }
 
