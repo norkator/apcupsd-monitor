@@ -2,14 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
     defaultConfig {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         versionCode 33
-        versionName "1.8.7" // Use Semver
+        versionName "1.9.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
