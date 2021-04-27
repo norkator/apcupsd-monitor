@@ -176,7 +176,8 @@ public class UPS {
         return this.getSTATUS().contains("ONLINE") || // APCUPSD
                 this.getSTATUS().equals("UPS OL") || // UPSC
                 this.getSTATUS().equals("UPS OLCHRG") || // UPSC
-                this.getSTATUS().contains("OnLine,NoAlarmsPresent"); // APC NETWORK CARD
+                this.getSTATUS().contains("OnLine,NoAlarmsPresent") || // APC NETWORK CARD
+                this.getSTATUS().contains("Online-GreenMode"); // APC NETWORK CARD AP9630
     }
 
     public String getLineVoltageStr(Context context) {

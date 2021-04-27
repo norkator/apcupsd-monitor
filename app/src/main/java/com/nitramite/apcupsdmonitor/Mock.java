@@ -172,5 +172,35 @@ public class Mock {
         return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * APC Network Card Mock data #2
+     */
+    public static InputStream APCNetworkCardMockDataAP9630() {
+        String input_test =
+            "E000: Success\n" +
+            "Status of UPS: Online - Green Mode\n" +
+            "Last Transfer: None\n" +
+            "Input Status: Acceptable\n" +
+            "Next Battery Replacement Date: 11/11/2026\n" +
+            "Runtime Remaining: 1 hr 58 min 0 sec\n" +
+            "Battery State Of Charge: 100.0 %\n" +
+            "Output Voltage: 247.6 VAC\n" +
+            "Output Frequency: 50.1 Hz\n" +
+            "Output Watts Percent: 9.1 %\n" +
+            "Output VA Percent: 10.4 %\n" +
+            "Output Current: 0.66 A\n" +
+            "Output Efficiency: 90.0 %\n" +
+            "Output Energy: 4631.618 kWh\n" +
+            "Input Voltage: 247.6 VAC\n" +
+            "Input Frequency: 50.1 Hz\n" +
+            "Battery Voltage: 27.3 VDC\n" +
+            "Battery Temperature: 20.7 C, 69.2 F\n" +
+            "Self-Test Result: Refused via internal operation due to internal fault o\n" +
+            "Self-Test Date: Unknown\n" +
+            "Calibration Result: Unknown\n" +
+            "Calibration Date: Unknown";
+        return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
+    }
+
 
 }

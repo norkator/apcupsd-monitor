@@ -278,6 +278,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     // Mock.ApcupsdMockData()
                     // Mock.SynologyMockData()
                     // Mock.APCNetworkCardMockData()
+                    // Mock.APCNetworkCardMockDataAP9630()
             );
 
 
