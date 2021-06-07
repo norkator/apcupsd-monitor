@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
     // Logging
-    private final static String TAG = "CustomUpsAdapter";
+    private final static String TAG = CustomUpsAdapter.class.getSimpleName();
 
     // Variables
     private final Activity context;

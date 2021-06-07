@@ -38,7 +38,7 @@ import java.util.Date;
 public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
 
     // Logging
-    private final static String TAG = "UpsViewer";
+    private final static String TAG = UpsViewer.class.getSimpleName();
 
     // Views
     private ProgressBar progressBar;

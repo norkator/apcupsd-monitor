@@ -54,7 +54,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     // http://www.apcupsd.org/manual/manual.html
 
     // Logging
-    private final static String TAG = "MainMenu";
+    private final static String TAG = MainMenu.class.getSimpleName();
 
     // In app billing
     private BillingClient mBillingClient;

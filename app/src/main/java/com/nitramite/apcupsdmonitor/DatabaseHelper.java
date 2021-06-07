@@ -14,7 +14,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Logging
-    private static final String TAG = "DatabaseHelper";
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
 
     // Variables
     private Context context;

@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat;
 public class StatusService implements ConnectorInterface {
 
     // Logging
-    private static final String TAG = "StatusService";
+    private static final String TAG = StatusService.class.getSimpleName();
 
     // Variables
     private DatabaseHelper databaseHelper = null;
