@@ -1,17 +1,13 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +19,6 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.nitramite.ui.FileDialog;
 
@@ -32,10 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpsEditor extends AppCompatActivity {
-
-    // App camera permissions
-    private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2;
-    private final String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
 
     // Variables
     private SharedPreferences sharedPreferences;
@@ -159,17 +150,15 @@ public class UpsEditor extends AppCompatActivity {
 
         Button selectPrivateKeyLocationBtn = findViewById(R.id.selectPrivateKeyLocationBtn);
         selectPrivateKeyLocationBtn.setOnClickListener(view -> {
-            if (hasPermissions(UpsEditor.this, new String[]{permissionReadStorage})) {
-                File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
-                final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
-                fileDialog.addFileListener(file -> {
-                    Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
-                    privateKeyLocationET.setText(file.toString());
-                });
-                fileDialog.showDialog();
-            } else {
-                ActivityCompat.requestPermissions(UpsEditor.this, new String[]{permissionReadStorage}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
-            }
+
+            File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
+            final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
+            fileDialog.addFileListener(file -> {
+                Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
+                privateKeyLocationET.setText(file.toString());
+            });
+            fileDialog.showDialog();
+
         });
 
 
@@ -217,21 +206,7 @@ public class UpsEditor extends AppCompatActivity {
             prefsEditor.apply();
         });
 
-
     } // End of onCreate();
-
-
-    // Check for required permissions
-    private static boolean hasPermissions(Context context, String[] permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
 
 }
