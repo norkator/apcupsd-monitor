@@ -71,6 +71,8 @@
     <string name="path">Path</string>
     <string name="ups_editor_create_new">UPS Editor (Create new)</string>
     <string name="ups_editor_update_existing">UPS Editor (Update existing)</string>
+    <string name="private_key_file_imported_success">Private key file imported.</string>
+    <string name="private_key_file_imported_failed">Failed to import private key file.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
