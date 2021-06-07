@@ -1,13 +1,18 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,18 +25,31 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nitramite.ui.FileDialog;
-
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UpsEditor extends AppCompatActivity {
+
+    // Logging
+    private final static String TAG = UpsEditor.class.getSimpleName();
 
     // Variables
     private SharedPreferences sharedPreferences;
     private String upsId = null;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    private static final int IMPORT_FILE_REQUEST_CODE = 2;
+
+    // View elements
+    private EditText privateKeyLocationET;
+
+    // File paths
+    public static final String PATH = "/keys/";
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @Override
@@ -56,7 +74,7 @@ public class UpsEditor extends AppCompatActivity {
         final EditText serverPasswordET = findViewById(R.id.serverPasswordET);
         final Switch privateKeyAuthSwitch = findViewById(R.id.privateKeyAuthSwitch);
         final EditText privateKeyPassphraseET = findViewById(R.id.privateKeyPassphraseET);
-        final EditText privateKeyLocationET = findViewById(R.id.privateKeyLocationET);
+        privateKeyLocationET = findViewById(R.id.privateKeyLocationET);
         final Switch strictHostKeyCheckingSwitch = findViewById(R.id.strictHostKeyCheckingSwitch);
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
@@ -150,15 +168,10 @@ public class UpsEditor extends AppCompatActivity {
 
         Button selectPrivateKeyLocationBtn = findViewById(R.id.selectPrivateKeyLocationBtn);
         selectPrivateKeyLocationBtn.setOnClickListener(view -> {
-
-            File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
-            final FileDialog fileDialog = new FileDialog(UpsEditor.this, mPath, "");
-            fileDialog.addFileListener(file -> {
-                Toast.makeText(UpsEditor.this, getString(R.string.path) + ": " + file.toString(), Toast.LENGTH_SHORT).show();
-                privateKeyLocationET.setText(file.toString());
-            });
-            fileDialog.showDialog();
-
+            Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+            chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+            chooseFile.setType("*/*");
+            startActivityForResult(Intent.createChooser(chooseFile, "Choose private key file"), IMPORT_FILE_REQUEST_CODE);
         });
 
 
@@ -207,6 +220,74 @@ public class UpsEditor extends AppCompatActivity {
         });
 
     } // End of onCreate();
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMPORT_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri content_describer = data.getData();
+            assert content_describer != null;
+            Log.d(TAG, Objects.requireNonNull(content_describer.getPath()));
+            try {
+                String inFileName = queryName(this.getContentResolver(), content_describer);
+                InputStream inputStream = this.getContentResolver().openInputStream(content_describer);
+                assert inputStream != null;
+                if (ImportFile(this, inFileName, inputStream)) {
+                    privateKeyLocationET.setText(new File(getFilesDir() + PATH + inFileName).toString());
+                    Toast.makeText(this, R.string.private_key_file_imported_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.private_key_file_imported_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private String queryName(ContentResolver resolver, Uri uri) {
+        Cursor returnCursor =
+                resolver.query(uri, null, null, null, null);
+        assert returnCursor != null;
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(nameIndex);
+        returnCursor.close();
+        return name;
+    }
+
+
+    public static boolean ImportFile(Context context, String fileName, InputStream inputStream) {
+        try {
+            OutputStream dbFileOutputStream = getDBOutputStream(context, fileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                dbFileOutputStream.write(buffer, 0, length);
+            }
+            dbFileOutputStream.flush();
+            dbFileOutputStream.close();
+            inputStream.close();
+
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+
+    private static OutputStream getDBOutputStream(Context context, String fileName) throws NullPointerException, IOException {
+        File filePath = new File(context.getFilesDir(), PATH);
+        filePath.mkdirs();
+
+        File file = new File(context.getFilesDir(), PATH + fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        return new FileOutputStream(file);
+    }
 
 
 }

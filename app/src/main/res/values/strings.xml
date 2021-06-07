@@ -177,5 +177,7 @@
     <string name="apc_network_management_card_aos">APC Network Management Card AOS</string>
     <string name="project_on_github">Project on Github</string>
     <string name="ups_unreachable">UPS UNREACHABLE</string>
+    <string name="private_key_file_imported_success">Private key file imported.</string>
+    <string name="private_key_file_imported_failed">Failed to import private key file.</string>
 
 </resources>
