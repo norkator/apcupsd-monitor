@@ -42,6 +42,7 @@ public class UpsEditor extends AppCompatActivity {
     // Variables
     private SharedPreferences sharedPreferences;
     private String upsId = null;
+    private boolean isApcNmc = false;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
     private static final int IMPORT_FILE_REQUEST_CODE = 2;
 
@@ -100,18 +101,22 @@ public class UpsEditor extends AppCompatActivity {
                     case 1:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
                         loadUpsEventsSwitch.setChecked(true);
+                        isApcNmc = false;
                         break;
                     case 2:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD_NO_SUDO);
                         loadUpsEventsSwitch.setChecked(true);
+                        isApcNmc = false;
                         break;
                     case 3:
                         statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
                         loadUpsEventsSwitch.setChecked(false);
+                        isApcNmc = false;
                         break;
                     case 4:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
                         loadUpsEventsSwitch.setChecked(false);
+                        isApcNmc = true;
                         break;
                 }
             }
@@ -153,6 +158,7 @@ public class UpsEditor extends AppCompatActivity {
             privateKeyPassphraseET.setText(ups.UPS_PRIVATE_KEY_PASSWORD);
             strictHostKeyCheckingSwitch.setChecked(ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1"));
             statusCommandET.setText(ups.UPS_SERVER_STATUS_COMMAND);
+            isApcNmc = ups.IS_APC_NMC;
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
             loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
         }
@@ -193,6 +199,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_PRIVATE_KEY_PATH, privateKeyLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING, strictHostKeyCheckingSwitch.isChecked() ? "1" : "0");
             contentValues.put(DatabaseHelper.UPS_SERVER_STATUS_COMMAND, statusCommandET.getText().toString());
+            contentValues.put(DatabaseHelper.IS_APC_NMC, isApcNmc);
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
             databaseHelper.insertUpdateUps(upsId, contentValues);

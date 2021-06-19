@@ -30,6 +30,7 @@ public class UPS {
     public String UPS_PRIVATE_KEY_PATH = null;
     public String UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING = null;
     public String UPS_SERVER_STATUS_COMMAND = null;
+    public boolean IS_APC_NMC = false;
     public String UPS_SERVER_EVENTS_LOCATION = null;
     public String UPS_SERVER_HOST_NAME = null;
     public String UPS_SERVER_HOST_FINGER_PRINT = null;

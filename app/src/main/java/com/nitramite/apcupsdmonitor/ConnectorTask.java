@@ -39,6 +39,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // Command variables
     private String statusCommand = Constants.STATUS_COMMAND_APCUPSD;
+    private boolean isApcNmc = false;
     private String eventsLocation = Constants.EVENTS_LOCATION;
 
     // Variables
@@ -115,6 +116,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             final String connectionType = upsArrayList.get(arrayPosition).UPS_CONNECTION_TYPE;
 
             this.statusCommand = upsArrayList.get(arrayPosition).UPS_SERVER_STATUS_COMMAND;
+            this.isApcNmc = upsArrayList.get(arrayPosition).IS_APC_NMC;
             this.eventsLocation = upsArrayList.get(arrayPosition).UPS_SERVER_EVENTS_LOCATION;
             this.address = upsArrayList.get(arrayPosition).UPS_SERVER_ADDRESS;
             this.port = portStringToInteger(upsArrayList.get(arrayPosition).UPS_SERVER_PORT);
