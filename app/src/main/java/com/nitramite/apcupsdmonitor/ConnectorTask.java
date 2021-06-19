@@ -21,8 +21,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -151,7 +151,11 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 // SSH
                 if (validSSHRequirements()) {
                     if (connectSSHServer(ups.UPS_ID)) {
-                        getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                        if (ups.IS_APC_NMC) {
+                            getUPSStatusNMC(ups.UPS_ID);
+                        } else {
+                            getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                        }
                     } else {
                         onConnectionError(ups.UPS_ID);
                     }
@@ -259,6 +263,47 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // ---------------------------------------------------------------------------------------------
 
+    // Get ups status for APC NMC cards
+    private void getUPSStatusNMC(final String upsId) {
+        try {
+            Channel channel = session.openChannel("shell");
+            InputStream in = channel.getInputStream();
+            OutputStream out = channel.getOutputStream();
+            channel.connect();
+            out.write("detstatus -all\nexit\n".getBytes());
+            out.flush();
+
+            // Can be replaced by test string (/*input*/ testInputStream)
+            InputStreamReader inputReader = new InputStreamReader(in);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(inputReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+            bufferedReader.close();
+            inputReader.close();
+            channel.disconnect();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+            String output = stringBuilder.toString();
+            contentValues.put(DatabaseHelper.UPS_STATUS_STR, output);
+            databaseHelper.insertUpdateUps(upsId, contentValues);
+
+            if (this.taskMode == TaskMode.MODE_ACTIVITY) {
+                getUPSEvents(upsId, false);
+            } else {
+                arrayPosition++;
+                upsTaskHelper();
+            }
+        } catch (JSchException | IOException e) {
+            e.printStackTrace();
+            apcupsdInterface.onCommandError(e.toString());
+            sessionDisconnect();
+        }
+    }
 
     // Get ups status
     private void getUPSStatusSSH(final String upsId, final boolean loadEvents) {
