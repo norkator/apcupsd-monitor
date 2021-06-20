@@ -21,8 +21,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -112,35 +112,35 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 apcupsdInterface.onRefreshList(); // Refresh list view
             }
 
-            final String connectionType = upsArrayList.get(arrayPosition).UPS_CONNECTION_TYPE;
+            UPS ups = upsArrayList.get(arrayPosition);
+            final String connectionType = ups.UPS_CONNECTION_TYPE;
 
-            this.statusCommand = upsArrayList.get(arrayPosition).UPS_SERVER_STATUS_COMMAND;
-            this.eventsLocation = upsArrayList.get(arrayPosition).UPS_SERVER_EVENTS_LOCATION;
-            this.address = upsArrayList.get(arrayPosition).UPS_SERVER_ADDRESS;
-            this.port = portStringToInteger(upsArrayList.get(arrayPosition).UPS_SERVER_PORT);
-            this.sshUsername = upsArrayList.get(arrayPosition).UPS_SERVER_USERNAME;
-            this.sshPassword = upsArrayList.get(arrayPosition).UPS_SERVER_PASSWORD;
-            this.strictHostKeyChecking = upsArrayList.get(arrayPosition).UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1");
+            this.statusCommand = ups.UPS_SERVER_STATUS_COMMAND;
+            this.eventsLocation = ups.UPS_SERVER_EVENTS_LOCATION;
+            this.address = ups.UPS_SERVER_ADDRESS;
+            this.port = portStringToInteger(ups.UPS_SERVER_PORT);
+            this.sshUsername = ups.UPS_SERVER_USERNAME;
+            this.sshPassword = ups.UPS_SERVER_PASSWORD;
+            this.strictHostKeyChecking = ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1");
 
-            this.sshHostName = upsArrayList.get(arrayPosition).UPS_SERVER_HOST_NAME;
-            this.sshHostFingerPrint = upsArrayList.get(arrayPosition).UPS_SERVER_HOST_FINGER_PRINT;
-            this.sshHostKey = upsArrayList.get(arrayPosition).UPS_SERVER_HOST_KEY;
+            this.sshHostName = ups.UPS_SERVER_HOST_NAME;
+            this.sshHostFingerPrint = ups.UPS_SERVER_HOST_FINGER_PRINT;
+            this.sshHostKey = ups.UPS_SERVER_HOST_KEY;
 
             // Private key feature
-            this.privateKeyFileEnabled = upsArrayList.get(arrayPosition).UPS_USE_PRIVATE_KEY_AUTH.equals("1");
-            this.privateKeyFilePassphrase = upsArrayList.get(arrayPosition).UPS_PRIVATE_KEY_PASSWORD;
-            this.privateKeyFileLocation = upsArrayList.get(arrayPosition).UPS_PRIVATE_KEY_PATH;
+            this.privateKeyFileEnabled = ups.UPS_USE_PRIVATE_KEY_AUTH.equals("1");
+            this.privateKeyFilePassphrase = ups.UPS_PRIVATE_KEY_PASSWORD;
+            this.privateKeyFileLocation = ups.UPS_PRIVATE_KEY_PATH;
 
 
             // Determine connection type
             if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_NIS)) {
                 // APCUPSD SOCKET
                 if (validAPCUPSDRequirements()) {
-                    if (connectSocketServer(upsArrayList.get(arrayPosition).UPS_ID, this.address, this.port)) {
-                        getUPSStatusAPCUPSD(upsArrayList.get(arrayPosition).UPS_ID,
-                                upsArrayList.get(arrayPosition).getUpsLoadEvents());
+                    if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
+                        getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
                     } else {
-                        onConnectionError(upsArrayList.get(arrayPosition).UPS_ID);
+                        onConnectionError(ups.UPS_ID);
                     }
                 } else {
                     apcupsdInterface.onMissingPreferences();
@@ -148,11 +148,14 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             } else if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_SSH)) {
                 // SSH
                 if (validSSHRequirements()) {
-                    if (connectSSHServer(upsArrayList.get(arrayPosition).UPS_ID)) {
-                        getUPSStatusSSH(upsArrayList.get(arrayPosition).UPS_ID,
-                                upsArrayList.get(arrayPosition).getUpsLoadEvents());
+                    if (connectSSHServer(ups.UPS_ID)) {
+                        if (ups.UPS_IS_APC_NMC) {
+                            getUPSStatusNMC(ups.UPS_ID);
+                        } else {
+                            getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                        }
                     } else {
-                        onConnectionError(upsArrayList.get(arrayPosition).UPS_ID);
+                        onConnectionError(ups.UPS_ID);
                     }
                 } else {
                     apcupsdInterface.onMissingPreferences();
@@ -258,6 +261,47 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // ---------------------------------------------------------------------------------------------
 
+    // Get ups status for APC NMC cards
+    private void getUPSStatusNMC(final String upsId) {
+        try {
+            Channel channel = session.openChannel("shell");
+            InputStream in = channel.getInputStream();
+            OutputStream out = channel.getOutputStream();
+            channel.connect();
+            out.write("detstatus -all\nexit\n".getBytes());
+            out.flush();
+
+            // Can be replaced by test string (/*input*/ testInputStream)
+            InputStreamReader inputReader = new InputStreamReader(in);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(inputReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+            bufferedReader.close();
+            inputReader.close();
+            channel.disconnect();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+            String output = stringBuilder.toString();
+            contentValues.put(DatabaseHelper.UPS_STATUS_STR, output);
+            databaseHelper.insertUpdateUps(upsId, contentValues);
+
+            if (this.taskMode == TaskMode.MODE_ACTIVITY) {
+                getUPSEvents(upsId, false);
+            } else {
+                arrayPosition++;
+                upsTaskHelper();
+            }
+        } catch (JSchException | IOException e) {
+            e.printStackTrace();
+            apcupsdInterface.onCommandError(e.toString());
+            sessionDisconnect();
+        }
+    }
 
     // Get ups status
     private void getUPSStatusSSH(final String upsId, final boolean loadEvents) {

@@ -35,6 +35,7 @@ public class UPS {
     public String UPS_SERVER_HOST_FINGER_PRINT = null;
     public String UPS_SERVER_HOST_KEY = null;
     public String UPS_LOAD_EVENTS = null;
+    public boolean UPS_IS_APC_NMC = false;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
