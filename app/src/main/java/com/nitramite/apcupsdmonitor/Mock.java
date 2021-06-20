@@ -108,6 +108,64 @@ public class Mock {
             "Self-Test Date: 10/25/2020\n" +
             "Calibration Result: Not Available\n" +
             "Calibration Date: Unknown\n";
+
+
+    public static final String APC_NMC_MOCK_DATA_FULL = "Schneider Electric                      Network Management Card AOS      v6.9.4\n" +
+            "(c) Copyright 2020 All Rights Reserved  Smart-UPS & Matrix-UPS APP       v6.9.4\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "Name      : apc9B4234                                 Date : 06/20/2021\n" +
+            "Contact   : Unknown                                   Time : 10:24:44\n" +
+            "\n" +
+            "Location  : Unknown                                   User : Device Manager\n" +
+            "\n" +
+            "Up Time   : 0 Days 18 Hours 29 Minutes                Stat : P+ N4+ N6+ A+\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "IPv4               : Enabled            IPv6               : Enabled\n" +
+            "Ping Response      : Enabled\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "HTTP               : Enabled            HTTPS              : Disabled\n" +
+            "FTP                : Enabled            Telnet             : Enabled\n" +
+            "SSH/SCP            : Enabled            SNMPv1             : Read/Write\n" +
+            "SNMPv3             : Disabled\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "Super User         : Enabled            RADIUS             : Disabled\n" +
+            "Administrator      : Disabled           Device User        : 1 Enabled\n" +
+            "Read-Only User     : 1 Enabled          Network-Only User  : Disabled\n" +
+            "\n" +
+            "\n" +
+            "Type ? for command listing\n" +
+            "Use tcpip command for IP address(-i), subnet(-s), and gateway(-g)\n" +
+            "\n" +
+            "detstatus -all\n" +
+            "E000: Success\n" +
+            "Status of UPS: On Line, No Alarms Present\n" +
+            "Last Transfer: Due to software command or UPS's test control\n" +
+            "Runtime Remaining: 2 hr 0 min\n" +
+            "Battery State Of Charge: 100.0 %\n" +
+            "Output Voltage: 229.3 VAC\n" +
+            "Output Frequency: 50.0 Hz\n" +
+            "Output Watts Percent: 8.0 %\n" +
+            "Input Voltage: 226.0 VAC\n" +
+            "Input Frequency: 50 Hz\n" +
+            "Battery Voltage: 54.8 VDC\n" +
+            "Battery Temperature: 16.2 C, 61.1 F\n" +
+            "Self-Test Result: Passed\n" +
+            "Self-Test Date: 10/25/2020\n" +
+            "Calibration Result: Not Available\n" +
+            "Calibration Date: Unknown\n" +
+            "\n" +
+            "\n" +
+            "upsabout\n" +
+            "E000: Success\n" +
+            "Model: Smart-UPS 2200\n" +
+            "SKU: SMT2200I\n" +
+            "Serial Number: AS1319242955\n" +
+            "Firmware Revision: UPS 08.3 (ID18) \n" +
+            "Manufacture Date: 05/08/2013\n" +
+            "Apparent Power Rating: 2200 VA\n" +
+            "Real Power Rating: 1980 W\n" +
+            "Battery SKU: RBC55";
+
     public static final String APC_NMC_9630_MOCK_DATA = "E000: Success\n" +
             "Status of UPS: Online - Green Mode\n" +
             "Last Transfer: None\n" +
