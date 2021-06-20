@@ -42,4 +42,6 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.5'
     // For the notifications
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
+
+    testImplementation 'junit:junit:4.12'
 }
