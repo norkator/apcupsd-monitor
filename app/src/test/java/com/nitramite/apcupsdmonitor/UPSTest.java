@@ -71,4 +71,25 @@ public class UPSTest extends TestCase {
         assertEquals("24 of load", ups.getLoadPercentStr(this.mockContext));
         assertEquals("Battery time left: 27 minutes", ups.getBATTERY_TIME_LEFT(this.mockContext));
     }
+
+    @Test
+    public void testApcNMCStatusParse() {
+        when(this.mockContext.getString(R.string.ups_last)).thenReturn("Last");
+        when(this.mockContext.getString(R.string.ups_battery_time_left)).thenReturn("Battery time left");
+        when(this.mockContext.getString(R.string.ups_battery_charge)).thenReturn("battery charge");
+        when(this.mockContext.getString(R.string.ups_of_load)).thenReturn("of load");
+        when(this.mockContext.getString(R.string.ups_volts_line_voltage)).thenReturn("Volts line voltage");
+
+        UPS ups = new UPS();
+        ups.setUPS_STATUS_STR(Mock.APC_NMC_MOCK_DATA);
+        assertEquals("APC NMC AOS", ups.getUPS_NAME());
+        assertEquals("UPS OnLine,NoAlarmsPresent", ups.getSTATUS());
+        assertEquals("Last: Due to software command or UPS's test control", ups.getLastTransferReasonStr(this.mockContext));
+        assertEquals("Battery time left: 2 hr 0 min", ups.getBATTERY_TIME_LEFT(this.mockContext));
+        assertEquals("100.0  battery charge", ups.getBatteryChargeLevelStr(this.mockContext));
+        assertEquals("8.0  of load", ups.getLoadPercentStr(this.mockContext));
+        assertEquals("226.0V", ups.getLineVoltageOnlyStr(this.mockContext));
+        assertEquals("54.8V", ups.getBatteryVoltageOnlyStr(this.mockContext));
+        assertEquals("16.2 C, 61.1 F", ups.getITEMP());
+    }
 }
