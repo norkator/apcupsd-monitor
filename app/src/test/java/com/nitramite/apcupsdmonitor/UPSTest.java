@@ -51,4 +51,24 @@ public class UPSTest extends TestCase {
         assertEquals("UPS 08.8 (ID18)", ups.getFIRMWARE());
         assertEquals("30.0 C", ups.getITEMP());
     }
+
+    @Test
+    public void testNetworkUpsToolsStatusParse() {
+        when(this.mockContext.getString(R.string.ups_battery_charge)).thenReturn("battery charge");
+        when(this.mockContext.getString(R.string.ups_volts_line_voltage)).thenReturn("Volts line voltage");
+        when(this.mockContext.getString(R.string.ups_of_load)).thenReturn("of load");
+        when(this.mockContext.getString(R.string.ups_battery_time_left)).thenReturn("Battery time left");
+
+        UPS ups = new UPS();
+        ups.setUPS_STATUS_STR(Mock.NUT_MOCK_DATA);
+        assertEquals("CPS", ups.getUPS_NAME());
+        assertEquals("100 battery charge", ups.getBatteryChargeLevelStr(this.mockContext));
+        assertEquals("16.0V", ups.getBatteryVoltageOnlyStr(this.mockContext));
+        assertEquals("CP900EPFCLCD", ups.getMODEL());
+        assertEquals("UPS OL", ups.getSTATUS());
+        assertEquals("DSM6-2-25364-191230", ups.getFIRMWARE());
+        assertEquals("228.0V", ups.getLineVoltageOnlyStr(this.mockContext));
+        assertEquals("24 of load", ups.getLoadPercentStr(this.mockContext));
+        assertEquals("Battery time left: 27 minutes", ups.getBATTERY_TIME_LEFT(this.mockContext));
+    }
 }

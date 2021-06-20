@@ -52,7 +52,8 @@ public class Mock {
             "NOMOUTV : 230 Volts\n" +
             "FIRMWARE : UPS 08.8 (ID18)\n" +
             "END APC : 2021-02-16 19:18:32 +0100\n";
-    public static final String NUT_MOCK_DATA = "battery.charge: 100\n" +
+    public static final String NUT_MOCK_DATA =
+            "battery.charge: 100\n" +
             "battery.charge.low: 10\n" +
             "battery.charge.warning: 20\n" +
             "battery.mfr.date: CPS\n" +
