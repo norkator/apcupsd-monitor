@@ -29,6 +29,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 // Had methods to query information from ConnectorTask
 @SuppressWarnings("FieldCanBeLocal")
@@ -268,20 +269,25 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             InputStream in = channel.getInputStream();
             OutputStream out = channel.getOutputStream();
             channel.connect();
-            out.write("detstatus -all\nexit\n".getBytes());
-            out.flush();
-
-            // Can be replaced by test string (/*input*/ testInputStream)
-            InputStreamReader inputReader = new InputStreamReader(in);
 
             StringBuilder stringBuilder = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(inputReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
+            Scanner scanner = new Scanner(in);
+            //We have to send the commands one by one like this
+            //Otherwise, the NMC ssh server just gives up on us ¯\_(ツ)_/¯
+            scanner.useDelimiter("apc>");
+            stringBuilder.append(scanner.next());
+            out.write("detstatus -all\n".getBytes());
+            out.flush();
+            stringBuilder.append(scanner.next());
+            out.write("upsabout\n".getBytes());
+            out.flush();
+            stringBuilder.append(scanner.next());
+            out.write("exit\n".getBytes());
+            out.flush();
+            while (scanner.hasNext()) {
+                stringBuilder.append(scanner.next());
             }
-            bufferedReader.close();
-            inputReader.close();
+            scanner.close();
             channel.disconnect();
 
             ContentValues contentValues = new ContentValues();

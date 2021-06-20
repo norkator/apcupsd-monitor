@@ -7,12 +7,7 @@ import java.nio.charset.StandardCharsets;
 /* Provides mock data */
 public class Mock {
 
-    /**
-     * APCUPSD Mock data
-     */
-    public static InputStream ApcupsdMockData() {
-        String input_test =
-            "APC : 001,044,1035\n" +
+    public static final String APCUPSD_MOCK_DATA = "APC : 001,044,1035\n" +
             "DATE : 2021-02-16 19:18:03 +0100\n" +
             "HOSTNAME : proxmox\n" +
             "VERSION : 3.14.14 (31 May 2016) debian\n" +
@@ -57,55 +52,7 @@ public class Mock {
             "NOMOUTV : 230 Volts\n" +
             "FIRMWARE : UPS 08.8 (ID18)\n" +
             "END APC : 2021-02-16 19:18:32 +0100\n";
-            /*
-            "APC      : 001,037,0940\n" +
-            "DATE     : 2019-09-20 09:10:34 +0200\n" +
-            "HOSTNAME : nebula\n" +
-            "VERSION  : 3.14.14 (31 May 2016) debian\n" +
-            "UPSNAME  : HomeUPS\n" +
-            "CABLE    : USB Cable\n" +
-            "DRIVER   : USB UPS Driver\n" +
-            "UPSMODE  : Stand Alone\n" +
-            "STARTTIME: 2019-09-04 21:52:07 +0200\n" +
-            "MODEL    : Back-UPS XS 950U\n" +
-            "STATUS   : ONLINE\n" +
-            "LINEV    : 232.0 Volts\n" +
-            "LOADPCT  : 12.0 Percent\n" +
-            "BCHARGE  : 100.0 Percent\n" +
-            "TIMELEFT : 48.0 Minutes\n" +
-            "MBATTCHG : 5 Percent\n" +
-            "MINTIMEL : 3 Minutes\n" +
-            "MAXTIME  : 0 Seconds\n" +
-            "SENSE    : Medium\n" +
-            "LOTRANS  : 155.0 Volts\n" +
-            "HITRANS  : 280.0 Volts\n" +
-            "ALARMDEL : 30 Seconds\n" +
-            "BATTV    : 13.4 Volts\n" +
-            "LASTXFER : Unacceptable line voltage changes\n" +
-            "NUMXFERS : 2\n" +
-            "XONBATT  : 2019-09-12 09:32:19 +0200\n" +
-            "TONBATT  : 0 Seconds\n" +
-            "CUMONBATT: 117 Seconds\n" +
-            "XOFFBATT : 2019-09-12 09:34:13 +0200\n" +
-            "SELFTEST : NO\n" +
-            "STATFLAG : 0x05000008\n" +
-            "SERIALNO : 3B1739X28322\n" +
-            "BATTDATE : 2017-10-01\n" +
-            "NOMINV   : 230 Volts\n" +
-            "NOMBATTV : 12.0 Volts\n" +
-            "NOMPOWER : 480 Watts\n" +
-            "FIRMWARE : 925.T2 .I USB FW:T2\n" +
-            "END APC  : 2019-09-20 09:10:35 +0200\n";
-             */
-        return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * Synology NAS Mock data
-     * command: upsc ups
-     */
-    public static InputStream SynologyMockData() {
-        String input_test =
+    public static final String NUT_MOCK_DATA =
             "battery.charge: 100\n" +
             "battery.charge.low: 10\n" +
             "battery.charge.warning: 20\n" +
@@ -145,15 +92,7 @@ public class Mock {
             "ups.timer.shutdown: -60\n" +
             "ups.timer.start: -60\n" +
             "ups.vendorid: 0764\n";
-        return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * APC Network Card Mock data
-     */
-    public static InputStream APCNetworkCardMockData() {
-        String input_test =
-            "E000: Success\n" +
+    public static final String APC_NMC_MOCK_DATA = "E000: Success\n" +
             "Status of UPS: On Line, No Alarms Present\n" +
             "Last Transfer: Due to software command or UPS's test control\n" +
             "Runtime Remaining: 2 hr 0 min\n" +
@@ -169,15 +108,65 @@ public class Mock {
             "Self-Test Date: 10/25/2020\n" +
             "Calibration Result: Not Available\n" +
             "Calibration Date: Unknown\n";
-        return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
-    }
 
-    /**
-     * APC Network Card Mock data #2
-     */
-    public static InputStream APCNetworkCardMockDataAP9630() {
-        String input_test =
+
+    public static final String APC_NMC_MOCK_DATA_FULL = "Schneider Electric                      Network Management Card AOS      v6.9.4\n" +
+            "(c) Copyright 2020 All Rights Reserved  Smart-UPS & Matrix-UPS APP       v6.9.4\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "Name      : apc9B4234                                 Date : 06/20/2021\n" +
+            "Contact   : Unknown                                   Time : 10:24:44\n" +
+            "\n" +
+            "Location  : Unknown                                   User : Device Manager\n" +
+            "\n" +
+            "Up Time   : 0 Days 18 Hours 29 Minutes                Stat : P+ N4+ N6+ A+\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "IPv4               : Enabled            IPv6               : Enabled\n" +
+            "Ping Response      : Enabled\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "HTTP               : Enabled            HTTPS              : Disabled\n" +
+            "FTP                : Enabled            Telnet             : Enabled\n" +
+            "SSH/SCP            : Enabled            SNMPv1             : Read/Write\n" +
+            "SNMPv3             : Disabled\n" +
+            "-------------------------------------------------------------------------------\n" +
+            "Super User         : Enabled            RADIUS             : Disabled\n" +
+            "Administrator      : Disabled           Device User        : 1 Enabled\n" +
+            "Read-Only User     : 1 Enabled          Network-Only User  : Disabled\n" +
+            "\n" +
+            "\n" +
+            "Type ? for command listing\n" +
+            "Use tcpip command for IP address(-i), subnet(-s), and gateway(-g)\n" +
+            "\n" +
+            "detstatus -all\n" +
             "E000: Success\n" +
+            "Status of UPS: On Line, No Alarms Present\n" +
+            "Last Transfer: Due to software command or UPS's test control\n" +
+            "Runtime Remaining: 2 hr 0 min\n" +
+            "Battery State Of Charge: 100.0 %\n" +
+            "Output Voltage: 229.3 VAC\n" +
+            "Output Frequency: 50.0 Hz\n" +
+            "Output Watts Percent: 8.0 %\n" +
+            "Input Voltage: 226.0 VAC\n" +
+            "Input Frequency: 50 Hz\n" +
+            "Battery Voltage: 54.8 VDC\n" +
+            "Battery Temperature: 16.2 C, 61.1 F\n" +
+            "Self-Test Result: Passed\n" +
+            "Self-Test Date: 10/25/2020\n" +
+            "Calibration Result: Not Available\n" +
+            "Calibration Date: Unknown\n" +
+            "\n" +
+            "\n" +
+            "upsabout\n" +
+            "E000: Success\n" +
+            "Model: Smart-UPS 2200\n" +
+            "SKU: SMT2200I\n" +
+            "Serial Number: AS1319242955\n" +
+            "Firmware Revision: UPS 08.3 (ID18) \n" +
+            "Manufacture Date: 05/08/2013\n" +
+            "Apparent Power Rating: 2200 VA\n" +
+            "Real Power Rating: 1980 W\n" +
+            "Battery SKU: RBC55";
+
+    public static final String APC_NMC_9630_MOCK_DATA = "E000: Success\n" +
             "Status of UPS: Online - Green Mode\n" +
             "Last Transfer: None\n" +
             "Input Status: Acceptable\n" +
@@ -199,7 +188,74 @@ public class Mock {
             "Self-Test Date: Unknown\n" +
             "Calibration Result: Unknown\n" +
             "Calibration Date: Unknown";
-        return new ByteArrayInputStream(input_test.getBytes(StandardCharsets.UTF_8));
+
+    /**
+     * APCUPSD Mock data
+     */
+    public static InputStream ApcupsdMockData() {
+        /*
+            "APC      : 001,037,0940\n" +
+            "DATE     : 2019-09-20 09:10:34 +0200\n" +
+            "HOSTNAME : nebula\n" +
+            "VERSION  : 3.14.14 (31 May 2016) debian\n" +
+            "UPSNAME  : HomeUPS\n" +
+            "CABLE    : USB Cable\n" +
+            "DRIVER   : USB UPS Driver\n" +
+            "UPSMODE  : Stand Alone\n" +
+            "STARTTIME: 2019-09-04 21:52:07 +0200\n" +
+            "MODEL    : Back-UPS XS 950U\n" +
+            "STATUS   : ONLINE\n" +
+            "LINEV    : 232.0 Volts\n" +
+            "LOADPCT  : 12.0 Percent\n" +
+            "BCHARGE  : 100.0 Percent\n" +
+            "TIMELEFT : 48.0 Minutes\n" +
+            "MBATTCHG : 5 Percent\n" +
+            "MINTIMEL : 3 Minutes\n" +
+            "MAXTIME  : 0 Seconds\n" +
+            "SENSE    : Medium\n" +
+            "LOTRANS  : 155.0 Volts\n" +
+            "HITRANS  : 280.0 Volts\n" +
+            "ALARMDEL : 30 Seconds\n" +
+            "BATTV    : 13.4 Volts\n" +
+            "LASTXFER : Unacceptable line voltage changes\n" +
+            "NUMXFERS : 2\n" +
+            "XONBATT  : 2019-09-12 09:32:19 +0200\n" +
+            "TONBATT  : 0 Seconds\n" +
+            "CUMONBATT: 117 Seconds\n" +
+            "XOFFBATT : 2019-09-12 09:34:13 +0200\n" +
+            "SELFTEST : NO\n" +
+            "STATFLAG : 0x05000008\n" +
+            "SERIALNO : 3B1739X28322\n" +
+            "BATTDATE : 2017-10-01\n" +
+            "NOMINV   : 230 Volts\n" +
+            "NOMBATTV : 12.0 Volts\n" +
+            "NOMPOWER : 480 Watts\n" +
+            "FIRMWARE : 925.T2 .I USB FW:T2\n" +
+            "END APC  : 2019-09-20 09:10:35 +0200\n";
+             */
+        return new ByteArrayInputStream(APCUPSD_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Synology NAS Mock data
+     * command: upsc ups
+     */
+    public static InputStream SynologyMockData() {
+        return new ByteArrayInputStream(NUT_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * APC Network Card Mock data
+     */
+    public static InputStream APCNetworkCardMockData() {
+        return new ByteArrayInputStream(APC_NMC_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * APC Network Card Mock data #2
+     */
+    public static InputStream APCNetworkCardMockDataAP9630() {
+        return new ByteArrayInputStream(APC_NMC_9630_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
     }
 
 

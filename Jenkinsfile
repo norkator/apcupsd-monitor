@@ -23,15 +23,15 @@ pipeline {
         bat './gradlew compileDebugSources'
       }
     }
-    // stage('Unit test') {
-    //   steps {
-    //     // Compile and run the unit tests for the app and its dependencies
-    //     bat './gradlew testDebugUnitTest testDebugUnitTest'
+    stage('Unit test') {
+      steps {
+        // Compile and run the unit tests for the app and its dependencies
+        bat './gradlew testDebugUnitTest testDebugUnitTest'
 
-    //     // Analyse the test results and update the build result as appropriate
-    //     junit '**/TEST-*.xml'
-    //   }
-    // }
+        // Analyse the test results and update the build result as appropriate
+        junit '**/TEST-*.xml'
+      }
+    }
     stage('Build APK') {
       steps {
         // Finish building and packaging the APK
