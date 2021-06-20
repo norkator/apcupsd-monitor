@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 1 = v1.1.5
     // 2 = v1.2.2, added ups load events boolean
     // 3 = v1.8.7, added ups_reachable boolean
+    // 4 = v1.12.0, contributor bo0tzz added is_apc_nmc field
 
 
     // DATABASE NAME
@@ -52,7 +53,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String UPS_PRIVATE_KEY_PATH = "server_private_key_path";
     static final String UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING = "server_strict_host_key_checking";
     static final String UPS_SERVER_STATUS_COMMAND = "server_status_command";
-    static final String IS_APC_NMC = "is_apc_nmc";
     static final String UPS_SERVER_EVENTS_LOCATION = "server_events_location";
     static final String UPS_SERVER_HOST_NAME = "server_host_name";
     static final String UPS_SERVER_HOST_FINGER_PRINT = "server_host_finger_print";
@@ -60,6 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String UPS_STATUS_STR = "ups_status_str"; // status message containing all lines
     static final String UPS_LOAD_EVENTS = "ups_load_events";
     static final String UPS_REACHABLE = "ups_reachable";
+    static final String UPS_IS_APC_NMC = "is_apc_nmc";
 
     // -------------------------------------------------------------------
 
@@ -182,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ups.setUPS_STATUS_STR(res.getString(15));
             ups.UPS_LOAD_EVENTS = res.getString(16);
             ups.setUPS_REACHABLE_STATUS(res.getString(17));
-            ups.IS_APC_NMC = res.getInt(18) != 0;
+            ups.UPS_IS_APC_NMC = res.getInt(18) != 0;
             upsArrayList.add(ups);
         }
         res.close();

@@ -40,7 +40,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
     // Command variables
     private String statusCommand = Constants.STATUS_COMMAND_APCUPSD;
-    private boolean isApcNmc = false;
     private String eventsLocation = Constants.EVENTS_LOCATION;
 
     // Variables
@@ -118,7 +117,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             final String connectionType = ups.UPS_CONNECTION_TYPE;
 
             this.statusCommand = ups.UPS_SERVER_STATUS_COMMAND;
-            this.isApcNmc = ups.IS_APC_NMC;
             this.eventsLocation = ups.UPS_SERVER_EVENTS_LOCATION;
             this.address = ups.UPS_SERVER_ADDRESS;
             this.port = portStringToInteger(ups.UPS_SERVER_PORT);
@@ -152,7 +150,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 // SSH
                 if (validSSHRequirements()) {
                     if (connectSSHServer(ups.UPS_ID)) {
-                        if (ups.IS_APC_NMC) {
+                        if (ups.UPS_IS_APC_NMC) {
                             getUPSStatusNMC(ups.UPS_ID);
                         } else {
                             getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
