@@ -64,7 +64,7 @@ Authors
 
 Contributors
 ============
-None so far.
+* [bo0tzz](https://github.com/bo0tzz)
 
 
 License
