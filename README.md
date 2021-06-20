@@ -64,7 +64,7 @@ Authors
 
 Contributors
 ============
-* [bo0tzz](https://github.com/bo0tzz)
+* [bo0tzz](https://github.com/bo0tzz) - [See commits](https://github.com/norkator/apcupsd-monitor/commits?author=bo0tzz)
 
 
 License
