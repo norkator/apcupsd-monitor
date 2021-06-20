@@ -102,21 +102,25 @@ public class UpsEditor extends AppCompatActivity {
                         statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD);
                         loadUpsEventsSwitch.setChecked(true);
                         isApcNmc = false;
+                        statusCommandET.setVisibility(View.VISIBLE);
                         break;
                     case 2:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APCUPSD_NO_SUDO);
                         loadUpsEventsSwitch.setChecked(true);
                         isApcNmc = false;
+                        statusCommandET.setVisibility(View.VISIBLE);
                         break;
                     case 3:
                         statusCommandET.setText(Constants.STATUS_COMMAND_SYNOLOGY);
                         loadUpsEventsSwitch.setChecked(false);
                         isApcNmc = false;
+                        statusCommandET.setVisibility(View.VISIBLE);
                         break;
                     case 4:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
                         loadUpsEventsSwitch.setChecked(false);
                         isApcNmc = true;
+                        statusCommandET.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -159,6 +163,10 @@ public class UpsEditor extends AppCompatActivity {
             strictHostKeyCheckingSwitch.setChecked(ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1"));
             statusCommandET.setText(ups.UPS_SERVER_STATUS_COMMAND);
             isApcNmc = ups.IS_APC_NMC;
+            if (isApcNmc) {
+                int pos = dataAdapter.getPosition(getString(R.string.apc_network_management_card_aos));
+                cmdPresetSelection.setSelection(pos);
+            }
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
             loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
         }
