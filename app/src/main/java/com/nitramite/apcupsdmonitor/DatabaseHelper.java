@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 1 = v1.1.5
     // 2 = v1.2.2, added ups load events boolean
     // 3 = v1.8.7, added ups_reachable boolean
+    // 4 = v1.12.0, contributor bo0tzz added is_apc_nmc field
 
 
     // DATABASE NAME
