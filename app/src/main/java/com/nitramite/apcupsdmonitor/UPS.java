@@ -282,7 +282,7 @@ public class UPS {
                 setMODEL(this.getCleanLine(line, "MODEL"));
             } else if (line.contains("STATUS")) {
                 setSTATUS(this.getCleanLine(line, "STATUS"));
-            } else if (line.contains("LINEV")) {
+            } else if (line.contains("LINEV") && !line.contains("MAXLINEV") && !line.contains("MINLINEV")) {
                 setLINE_VOLTAGE(this.getCleanLine(line, "LINEV"));
             } else if (line.contains("LOADPCT")) {
                 setLOAD_PERCENT(this.getCleanLine(line, "LOADPCT"));
