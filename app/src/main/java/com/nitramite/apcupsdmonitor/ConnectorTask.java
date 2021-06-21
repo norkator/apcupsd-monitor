@@ -29,6 +29,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 // Had methods to query information from ConnectorTask
@@ -151,7 +152,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 if (validSSHRequirements()) {
                     if (connectSSHServer(ups.UPS_ID)) {
                         if (ups.UPS_IS_APC_NMC) {
-                            getUPSStatusNMC(ups.UPS_ID);
+                            getUPSStatusNMC(ups.UPS_ID, ups.getUpsLoadEvents());
                         } else {
                             getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
                         }
@@ -263,7 +264,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // ---------------------------------------------------------------------------------------------
 
     // Get ups status for APC NMC cards
-    private void getUPSStatusNMC(final String upsId) {
+    private void getUPSStatusNMC(final String upsId, final boolean loadEvents) {
         try {
             Channel channel = session.openChannel("shell");
             InputStream in = channel.getInputStream();
@@ -297,7 +298,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             databaseHelper.insertUpdateUps(upsId, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(upsId, false);
+                getNMCEvents(upsId, loadEvents);
             } else {
                 arrayPosition++;
                 upsTaskHelper();
@@ -437,6 +438,43 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         upsTaskHelper();
     }
 
+    private void getNMCEvents(final String upsId, final boolean loadEvents) {
+        ArrayList<String> events = new ArrayList<>();
+        if (loadEvents) {
+            Log.i(TAG, "Loading events...");
+            try {
+                this.connectSSHServer(upsId);
+
+                ChannelExec channel = (ChannelExec) session.openChannel("exec");
+                channel.setCommand("apc-scp -f event.txt");
+                channel.connect();
+
+                InputStream in = channel.getInputStream();
+                Scanner scanner = new Scanner(in);
+                scanner.useDelimiter("\r");
+                StringBuilder stringBuilder = new StringBuilder();
+                while (scanner.hasNext()) {
+                    stringBuilder.append(scanner.next());
+                }
+
+                String eventsString = stringBuilder.toString();
+                if (eventsString.contains("Date,Time,User,Event,Code")) {
+                    String eventString = eventsString.split("Date,Time,User,Event,Code")[1];
+                    events.addAll(Arrays.asList(eventString.split("\n")));
+                }
+
+                channel.disconnect();
+                sessionDisconnect();
+                databaseHelper.insertEvents(upsId, events);
+            } catch (JSchException | IOException e) {
+                e.printStackTrace();
+                apcupsdInterface.onCommandError(e.toString());
+                sessionDisconnect();
+            }
+        }
+        arrayPosition++;
+        upsTaskHelper();
+    }
 
     private void getUPSEventsAPCUPSD(final String upsId, final Boolean loadEvents) {
         ArrayList<String> events = new ArrayList<>();

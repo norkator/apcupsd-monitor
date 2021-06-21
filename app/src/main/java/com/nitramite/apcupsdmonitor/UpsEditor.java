@@ -118,7 +118,7 @@ public class UpsEditor extends AppCompatActivity {
                         break;
                     case 4:
                         statusCommandET.setText(Constants.STATUS_COMMAND_APC_NETWORK_CARD);
-                        loadUpsEventsSwitch.setChecked(false);
+                        loadUpsEventsSwitch.setChecked(true);
                         isApcNmc = true;
                         statusCommandET.setVisibility(View.GONE);
                         break;
