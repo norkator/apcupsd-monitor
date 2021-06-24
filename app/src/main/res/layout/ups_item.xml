@@ -138,10 +138,76 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:id="@+id/internalTemperatureLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/internal_temperature" />
+
+                        <TextView
+                            android:id="@+id/internalTemperature"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="N/A"
+                            android:textAlignment="textEnd"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/batteryLoadPercentageLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/loadPercent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/load_percentage" />
+
+                        <ProgressBar
+                            android:id="@+id/loadPercentPB"
+                            style="?android:progressBarStyleHorizontal"
+                            android:layout_width="80dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:progressDrawable="@drawable/progressbar" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/batteryTimeLeftLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/batteryTimeLeft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/battery_time_left" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
 
                 <FrameLayout
+                    android:id="@+id/chargePercentageFrameLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">

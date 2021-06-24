@@ -1,10 +1,15 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -19,12 +24,14 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
     // Variables
     private final Activity context;
     private final ArrayList<UPS> upsArrayList;
+    private final SharedPreferences sharedPreferences;
 
     // Constructor
     CustomUpsAdapter(Activity context, ArrayList<UPS> upsArrayList_) {
         super(context, R.layout.ups_item, upsArrayList_);
         // TODO Auto-generated constructor stub
         this.context = context;
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.upsArrayList = upsArrayList_;
     }
 
@@ -37,20 +44,47 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         TextView name = rowView.findViewById(R.id.name);
         TextView status = rowView.findViewById(R.id.status);
 
+        LinearLayout upsModelLayout = rowView.findViewById(R.id.upsModelLayout);
         TextView model = rowView.findViewById(R.id.model);
         TextView lineVoltageOnly = rowView.findViewById(R.id.lineVoltageOnly);
+        LinearLayout lineVoltageLayout = rowView.findViewById(R.id.lineVoltageLayout);
         TextView batteryVoltageOnly = rowView.findViewById(R.id.batteryVoltageOnly);
+        LinearLayout batteryVoltageLayout = rowView.findViewById(R.id.batteryVoltageLayout);
+        TextView internalTemperature = rowView.findViewById(R.id.internalTemperature);
+        LinearLayout internalTemperatureLayout = rowView.findViewById(R.id.internalTemperatureLayout);
+        ProgressBar loadPercentPB = rowView.findViewById(R.id.loadPercentPB);
+        LinearLayout batteryLoadPercentageLayout = rowView.findViewById(R.id.batteryLoadPercentageLayout);
+        TextView batteryTimeLeft = rowView.findViewById(R.id.batteryTimeLeft);
+        LinearLayout batteryTimeLeftLayout = rowView.findViewById(R.id.batteryTimeLeftLayout);
 
+        FrameLayout chargePercentageFrameLayout = rowView.findViewById(R.id.chargePercentageFrameLayout);
         CustomGauge chargePB = rowView.findViewById(R.id.chargePB);
         TextView percentageTv = rowView.findViewById(R.id.percentageTv);
 
 
-        // Name
+        // Setting values and visibilities
         name.setText(upsArrayList.get(position).getUPS_NAME());
 
+        upsModelLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_UPS_MODEL, true) ? View.VISIBLE : View.GONE);
         model.setText(upsArrayList.get(position).getMODEL());
+
+        lineVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LINE_VOLTAGE, true) ? View.VISIBLE : View.GONE);
         lineVoltageOnly.setText(upsArrayList.get(position).getLineVoltageOnlyStr(rowView.getContext()));
+
+        batteryVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_VOLTAGE, true) ? View.VISIBLE : View.GONE);
         batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr(rowView.getContext()));
+
+        internalTemperatureLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_INTERNAL_TEMPERATURE, true) ? View.VISIBLE : View.GONE);
+        internalTemperature.setText(upsArrayList.get(position).getITEMP());
+
+        batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, true) ? View.VISIBLE : View.GONE);
+        loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
+
+        batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, true) ? View.VISIBLE : View.GONE);
+        batteryTimeLeft.setText(upsArrayList.get(position).getBATTERY_TIME_LEFT(rowView.getContext()));
+
+        chargePercentageFrameLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_PERCENT_BATTERY_CHARGE, true) ? View.VISIBLE : View.GONE);
+
 
         // Set status (Always shown)
         if (upsArrayList.get(position).upsIsReachable()) {
