@@ -74,13 +74,13 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         batteryVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_VOLTAGE, true) ? View.VISIBLE : View.GONE);
         batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr(rowView.getContext()));
 
-        internalTemperatureLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_INTERNAL_TEMPERATURE, true) ? View.VISIBLE : View.GONE);
+        internalTemperatureLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_INTERNAL_TEMPERATURE, false) ? View.VISIBLE : View.GONE);
         internalTemperature.setText(upsArrayList.get(position).getITEMP());
 
-        batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, true) ? View.VISIBLE : View.GONE);
+        batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, false) ? View.VISIBLE : View.GONE);
         loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
 
-        batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, true) ? View.VISIBLE : View.GONE);
+        batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, false) ? View.VISIBLE : View.GONE);
         batteryTimeLeft.setText(upsArrayList.get(position).getBATTERY_TIME_LEFT(rowView.getContext()));
 
         chargePercentageFrameLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_PERCENT_BATTERY_CHARGE, true) ? View.VISIBLE : View.GONE);

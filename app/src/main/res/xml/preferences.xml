@@ -32,7 +32,7 @@
             android:title="@string/prefs_load_percentage" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="SP_MS_SHOW_PERCENT_BATTERY_CHARGE"
             android:title="@string/prefs_percent_batt_charge" />
 
