@@ -116,7 +116,8 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Settings</string>
-    <string name="prefs_configure_display_items">Configure displayed items</string>
+    <string name="configure_displayed_main_screen_items">Configure displayed main screen items</string>
+    <string name="prefs_configure_display_items">Configure displayed details items</string>
     <string name="prefs_ups_nam_title">Set UPS name as activity title</string>
     <string name="prefs_ups_model">Show UPS model</string>
     <string name="prefs_line_voltage">Show line voltage</string>
