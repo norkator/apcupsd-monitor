@@ -53,6 +53,7 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         TextView internalTemperature = rowView.findViewById(R.id.internalTemperature);
         LinearLayout internalTemperatureLayout = rowView.findViewById(R.id.internalTemperatureLayout);
         ProgressBar loadPercentPB = rowView.findViewById(R.id.loadPercentPB);
+        TextView loadPercent = rowView.findViewById(R.id.loadPercent);
         LinearLayout batteryLoadPercentageLayout = rowView.findViewById(R.id.batteryLoadPercentageLayout);
         TextView batteryTimeLeft = rowView.findViewById(R.id.batteryTimeLeft);
         LinearLayout batteryTimeLeftLayout = rowView.findViewById(R.id.batteryTimeLeftLayout);
@@ -78,6 +79,7 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         internalTemperature.setText(upsArrayList.get(position).getITEMP());
 
         batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, false) ? View.VISIBLE : View.GONE);
+        loadPercent.setText(upsArrayList.get(position).getLoadPercentStr(rowView.getContext()));
         loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
 
         batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, false) ? View.VISIBLE : View.GONE);
