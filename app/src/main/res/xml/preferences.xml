@@ -4,6 +4,46 @@
     android:title="@string/prefs_title">
 
 
+    <PreferenceCategory android:title="@string/configure_displayed_main_screen_items">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_MS_SHOW_UPS_MODEL"
+            android:title="@string/prefs_ups_model" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_MS_SHOW_LINE_VOLTAGE"
+            android:title="@string/prefs_line_voltage" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_MS_SHOW_BATTERY_VOLTAGE"
+            android:title="@string/prefs_batt_voltage" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="SP_MS_SHOW_INTERNAL_TEMPERATURE"
+            android:title="@string/prefs_internal_temp" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="SP_MS_SHOW_LOAD_PERCENTAGE"
+            android:title="@string/prefs_load_percentage" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SP_MS_SHOW_PERCENT_BATTERY_CHARGE"
+            android:title="@string/prefs_percent_batt_charge" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="SP_MS_SHOW_BATTERY_TIME_LEFT"
+            android:title="@string/prefs_batt_time_left" />
+
+    </PreferenceCategory>
+
+
     <PreferenceCategory android:title="@string/prefs_configure_display_items">
 
         <SwitchPreference

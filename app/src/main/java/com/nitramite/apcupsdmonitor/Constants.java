@@ -21,6 +21,16 @@ public class Constants {
     final static String SP_UPS_EARLIER_STATUS = "SP_UPS_EARLIER_STATUS";
     final static String SP_ACTIVITY_RUNNING = "SP_ACTIVITY_RUNNING";
 
+    // Shown prefs for main screen
+    final static String SP_MS_SHOW_UPS_MODEL = "SP_MS_SHOW_UPS_MODEL";
+    final static String SP_MS_SHOW_LINE_VOLTAGE = "SP_MS_SHOW_LINE_VOLTAGE";
+    final static String SP_MS_SHOW_BATTERY_VOLTAGE = "SP_MS_SHOW_BATTERY_VOLTAGE";
+    final static String SP_MS_SHOW_INTERNAL_TEMPERATURE = "SP_MS_SHOW_INTERNAL_TEMPERATURE";
+    final static String SP_MS_SHOW_LOAD_PERCENTAGE = "SP_MS_SHOW_LOAD_PERCENTAGE";
+    final static String SP_MS_SHOW_PERCENT_BATTERY_CHARGE = "SP_MS_SHOW_PERCENT_BATTERY_CHARGE";
+    final static String SP_MS_SHOW_BATTERY_TIME_LEFT = "SP_MS_SHOW_BATTERY_TIME_LEFT";
+
+    // Shown prefs for details screen
     final static String SP_SET_UPS_AS_ACTIVITY_TITLE = "SP_SET_UPS_AS_ACTIVITY_TITLE";
     final static String SP_SHOW_UPS_MODEL = "SP_SHOW_UPS_MODEL";
     final static String SP_SHOW_LINE_VOLTAGE = "SP_SHOW_LINE_VOLTAGE";
