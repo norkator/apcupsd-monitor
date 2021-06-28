@@ -42,7 +42,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.10'
     // For the notifications
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
-
+    // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.11.2'
 }
