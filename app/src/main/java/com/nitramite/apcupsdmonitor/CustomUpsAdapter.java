@@ -80,7 +80,11 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
         batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, false) ? View.VISIBLE : View.GONE);
         loadPercent.setText(upsArrayList.get(position).getLoadPercentStr(rowView.getContext()));
-        loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
+        try {
+            loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
+        } catch (Exception ignored) {
+            batteryLoadPercentageLayout.setVisibility(View.INVISIBLE);
+        }
 
         batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, false) ? View.VISIBLE : View.GONE);
         batteryTimeLeft.setText(upsArrayList.get(position).getBATTERY_TIME_LEFT(rowView.getContext()));
