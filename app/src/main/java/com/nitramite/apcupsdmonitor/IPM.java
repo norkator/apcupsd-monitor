@@ -7,20 +7,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class IPM {
@@ -30,13 +29,16 @@ public class IPM {
 
     private final OkHttpClient client = getUnsafeOkHttpClient();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    public static final MediaType FORM = MediaType.parse("multipart/form-data");
 
-    
+
     IPM(String baseUrl, String port) {
         try {
             String challenge = getChallenge(baseUrl, port);
-            Log.i(TAG, challenge);
-        } catch (IOException | JSONException e) {
+            Log.i(TAG, "Challenge: " + challenge);
+            String sessionId = getLoginSessionId(baseUrl, port, "admin", "admin", challenge);
+            Log.i(TAG, sessionId);
+        } catch (Exception e) {
             Log.e(TAG, e.toString());
             e.printStackTrace();
         }
@@ -59,6 +61,28 @@ public class IPM {
         try (Response response = client.newCall(request).execute()) {
             JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
             return jsonObject.optString("challenge");
+        }
+    }
+
+
+    private String getLoginSessionId(String baseUrl, String port, String userName, String password, String challenge) throws Exception {
+        String hmac = EatonHMAC(password, challenge);
+        Log.i(TAG, "HMAC: " + hmac);
+        if (hmac == null) {
+            throw new Exception("HMAC generation has failed. Cannot proceed with login.");
+        }
+        RequestBody formBody = new FormBody.Builder()
+                .add("login", userName)
+                .add("password", hmac)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://" + baseUrl + ":" + port + "/server/user_srv.js?action=loginUser")
+                .post(formBody)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+            // JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+            // return jsonObject.optString("challenge");
         }
     }
 
@@ -102,5 +126,11 @@ public class IPM {
             throw new RuntimeException(e);
         }
     }
+
+
+    private String EatonHMAC(String key, String data) {
+        return null;
+    }
+
 
 }
