@@ -151,4 +151,6 @@ var HMAC =
 };
 
 
-console.log(HMAC.encode(SHA1.encode('admin'), 'bed6448e6250b8d24f2384af963770c28a1ce5c2'));
+function hmac(key, data) {
+    return HMAC.encode(SHA1.encode(key), data);
+}
