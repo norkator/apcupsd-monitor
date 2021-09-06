@@ -41,11 +41,11 @@
     <!-- UpsEditor -->
     <string name="click_here_for_setup_tutorial">Щелкните здесь, чтобы просмотреть руководство по установке</string>
     <string name="connection_type">Тип соединения</string>
-    <string name="off_ssh_on_apcupsd_tcp_port">Выкл. = SSH, Вкл. = TCP-ПОРТ APCUPSD</string>
+    <string name="off_ssh_on_apcupsd_tcp_port">Options are SSH, APCUPSD TCP PORT or Eaton IPM</string>
     <string name="server_address">Адрес сервера</string>
     <string name="server_ip_or_domain_address">IP-адрес сервера или адрес домена</string>
     <string name="server_port">Порт сервера</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551.</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551. Eaton IPM 4680.</string>
     <string name="port_to_use_for_connection">Порт для подключения</string>
     <string name="server_username_ssh">Имя пользователя сервера (SSH)</string>
     <string name="ssh_server_username">Имя пользователя SSH-сервера</string>

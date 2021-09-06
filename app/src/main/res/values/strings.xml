@@ -41,11 +41,11 @@
     <!-- UpsEditor -->
     <string name="click_here_for_setup_tutorial">Click here for setup tutorial</string>
     <string name="connection_type">Connection type</string>
-    <string name="off_ssh_on_apcupsd_tcp_port">Off = SSH, On = APCUPSD TCP PORT</string>
+    <string name="off_ssh_on_apcupsd_tcp_port">Options are SSH, APCUPSD TCP PORT or Eaton IPM</string>
     <string name="server_address">Server address</string>
     <string name="server_ip_or_domain_address">Server ip or domain address</string>
     <string name="server_port">Server port</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM 4680.</string>
     <string name="port_to_use_for_connection">Port to use for connection</string>
     <string name="server_username_ssh">Server username (SSH)</string>
     <string name="ssh_server_username">SSH Server username</string>

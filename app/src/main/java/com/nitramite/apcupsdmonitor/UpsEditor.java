@@ -49,6 +49,7 @@ public class UpsEditor extends AppCompatActivity {
 
     // View elements
     private EditText privateKeyLocationET;
+    private LinearLayout sshOptionsLayout;
     private RadioButton sshRB;
     private RadioButton nisRB;
     private RadioButton ipmRB;
@@ -137,28 +138,22 @@ public class UpsEditor extends AppCompatActivity {
         });
 
 
-        final LinearLayout sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
+        sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
 
-        sshRB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                sshOptionsLayout.setVisibility(View.VISIBLE);
-            } else {
-                sshOptionsLayout.setVisibility(View.GONE);
-            }
+        sshRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.VISIBLE);
+            nisRB.setChecked(false);
+            ipmRB.setChecked(false);
         });
-        nisRB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                sshOptionsLayout.setVisibility(View.GONE);
-            } else {
-                sshOptionsLayout.setVisibility(View.VISIBLE);
-            }
+        nisRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            sshRB.setChecked(false);
+            ipmRB.setChecked(false);
         });
-        ipmRB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                sshOptionsLayout.setVisibility(View.GONE);
-            } else {
-                sshOptionsLayout.setVisibility(View.VISIBLE);
-            }
+        ipmRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            nisRB.setChecked(false);
+            sshRB.setChecked(false);
         });
 
 
