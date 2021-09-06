@@ -136,7 +136,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
             // Determine connection type
-            if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_NIS)) {
+            if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_NIS)) {
                 // APCUPSD SOCKET
                 if (validAPCUPSDRequirements()) {
                     if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
@@ -147,7 +147,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 } else {
                     apcupsdInterface.onMissingPreferences();
                 }
-            } else if (connectionType.equals(UPS.UPS_CONNECTION_TYPE_SSH)) {
+            } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_SSH)) {
                 // SSH
                 if (validSSHRequirements()) {
                     if (connectSSHServer(ups.UPS_ID)) {
@@ -162,6 +162,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 } else {
                     apcupsdInterface.onMissingPreferences();
                 }
+            } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
+                IPM ipm = new IPM(ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT);
+                // ipm.
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
             }

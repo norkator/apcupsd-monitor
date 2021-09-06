@@ -14,10 +14,6 @@ public class UPS {
     public static final String UPS_NOT_REACHABLE = "0";
     public static final String UPS_REACHABLE = "1";
 
-    // Supported connection types
-    public static final String UPS_CONNECTION_TYPE_SSH = "0";
-    public static final String UPS_CONNECTION_TYPE_NIS = "1";
-
     // Variables | for connection
     public String UPS_ID = null;
     public String UPS_CONNECTION_TYPE = null;

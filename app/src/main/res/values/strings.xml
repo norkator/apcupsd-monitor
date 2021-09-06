@@ -180,5 +180,8 @@
     <string name="apc_network_management_card_aos">APC Network Management Card AOS</string>
     <string name="project_on_github">Project on Github</string>
     <string name="ups_unreachable">UPS UNREACHABLE</string>
+    <string name="ssh">SSH</string>
+    <string name="apcupsd_nis">APCUPSD NIS</string>
+    <string name="eaton_ipm">Eaton IPM</string>
 
 </resources>
