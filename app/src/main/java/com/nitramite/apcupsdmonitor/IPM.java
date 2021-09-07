@@ -45,6 +45,9 @@ public class IPM {
             Log.i(TAG, "Challenge: " + challenge);
             String sessionId = getLoginSessionId(context, baseUrl, port, username, password, challenge);
             Log.i(TAG, sessionId);
+
+            loadEvents(baseUrl, port, sessionId, "UW336A0412");
+
         } catch (Exception e) {
             Log.e(TAG, e.toString());
             e.printStackTrace();
@@ -113,6 +116,38 @@ public class IPM {
         }
     }
 
+
+
+
+    private String loadEvents(
+            String baseUrl, String port, String sessionId, String upsNodeId
+    ) throws Exception {
+        RequestBody formBody = new FormBody.Builder()
+                .add("login", sessionId)
+                .add("nodeID", upsNodeId)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://" + baseUrl + ":" + port + "/server/events_srv.js?action=loadNodeEvents")
+                .post(formBody)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            Log.i(TAG, response.body().string());
+            // sample: todo...
+            // JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+//
+            // String success = jsonObject.optString("success");
+            // if (success.equals("true")) {
+            //     return jsonObject.optString("sessionID");
+            // } else {
+            //     throw new Exception("IPM login failed!");
+            // }
+        }
+    }
+
+
+
+
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * Unsecure okHttp client to make request to local network IPM server without valid cert
