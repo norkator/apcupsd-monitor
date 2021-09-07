@@ -47,9 +47,9 @@
     <string name="server_port">Server port</string>
     <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM 4680.</string>
     <string name="port_to_use_for_connection">Port to use for connection</string>
-    <string name="server_username_ssh">Server username (SSH)</string>
+    <string name="server_username_ssh">Server username</string>
     <string name="ssh_server_username">SSH Server username</string>
-    <string name="server_password_ssh">Server password (SSH)</string>
+    <string name="server_password_ssh">Server password</string>
     <string name="ssh_server_password">SSH Server password</string>
     <string name="private_key_authentication_ssh">Private key authentication (SSH)</string>
     <string name="if_enabled_ssh_connection_uses_private_key">If enabled, ssh connection uses private key instead of password. This is far more secure option</string>

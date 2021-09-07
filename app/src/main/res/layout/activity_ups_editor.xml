@@ -129,7 +129,7 @@
 
 
             <LinearLayout
-                android:id="@+id/sshOptionsLayout"
+                android:id="@+id/credentialOptionsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -169,6 +169,15 @@
                     android:nextFocusForward="@+id/privateKeyAuthSwitch"
                     android:singleLine="true"
                     android:importantForAutofill="no" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/sshOptionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
                 <TextView

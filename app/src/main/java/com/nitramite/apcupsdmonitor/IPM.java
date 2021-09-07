@@ -129,9 +129,11 @@ public class IPM {
         Request request = new Request.Builder()
                 .url("https://" + baseUrl + ":" + port + "/server/events_srv.js?action=loadNodeEvents")
                 .post(formBody)
+                .addHeader("Cookie", "sessionID=" + sessionId)
                 .build();
         try (Response response = client.newCall(request).execute()) {
             Log.i(TAG, response.body().string());
+            return null;
             // sample: todo...
             // JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
 //
@@ -211,7 +213,7 @@ public class IPM {
         runtime.executeScript(ipmScript.toString());
         String hash = runtime.executeStringFunction("hmac", new V8Array(runtime).push(key).push(data));
         Log.i(TAG, "Hash from V8: " + hash);
-        runtime.release();
+        // runtime.release();
         return hash;
     }
 

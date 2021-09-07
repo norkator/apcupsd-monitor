@@ -48,8 +48,8 @@
     <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551. Eaton IPM 4680.</string>
     <string name="port_to_use_for_connection">Порт для подключения</string>
     <string name="server_username_ssh">Имя пользователя сервера (SSH)</string>
-    <string name="ssh_server_username">Имя пользователя SSH-сервера</string>
-    <string name="server_password_ssh">Пароль сервера (SSH)</string>
+    <string name="ssh_server_username">Имя пользователя</string>
+    <string name="server_password_ssh">Пароль сервера</string>
     <string name="ssh_server_password">Пароль сервера SSH</string>
     <string name="private_key_authentication_ssh">Аутентификация с закрытым ключом (SSH)</string>
     <string name="if_enabled_ssh_connection_uses_private_key">Если включено, ssh-соединение использует закрытый ключ вместо пароля. Это гораздо более безопасный вариант</string>

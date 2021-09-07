@@ -49,7 +49,7 @@ public class UpsEditor extends AppCompatActivity {
 
     // View elements
     private EditText privateKeyLocationET;
-    private LinearLayout sshOptionsLayout;
+    private LinearLayout credentialOptionsLayout, sshOptionsLayout;
     private RadioButton sshRB;
     private RadioButton nisRB;
     private RadioButton ipmRB;
@@ -139,19 +139,23 @@ public class UpsEditor extends AppCompatActivity {
 
 
         sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
+        credentialOptionsLayout = findViewById(R.id.credentialOptionsLayout);
 
         sshRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.VISIBLE);
+            credentialOptionsLayout.setVisibility(View.VISIBLE);
             nisRB.setChecked(false);
             ipmRB.setChecked(false);
         });
         nisRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.GONE);
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
         });
         ipmRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.VISIBLE);
             nisRB.setChecked(false);
             sshRB.setChecked(false);
         });
