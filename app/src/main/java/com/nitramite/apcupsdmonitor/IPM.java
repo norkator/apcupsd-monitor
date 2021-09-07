@@ -147,18 +147,18 @@ public class IPM {
             // using apcupsd template as base
             sb.append("DATE : ").append(epochToDateString(node.optLong("System.CreationDate"))).append("\n");
             sb.append("VERSION : ").append(node.optString("System.UID")).append("\n");
-            sb.append("UPSNAME : ").append("System.Name").append("\n");
+            sb.append("UPSNAME : ").append(node.optString("System.Name")).append("\n");
             sb.append("CABLE : ").append(node.optString("System.CommunicationDescription")).append("\n");
             sb.append("DRIVER : ").append(node.optString("System.Mode")).append("\n");
             sb.append("UPSMODE : ").append(node.optString("System.Mode")).append("\n");
-            sb.append("MODEL : ").append("System.Name").append("\n");
+            sb.append("MODEL : ").append(node.optString("System.Name")).append("\n");
 
             // most obvious bit is here
             sb.append("STATUS : ").append(node.optInt("System.PresentStatus.ACPresent") == 1 ? "ONLINE" : "OFFLINE").append("\n");
 
             sb.append("LINEV : ").append(node.optString("UPS.PowerConverter.Input[1].Voltage")).append(" Volts").append("\n");
-            sb.append("LOADPCT : ").append(node.optString("System.PercentLoad")).append(" Percent").append("\n");
-            sb.append("BCHARGE : ").append(node.optString("UPS.PowerSummary.RemainingCapacity")).append(" Percent").append("\n");
+            sb.append("LOADPCT : ").append(node.optString("System.PercentLoad")).append("\n");
+            sb.append("BCHARGE : ").append(node.optString("UPS.PowerSummary.RemainingCapacity")).append("\n");
             sb.append("TIMELEFT : ").append(node.optInt("UPS.PowerSummary.RunTimeToEmpty") / 60).append(" Minutes").append("\n");
 
             sb.append("SERIALNO : ").append(node.optString("System.SerialNumber")).append("\n");
@@ -167,6 +167,7 @@ public class IPM {
             sb.append("BATTV : ").append(node.optString("UPS.PowerSummary.Voltage")).append(" Volts").append("\n");
             sb.append("LINEFREQ : ").append(node.optString("UPS.PowerConverter.Input[1].Frequency")).append(" Hz").append("\n");
 
+            Log.i(TAG, "Status string: " + sb.toString());
             nodeStatus = sb.toString();
             return true;
         }
