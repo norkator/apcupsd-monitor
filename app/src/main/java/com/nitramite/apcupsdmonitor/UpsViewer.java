@@ -324,6 +324,8 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
                     + "\n\nError description: " + e.toString()
                     + "\n\nServer raw output: " + serverOutput
             );
+        } catch (Exception e) {
+            genericErrorDialog("Error", e.toString());
         }
     }
 

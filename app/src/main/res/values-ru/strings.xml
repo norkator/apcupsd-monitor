@@ -41,15 +41,15 @@
     <!-- UpsEditor -->
     <string name="click_here_for_setup_tutorial">Щелкните здесь, чтобы просмотреть руководство по установке</string>
     <string name="connection_type">Тип соединения</string>
-    <string name="off_ssh_on_apcupsd_tcp_port">Выкл. = SSH, Вкл. = TCP-ПОРТ APCUPSD</string>
+    <string name="off_ssh_on_apcupsd_tcp_port">Options are SSH, APCUPSD TCP PORT or Eaton IPM</string>
     <string name="server_address">Адрес сервера</string>
     <string name="server_ip_or_domain_address">IP-адрес сервера или адрес домена</string>
     <string name="server_port">Порт сервера</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551.</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551. Eaton IPM 4680.</string>
     <string name="port_to_use_for_connection">Порт для подключения</string>
     <string name="server_username_ssh">Имя пользователя сервера (SSH)</string>
-    <string name="ssh_server_username">Имя пользователя SSH-сервера</string>
-    <string name="server_password_ssh">Пароль сервера (SSH)</string>
+    <string name="ssh_server_username">Имя пользователя</string>
+    <string name="server_password_ssh">Пароль сервера</string>
     <string name="ssh_server_password">Пароль сервера SSH</string>
     <string name="private_key_authentication_ssh">Аутентификация с закрытым ключом (SSH)</string>
     <string name="if_enabled_ssh_connection_uses_private_key">Если включено, ssh-соединение использует закрытый ключ вместо пароля. Это гораздо более безопасный вариант</string>
@@ -180,5 +180,10 @@
     <string name="apc_network_management_card_aos">APC Карта сетевого управления AOS</string>
     <string name="project_on_github">Проект на Github</string>
     <string name="ups_unreachable">ИБП недоступен</string>
+    <string name="ssh">SSH</string>
+    <string name="apcupsd_nis">APCUPSD NIS</string>
+    <string name="eaton_ipm">Eaton IPM</string>
+    <string name="node_id_ipm">Node ID (IPM)</string>
+    <string name="node_id_eaton_ipm_hint">Идентификатор узла для Eaton IPM, например UW222A0123</string>
 
 </resources>

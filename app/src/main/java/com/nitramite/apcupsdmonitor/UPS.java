@@ -14,10 +14,6 @@ public class UPS {
     public static final String UPS_NOT_REACHABLE = "0";
     public static final String UPS_REACHABLE = "1";
 
-    // Supported connection types
-    public static final String UPS_CONNECTION_TYPE_SSH = "0";
-    public static final String UPS_CONNECTION_TYPE_NIS = "1";
-
     // Variables | for connection
     public String UPS_ID = null;
     public String UPS_CONNECTION_TYPE = null;
@@ -36,6 +32,7 @@ public class UPS {
     public String UPS_SERVER_HOST_KEY = null;
     public String UPS_LOAD_EVENTS = null;
     public boolean UPS_IS_APC_NMC = false;
+    public String UPS_NODE_ID = null; // IPM this is serial number of your device
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
@@ -271,24 +268,6 @@ public class UPS {
             return;
         }
         StatusParser.parseStatus(UPS_STATUS_STR, this);
-    }
-
-
-    // Helper to clean results
-    private String getCleanLine(final String line, final String containing) {
-        String[] split = line.split(": "); // See : and space, important
-        return split.length > 0 ? split[1] : "";
-    }
-
-
-    private String parseUpscRuntime(String input) {
-        try {
-            int value = Integer.parseInt(input);
-            return String.valueOf(value / 60) + " " + "minutes";
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-            return "N/A (Parsing failed)";
-        }
     }
 
 

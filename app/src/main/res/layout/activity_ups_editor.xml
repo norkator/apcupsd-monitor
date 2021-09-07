@@ -47,14 +47,42 @@
                 android:text="@string/off_ssh_on_apcupsd_tcp_port"
                 android:textSize="12sp" />
 
-            <Switch
-                android:id="@+id/connectionTypeSwitch"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:nextFocusForward="@+id/privateKeyPassphraseET"
-                android:singleLine="true"
-                tools:ignore="UseSwitchCompatOrMaterialXml,UseSwitchOrMaterialXml" />
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/sshRB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="@string/ssh"
+                    tools:ignore="UnusedAttribute" />
+
+                <RadioButton
+                    android:id="@+id/nisRB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="@string/apcupsd_nis"
+                    tools:ignore="UnusedAttribute" />
+
+                <RadioButton
+                    android:id="@+id/ipmRB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="@string/eaton_ipm"
+                    tools:ignore="UnusedAttribute" />
+
+            </LinearLayout>
+
 
 
             <TextView
@@ -101,7 +129,7 @@
 
 
             <LinearLayout
-                android:id="@+id/sshOptionsLayout"
+                android:id="@+id/credentialOptionsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -141,6 +169,40 @@
                     android:nextFocusForward="@+id/privateKeyAuthSwitch"
                     android:singleLine="true"
                     android:importantForAutofill="no" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ipmOptionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/node_id_ipm"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/nodeIdET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/node_id_eaton_ipm_hint"
+                    android:singleLine="true"
+                    android:importantForAutofill="no"
+                    android:inputType="text"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/sshOptionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
                 <TextView

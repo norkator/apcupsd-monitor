@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -48,6 +49,10 @@ public class UpsEditor extends AppCompatActivity {
 
     // View elements
     private EditText privateKeyLocationET;
+    private LinearLayout credentialOptionsLayout, sshOptionsLayout, ipmOptionsLayout;
+    private RadioButton sshRB;
+    private RadioButton nisRB;
+    private RadioButton ipmRB;
 
     // File paths
     public static final String PATH = "/keys/";
@@ -65,8 +70,9 @@ public class UpsEditor extends AppCompatActivity {
         Intent intent = getIntent();
         upsId = intent.getStringExtra("UPS_ID");
 
-
-        final Switch connectionTypeSwitch = findViewById(R.id.connectionTypeSwitch);
+        sshRB = findViewById(R.id.sshRB);
+        nisRB = findViewById(R.id.nisRB);
+        ipmRB = findViewById(R.id.ipmRB);
 
         // Editable views
         final EditText serverAddressET = findViewById(R.id.serverAddressET);
@@ -80,6 +86,7 @@ public class UpsEditor extends AppCompatActivity {
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
+        final EditText nodeIdET = findViewById(R.id.nodeIdET);
 
 
         final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
@@ -132,14 +139,30 @@ public class UpsEditor extends AppCompatActivity {
         });
 
 
-        final LinearLayout sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
+        sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
+        credentialOptionsLayout = findViewById(R.id.credentialOptionsLayout);
+        ipmOptionsLayout = findViewById(R.id.ipmOptionsLayout);
 
-        connectionTypeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                sshOptionsLayout.setVisibility(View.GONE);
-            } else {
-                sshOptionsLayout.setVisibility(View.VISIBLE);
-            }
+        sshRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.VISIBLE);
+            credentialOptionsLayout.setVisibility(View.VISIBLE);
+            ipmOptionsLayout.setVisibility(View.GONE);
+            nisRB.setChecked(false);
+            ipmRB.setChecked(false);
+        });
+        nisRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.GONE);
+            ipmOptionsLayout.setVisibility(View.GONE);
+            sshRB.setChecked(false);
+            ipmRB.setChecked(false);
+        });
+        ipmRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.VISIBLE);
+            ipmOptionsLayout.setVisibility(View.VISIBLE);
+            nisRB.setChecked(false);
+            sshRB.setChecked(false);
         });
 
 
@@ -152,7 +175,25 @@ public class UpsEditor extends AppCompatActivity {
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
             UPS ups = databaseHelper.getAllUps(upsId).get(0);
-            connectionTypeSwitch.setChecked(ups.UPS_CONNECTION_TYPE.equals(UPS.UPS_CONNECTION_TYPE_NIS));
+
+            switch (ups.UPS_CONNECTION_TYPE) {
+                case ConnectionType.UPS_CONNECTION_TYPE_SSH:
+                    sshRB.setChecked(true);
+                    ipmRB.setChecked(false);
+                    nisRB.setChecked(false);
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_NIS:
+                    nisRB.setChecked(true);
+                    ipmRB.setChecked(false);
+                    sshRB.setChecked(false);
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_IPM:
+                    ipmRB.setChecked(true);
+                    nisRB.setChecked(false);
+                    sshRB.setChecked(false);
+                    break;
+            }
+
             serverAddressET.setText(ups.UPS_SERVER_ADDRESS);
             serverPortET.setText(ups.UPS_SERVER_PORT);
             serverUsernameET.setText(ups.UPS_SERVER_USERNAME);
@@ -169,6 +210,7 @@ public class UpsEditor extends AppCompatActivity {
             }
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
             loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
+            nodeIdET.setText(ups.UPS_NODE_ID);
         }
 
 
@@ -196,8 +238,7 @@ public class UpsEditor extends AppCompatActivity {
         Button positiveBtn = findViewById(R.id.positiveBtn);
         positiveBtn.setOnClickListener(view -> {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE,
-                    connectionTypeSwitch.isChecked() ? UPS.UPS_CONNECTION_TYPE_NIS : UPS.UPS_CONNECTION_TYPE_SSH);
+            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE, getConnectionType());
             contentValues.put(DatabaseHelper.UPS_SERVER_ADDRESS, serverAddressET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_PORT, serverPortET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_USERNAME, serverUsernameET.getText().toString());
@@ -210,6 +251,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_IS_APC_NMC, isApcNmc);
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
+            contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
             databaseHelper.insertUpdateUps(upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();
@@ -257,6 +299,19 @@ public class UpsEditor extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    private String getConnectionType() {
+        if (sshRB.isChecked()) {
+            return ConnectionType.UPS_CONNECTION_TYPE_SSH;
+        } else if (nisRB.isChecked()) {
+            return ConnectionType.UPS_CONNECTION_TYPE_NIS;
+        } else if (ipmRB.isChecked()) {
+            return ConnectionType.UPS_CONNECTION_TYPE_IPM;
+        } else {
+            return ConnectionType.UPS_CONNECTION_TYPE_NA;
         }
     }
 
