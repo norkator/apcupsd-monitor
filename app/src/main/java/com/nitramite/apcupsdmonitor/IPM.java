@@ -27,7 +27,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -40,8 +39,6 @@ public class IPM {
 
     private final ArrayList<String> events = new ArrayList<>();
     private final OkHttpClient client = getUnsafeOkHttpClient();
-    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    public static final MediaType FORM = MediaType.parse("multipart/form-data");
 
 
     IPM(Context context, String baseUrl, String port, String username, String password, String upsNodeId) {
@@ -124,6 +121,16 @@ public class IPM {
     }
 
 
+    /**
+     * IPM UPS events for specified UPS node id => your UPS serial number
+     *
+     * @param baseUrl   to query events from
+     * @param port      to use
+     * @param sessionId for request
+     * @param upsNodeId which events are requested
+     * @return success result
+     * @throws Exception if loading fails
+     */
     private Boolean loadEvents(
             String baseUrl, String port, String sessionId, String upsNodeId
     ) throws Exception {
