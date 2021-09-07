@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
-import com.eclipsesource.v8.V8Object;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,11 +39,11 @@ public class IPM {
     public static final MediaType FORM = MediaType.parse("multipart/form-data");
 
 
-    IPM(Context context, String baseUrl, String port) {
+    IPM(Context context, String baseUrl, String port, String username, String password) {
         try {
             String challenge = getChallenge(baseUrl, port);
             Log.i(TAG, "Challenge: " + challenge);
-            String sessionId = getLoginSessionId(context, baseUrl, port, "admin", "admin", challenge);
+            String sessionId = getLoginSessionId(context, baseUrl, port, username, password, challenge);
             Log.i(TAG, sessionId);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -73,12 +72,23 @@ public class IPM {
     }
 
 
+    /**
+     * Login to IPM to get sessionId
+     *
+     * @param context   of app
+     * @param baseUrl   of IPM server
+     * @param port      of IPM server
+     * @param userName  of IPM server
+     * @param password  of IPM server
+     * @param challenge from challenge request
+     * @return sessionId like: 96fbb852021cf0c8f7c6b5a10c9d0467ffc509f1
+     * @throws Exception if login fails
+     */
     private String getLoginSessionId(
             Context context, String baseUrl, String port, String userName,
             String password, String challenge
     ) throws Exception {
         String hmac = EatonHMAC(context, password, challenge);
-        Log.i(TAG, "HMAC: " + hmac);
         if (hmac == null) {
             throw new Exception("HMAC generation has failed. Cannot proceed with login.");
         }
@@ -91,9 +101,15 @@ public class IPM {
                 .post(formBody)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-            // JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
-            // return jsonObject.optString("challenge");
+            // sample: {"success":true,"sessionID":"96fbb852021cf0c8f7c6b5a10c9d0467ffc509f1","maxAge":900}
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+
+            String success = jsonObject.optString("success");
+            if (success.equals("true")) {
+                return jsonObject.optString("sessionID");
+            } else {
+                throw new Exception("IPM login failed!");
+            }
         }
     }
 
@@ -141,11 +157,12 @@ public class IPM {
 
     /**
      * Get hash for login
+     *
      * @param context of app
-     * @param key which is user
-     * @param data which is challenge
+     * @param key     which is user
+     * @param data    which is challenge
      * @return hash
-     * @throws IOException
+     * @throws IOException if calculating hmac fails
      */
     private String EatonHMAC(Context context, String key, String data) throws IOException {
         V8 runtime = V8.createV8Runtime();

@@ -166,7 +166,10 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     apcupsdInterface.onMissingPreferences();
                 }
             } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
-                IPM ipm = new IPM(context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT);
+                IPM ipm = new IPM(
+                        context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
+                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD
+                );
                 // ipm.
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
