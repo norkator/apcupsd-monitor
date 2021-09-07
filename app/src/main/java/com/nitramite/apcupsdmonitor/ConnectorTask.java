@@ -176,6 +176,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
                 databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
                 databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
+                // next
+                arrayPosition++;
+                upsTaskHelper();
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
             }
