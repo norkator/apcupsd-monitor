@@ -32,6 +32,7 @@ public class UPS {
     public String UPS_SERVER_HOST_KEY = null;
     public String UPS_LOAD_EVENTS = null;
     public boolean UPS_IS_APC_NMC = false;
+    public String UPS_NODE_ID = null;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
@@ -267,24 +268,6 @@ public class UPS {
             return;
         }
         StatusParser.parseStatus(UPS_STATUS_STR, this);
-    }
-
-
-    // Helper to clean results
-    private String getCleanLine(final String line, final String containing) {
-        String[] split = line.split(": "); // See : and space, important
-        return split.length > 0 ? split[1] : "";
-    }
-
-
-    private String parseUpscRuntime(String input) {
-        try {
-            int value = Integer.parseInt(input);
-            return String.valueOf(value / 60) + " " + "minutes";
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-            return "N/A (Parsing failed)";
-        }
     }
 
 

@@ -166,11 +166,19 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     apcupsdInterface.onMissingPreferences();
                 }
             } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
+                // Eaton IPM
                 IPM ipm = new IPM(
                         context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
-                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD
+                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD,
+                        "UW336A0412" // ups.UPS_NODE_ID
                 );
-                // ipm.
+                databaseHelper.insertEvents(upsId, ipm.getEvents());
+
+                // Todo fix, this is dummy
+                // ContentValues contentValues = new ContentValues();
+                // contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+                // databaseHelper.insertUpdateUps(upsId, contentValues);
+
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
             }
@@ -399,14 +407,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
             getUPSEventsAPCUPSD(upsId, loadEvents);
 
-        } catch (UnknownHostException e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
         } catch (Exception e) {
             Log.i(TAG, e.toString());
             apcupsdInterface.onCommandError(e.toString());
@@ -522,14 +522,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             arrayPosition++;
             upsTaskHelper();
 
-        } catch (UnknownHostException e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
         } catch (Exception e) {
             Log.i(TAG, e.toString());
             apcupsdInterface.onCommandError(e.toString());
