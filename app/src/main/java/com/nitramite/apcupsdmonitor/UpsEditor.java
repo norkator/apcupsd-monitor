@@ -307,7 +307,7 @@ public class UpsEditor extends AppCompatActivity {
         if (sshRB.isChecked()) {
             return ConnectionType.UPS_CONNECTION_TYPE_SSH;
         } else if (nisRB.isChecked()) {
-            return ConnectionType.UPS_CONNECTION_TYPE_SSH;
+            return ConnectionType.UPS_CONNECTION_TYPE_NIS;
         } else if (ipmRB.isChecked()) {
             return ConnectionType.UPS_CONNECTION_TYPE_IPM;
         } else {
