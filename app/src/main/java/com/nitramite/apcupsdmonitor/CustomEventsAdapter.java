@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -33,15 +34,17 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
         TextView event = (TextView) rowView.findViewById(R.id.event);
         final String positionStr = events.get(position);
         event.setText(positionStr);
-        if (positionStr.contains("Power failure")) {
+        if (
+                positionStr.contains("Power failure") || positionStr.contains("device has failed")
+        ) {
             if (this.eventsColoring) {
                 event.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
             } else {
                 event.setTextColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
             }
-        }
-        else
-        if (positionStr.contains("Power is back")) {
+        } else if (
+                positionStr.contains("Power is back") || positionStr.contains("is restored") || positionStr.contains("returns to normal load")
+        ) {
             if (this.eventsColoring) {
                 event.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
             } else {
