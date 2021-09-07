@@ -180,7 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ups.UPS_LOAD_EVENTS = res.getString(16);
             ups.setUPS_REACHABLE_STATUS(res.getString(17));
             ups.UPS_IS_APC_NMC = res.getInt(18) != 0;
-            // ups.UPS_NODE_ID = res.getString(19);
+            ups.UPS_NODE_ID = res.getString(19);
             upsArrayList.add(ups);
         }
         res.close();

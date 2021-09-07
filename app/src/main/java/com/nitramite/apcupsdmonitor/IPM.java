@@ -7,6 +7,7 @@ import android.util.Log;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 import javax.net.ssl.SSLContext;
@@ -34,19 +38,22 @@ public class IPM {
     // Logging
     private final static String TAG = IPM.class.getSimpleName();
 
+    private final ArrayList<String> events = new ArrayList<>();
     private final OkHttpClient client = getUnsafeOkHttpClient();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     public static final MediaType FORM = MediaType.parse("multipart/form-data");
 
 
-    IPM(Context context, String baseUrl, String port, String username, String password) {
+    IPM(Context context, String baseUrl, String port, String username, String password, String upsNodeId) {
         try {
             String challenge = getChallenge(baseUrl, port);
             Log.i(TAG, "Challenge: " + challenge);
             String sessionId = getLoginSessionId(context, baseUrl, port, username, password, challenge);
             Log.i(TAG, sessionId);
 
-            loadEvents(baseUrl, port, sessionId, "UW336A0412");
+            boolean eventsLoaded = loadEvents(baseUrl, port, sessionId, upsNodeId);
+
+            Log.i(TAG, "Events loaded: " + eventsLoaded);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -117,36 +124,43 @@ public class IPM {
     }
 
 
-
-
-    private String loadEvents(
+    private Boolean loadEvents(
             String baseUrl, String port, String sessionId, String upsNodeId
     ) throws Exception {
+        events.clear();
         RequestBody formBody = new FormBody.Builder()
-                .add("login", sessionId)
+                .add("sessionID", sessionId)
                 .add("nodeID", upsNodeId)
                 .build();
         Request request = new Request.Builder()
                 .url("https://" + baseUrl + ":" + port + "/server/events_srv.js?action=loadNodeEvents")
                 .post(formBody)
-                .addHeader("Cookie", "sessionID=" + sessionId)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Cookie", "mc2LastLogin=admin; sessionID=" + sessionId)
+                .addHeader("User-Agent", "Mozilla/5.0")
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            Log.i(TAG, response.body().string());
-            return null;
-            // sample: todo...
-            // JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
-//
-            // String success = jsonObject.optString("success");
-            // if (success.equals("true")) {
-            //     return jsonObject.optString("sessionID");
-            // } else {
-            //     throw new Exception("IPM login failed!");
-            // }
+            // sample: {"date":1631031250263,"count":4,"data":[{"id":"92","nodeID":"UW336A0412","name":"PW5115 750i","date":"1631025141789","status":"1","message":"Communication with device is restored","ack":"0"},{"id":"90","nodeID":"UW336A0412","name":"PW5115 750i","date":"1631024907166","status":"4","message":"Communication with device has failed","ack":"0"},{"id":"66","nodeID":"UW336A0412","name":"PW5115 750i","date":"1631002878631","status":"1","message":"Communication with device is restored","ack":"0"},{"id":"61","nodeID":"UW336A0412","name":"PW5115 750i","date":"1631000568102","status":"4","message":"Communication with device has failed","ack":"0"}]}
+            JSONObject eventsObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+            JSONArray eventsArray = eventsObject.optJSONArray("data");
+
+            for (int i = 0; i < eventsArray.length(); i++) {
+                // example: {"id":"92","nodeID":"UW336A0412","name":"PW5115 750i","date":"1631025141789","status":"1","message":"Communication with device is restored","ack":"0"}
+                StringBuilder sb = new StringBuilder();
+                JSONObject eventObject = eventsArray.optJSONObject(i);
+
+                // Datetime
+                Date date = new Date(eventObject.optLong("date"));
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                sb.append(jdf.format(date)).append(" ");
+
+                sb.append(eventObject.optString("message"));
+                Log.i(TAG, "IPM node " + upsNodeId + " event: " + sb.toString());
+                events.add(sb.toString());
+            }
+            return true;
         }
     }
-
-
 
 
     // ---------------------------------------------------------------------------------------------
@@ -217,5 +231,12 @@ public class IPM {
         return hash;
     }
 
+
+    /**
+     * @return parsed events
+     */
+    public ArrayList<String> getEvents() {
+        return events;
+    }
 
 }

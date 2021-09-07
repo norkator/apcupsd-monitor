@@ -183,5 +183,7 @@
     <string name="ssh">SSH</string>
     <string name="apcupsd_nis">APCUPSD NIS</string>
     <string name="eaton_ipm">Eaton IPM</string>
+    <string name="node_id_ipm">Node ID (IPM)</string>
+    <string name="node_id_eaton_ipm_hint">Node id for Eaton IPM like UW222A0123</string>
 
 </resources>

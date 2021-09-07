@@ -49,7 +49,7 @@ public class UpsEditor extends AppCompatActivity {
 
     // View elements
     private EditText privateKeyLocationET;
-    private LinearLayout credentialOptionsLayout, sshOptionsLayout;
+    private LinearLayout credentialOptionsLayout, sshOptionsLayout, ipmOptionsLayout;
     private RadioButton sshRB;
     private RadioButton nisRB;
     private RadioButton ipmRB;
@@ -86,6 +86,7 @@ public class UpsEditor extends AppCompatActivity {
         final EditText statusCommandET = findViewById(R.id.statusCommandET);
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
+        final EditText nodeIdET = findViewById(R.id.nodeIdET);
 
 
         final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
@@ -140,22 +141,26 @@ public class UpsEditor extends AppCompatActivity {
 
         sshOptionsLayout = findViewById(R.id.sshOptionsLayout);
         credentialOptionsLayout = findViewById(R.id.credentialOptionsLayout);
+        ipmOptionsLayout = findViewById(R.id.ipmOptionsLayout);
 
         sshRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.VISIBLE);
             credentialOptionsLayout.setVisibility(View.VISIBLE);
+            ipmOptionsLayout.setVisibility(View.GONE);
             nisRB.setChecked(false);
             ipmRB.setChecked(false);
         });
         nisRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
             credentialOptionsLayout.setVisibility(View.GONE);
+            ipmOptionsLayout.setVisibility(View.GONE);
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
         });
         ipmRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
             credentialOptionsLayout.setVisibility(View.VISIBLE);
+            ipmOptionsLayout.setVisibility(View.VISIBLE);
             nisRB.setChecked(false);
             sshRB.setChecked(false);
         });
@@ -205,6 +210,7 @@ public class UpsEditor extends AppCompatActivity {
             }
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
             loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
+            nodeIdET.setText(ups.UPS_NODE_ID);
         }
 
 
@@ -245,6 +251,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_IS_APC_NMC, isApcNmc);
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
+            contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
             databaseHelper.insertUpdateUps(upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();

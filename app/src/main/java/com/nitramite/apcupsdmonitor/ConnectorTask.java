@@ -169,15 +169,14 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 // Eaton IPM
                 IPM ipm = new IPM(
                         context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
-                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD,
-                        "UW336A0412" // ups.UPS_NODE_ID
+                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
                 );
-                databaseHelper.insertEvents(upsId, ipm.getEvents());
+                databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
 
                 // Todo fix, this is dummy
-                // ContentValues contentValues = new ContentValues();
-                // contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
-                // databaseHelper.insertUpdateUps(upsId, contentValues);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+                databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
 
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
