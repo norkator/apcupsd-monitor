@@ -4,7 +4,7 @@ Upper image is a video link.
 
 # APCUPSD Monitor
 
-Android app for monitoring APC UPS devices statuses and view events. 
+Android app for monitoring APC and EATON IPM UPS device statuses and view events.
 Watch Youtube video for better description. 
 I brought this project on Github so other people can add features for their own use. 
 See license and contribution rules below. 
@@ -32,7 +32,7 @@ Features
 ============
 * Basic status details viewer.
 * Event logs viewer.
-* Supports parsing data via SSH, APCUPSD Daemon NIS, Synology UPS, APC Network Management Card.
+* Supports parsing data via SSH, APCUPSD Daemon NIS, Synology UPS, APC Network Management Card, Eaton IPM (Intelligent Power Manager).
 * Firebase based status check triggering and monitoring with notifications.
 * Front screen widget support.
 * Light and dark themes automatically following Android OS system theme.  
