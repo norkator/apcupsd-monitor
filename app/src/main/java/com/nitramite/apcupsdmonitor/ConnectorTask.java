@@ -171,13 +171,11 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                         context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
                         ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
                 );
-                databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
-
-                // Todo fix, this is dummy
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+                contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
                 databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
-
+                databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");
             }

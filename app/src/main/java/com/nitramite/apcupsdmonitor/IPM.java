@@ -37,6 +37,7 @@ public class IPM {
     // Logging
     private final static String TAG = IPM.class.getSimpleName();
 
+    private String nodeStatus = null;
     private final ArrayList<String> events = new ArrayList<>();
     private final OkHttpClient client = getUnsafeOkHttpClient();
 
@@ -48,10 +49,11 @@ public class IPM {
             String sessionId = getLoginSessionId(context, baseUrl, port, username, password, challenge);
             Log.i(TAG, sessionId);
 
+            boolean statusLoaded = loadNodeStatus(baseUrl, port, sessionId, upsNodeId);
+            Log.i(TAG, "Status loaded: " + statusLoaded);
+
             boolean eventsLoaded = loadEvents(baseUrl, port, sessionId, upsNodeId);
-
             Log.i(TAG, "Events loaded: " + eventsLoaded);
-
         } catch (Exception e) {
             Log.e(TAG, e.toString());
             e.printStackTrace();
@@ -121,6 +123,56 @@ public class IPM {
     }
 
 
+    @SuppressWarnings("ConstantConditions")
+    private boolean loadNodeStatus(
+            String baseUrl, String port, String sessionId, String upsNodeId
+    ) throws Exception {
+        events.clear();
+        RequestBody formBody = new FormBody.Builder()
+                .add("sessionID", sessionId)
+                .add("nodes", "[\"" + upsNodeId + "\"]")
+                .build();
+        Request request = new Request.Builder()
+                .url("https://" + baseUrl + ":" + port + "/server/data_srv.js?action=loadNodeData")
+                .post(formBody)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Cookie", "mc2LastLogin=admin; sessionID=" + sessionId)
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            StringBuilder sb = new StringBuilder();
+            JSONObject dataObject = new JSONObject(Objects.requireNonNull(response.body()).string());
+            JSONObject node = dataObject.optJSONObject("nodeData").optJSONObject(upsNodeId);
+
+            // using apcupsd template as base
+            sb.append("DATE : ").append(epochToDateString(node.optLong("System.CreationDate"))).append("\n");
+            sb.append("VERSION : ").append(node.optString("System.UID")).append("\n");
+            sb.append("UPSNAME : ").append("System.Name").append("\n");
+            sb.append("CABLE : ").append(node.optString("System.CommunicationDescription")).append("\n");
+            sb.append("DRIVER : ").append(node.optString("System.Mode")).append("\n");
+            sb.append("UPSMODE : ").append(node.optString("System.Mode")).append("\n");
+            sb.append("MODEL : ").append("System.Name").append("\n");
+
+            // most obvious bit is here
+            sb.append("STATUS : ").append(node.optInt("System.PresentStatus.ACPresent") == 1 ? "ONLINE" : "OFFLINE").append("\n");
+
+            sb.append("LINEV : ").append(node.optString("UPS.PowerConverter.Input[1].Voltage")).append(" Volts").append("\n");
+            sb.append("LOADPCT : ").append(node.optString("System.PercentLoad")).append(" Percent").append("\n");
+            sb.append("BCHARGE : ").append(node.optString("UPS.PowerSummary.RemainingCapacity")).append(" Percent").append("\n");
+            sb.append("TIMELEFT : ").append(node.optInt("UPS.PowerSummary.RunTimeToEmpty") / 60).append(" Minutes").append("\n");
+
+            sb.append("SERIALNO : ").append(node.optString("System.SerialNumber")).append("\n");
+            sb.append("OUTPUTV : ").append(node.optString("UPS.PowerConverter.Output.Voltage")).append(" Volts").append("\n");
+            sb.append("ITEMP : ").append(node.optInt("UPS.PowerSummary.Temperature") / 10).append(" C").append("\n"); // Todo.. verify this, divided by 10 is guess
+            sb.append("BATTV : ").append(node.optString("UPS.PowerSummary.Voltage")).append(" Volts").append("\n");
+            sb.append("LINEFREQ : ").append(node.optString("UPS.PowerConverter.Input[1].Frequency")).append(" Hz").append("\n");
+
+            nodeStatus = sb.toString();
+            return true;
+        }
+    }
+
+
     /**
      * IPM UPS events for specified UPS node id => your UPS serial number
      *
@@ -157,9 +209,7 @@ public class IPM {
                 JSONObject eventObject = eventsArray.optJSONObject(i);
 
                 // Datetime
-                Date date = new Date(eventObject.optLong("date"));
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                sb.append(jdf.format(date)).append(" ");
+                sb.append(epochToDateString(eventObject.optLong("date"))).append(" ");
 
                 sb.append(eventObject.optString("message"));
                 Log.i(TAG, "IPM node " + upsNodeId + " event: " + sb.toString());
@@ -240,10 +290,29 @@ public class IPM {
 
 
     /**
+     * @param date_ in epoch format like 1630851955392
+     * @return string date in format
+     * Todo.. add settings formats here if added any others
+     */
+    private String epochToDateString(long date_) {
+        Date date = new Date(date_);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return jdf.format(date);
+    }
+
+
+    /**
      * @return parsed events
      */
     public ArrayList<String> getEvents() {
         return events;
+    }
+
+    /**
+     * @return all status details string containing all information
+     */
+    public String getNodeStatus() {
+        return nodeStatus;
     }
 
 }
