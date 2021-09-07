@@ -14,6 +14,9 @@ Table of contents
 =================
 * [Images](#images)
 * [Features](#features)
+* [UPS specific notes](#ups-specific-notes)
+  * [APCUPSD](#apcupsd) 
+  * [Eaton](#eaton)
 * [Requirements](#requirements)
 * [Contributions](#contributions)
 * [Authors](#authors)
@@ -36,6 +39,22 @@ Features
 * Firebase based status check triggering and monitoring with notifications.
 * Front screen widget support.
 * Light and dark themes automatically following Android OS system theme.  
+
+
+UPS specific notes
+============
+Always be careful when opening UPS software interfaces to public internet. These interfaces seem to be interesting target 
+for security researchers and bad people. Learn to create VPN tunnel from your device to your network instead and route 
+traffic trough that. Or use only in local network via WLAN.
+
+APCUPSD
+-----
+* No special notes.
+
+Eaton
+-----
+* Use latest IPM with https (default) installation way, which means web UI opens from port 4680.
+* Current implementation in this app does not check https certificate validity in any way. 
 
 
 Requirements
