@@ -74,11 +74,14 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // APC Socket
     private Socket socket;
 
+    private Context context;
+
 
     // Constructor
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
         Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
                 (upsId_ == null ? "all ups statuses" : "one ups status"));
+        this.context = context;
         taskMode = taskMode_;
         this.upsId = upsId_;
         databaseHelper = new DatabaseHelper(context);
@@ -163,7 +166,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     apcupsdInterface.onMissingPreferences();
                 }
             } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
-                IPM ipm = new IPM(ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT);
+                IPM ipm = new IPM(context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT);
                 // ipm.
             } else {
                 Log.w(TAG, "Unsupported UPS connection type");

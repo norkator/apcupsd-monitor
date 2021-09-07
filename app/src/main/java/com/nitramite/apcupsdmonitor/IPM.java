@@ -1,12 +1,20 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
+
+import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Array;
+import com.eclipsesource.v8.V8Object;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
 
@@ -32,11 +40,11 @@ public class IPM {
     public static final MediaType FORM = MediaType.parse("multipart/form-data");
 
 
-    IPM(String baseUrl, String port) {
+    IPM(Context context, String baseUrl, String port) {
         try {
             String challenge = getChallenge(baseUrl, port);
             Log.i(TAG, "Challenge: " + challenge);
-            String sessionId = getLoginSessionId(baseUrl, port, "admin", "admin", challenge);
+            String sessionId = getLoginSessionId(context, baseUrl, port, "admin", "admin", challenge);
             Log.i(TAG, sessionId);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -65,8 +73,11 @@ public class IPM {
     }
 
 
-    private String getLoginSessionId(String baseUrl, String port, String userName, String password, String challenge) throws Exception {
-        String hmac = EatonHMAC(password, challenge);
+    private String getLoginSessionId(
+            Context context, String baseUrl, String port, String userName,
+            String password, String challenge
+    ) throws Exception {
+        String hmac = EatonHMAC(context, password, challenge);
         Log.i(TAG, "HMAC: " + hmac);
         if (hmac == null) {
             throw new Exception("HMAC generation has failed. Cannot proceed with login.");
@@ -128,8 +139,28 @@ public class IPM {
     }
 
 
-    private String EatonHMAC(String key, String data) {
-        return null;
+    /**
+     * Get hash for login
+     * @param context of app
+     * @param key which is user
+     * @param data which is challenge
+     * @return hash
+     * @throws IOException
+     */
+    private String EatonHMAC(Context context, String key, String data) throws IOException {
+        V8 runtime = V8.createV8Runtime();
+        InputStream inputStream = context.getResources().openRawResource(R.raw.ipm);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder ipmScript = new StringBuilder();
+        for (String line; (line = bufferedReader.readLine()) != null; ) {
+            ipmScript.append(line).append('\n');
+        }
+
+        runtime.executeScript(ipmScript.toString());
+        String hash = runtime.executeStringFunction("hmac", new V8Array(runtime).push(key).push(data));
+        Log.i(TAG, "Hash from V8: " + hash);
+        runtime.release();
+        return hash;
     }
 
 
