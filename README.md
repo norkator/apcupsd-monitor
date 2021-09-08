@@ -54,7 +54,7 @@ APCUPSD
 Eaton
 -----
 * Use latest IPM with https (default) installation way, which means web UI opens from port 4680.
-* Current implementation in this app does not check https certificate validity in any way. 
+* This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds.
 
 
 Requirements
