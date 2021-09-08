@@ -10,10 +10,17 @@
         tools:ignore="HardcodedText" />
 
     <item
+        android:id="@+id/action_web_view"
+        android:icon="@drawable/ic_web"
+        android:title="@string/toggle_web_interface"
+        app:showAsAction="ifRoom"
+        tools:ignore="AlwaysShowAction,HardcodedText" />
+
+    <item
         android:id="@+id/action_statistics"
         android:icon="@drawable/ic_bar_chart"
         android:title="@string/menu_ups_viewer_statistics"
-        app:showAsAction="always"
+        app:showAsAction="never"
         tools:ignore="AlwaysShowAction,HardcodedText" />
 
     <item
