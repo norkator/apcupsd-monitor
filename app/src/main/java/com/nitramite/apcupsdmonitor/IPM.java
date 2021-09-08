@@ -8,20 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -36,7 +27,7 @@ public class IPM {
 
     private String nodeStatus = null;
     private final ArrayList<String> events = new ArrayList<>();
-    private final OkHttpClient client = getUnsafeOkHttpClient();
+    private final OkHttpClient client = new OkHttpClient();
 
 
     IPM(Context context, String baseUrl, String port, String username, String password, String upsNodeId) {
@@ -211,49 +202,6 @@ public class IPM {
                 events.add(sb.toString());
             }
             return true;
-        }
-    }
-
-
-    // ---------------------------------------------------------------------------------------------
-
-    /**
-     * Unsecure okHttp client to make request to local network IPM server without valid cert
-     *
-     * @return okHttp instance
-     */
-    private static OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @SuppressLint("TrustAllX509TrustManager")
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain,
-                                                       String authType) {
-                        }
-
-                        @SuppressLint("TrustAllX509TrustManager")
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain,
-                                                       String authType) {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[0];
-                        }
-                    }
-            };
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            return new OkHttpClient.Builder()
-                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
-                    .hostnameVerifier((hostname, session) -> true).build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
