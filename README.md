@@ -53,8 +53,9 @@ APCUPSD
 
 Eaton
 -----
-* Use latest IPM with https (default) installation way, which means web UI opens from port 4680.
-* This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds.
+* This app is develop towards IPM version -> ´1.69.253´
+* Use IPM with https (default) installation way, which means web UI opens from port 4680.
+* This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds. Possible solution for certificates https://certbot.eff.org/lets-encrypt/windows-other.html
 
 
 Requirements
