@@ -181,16 +181,25 @@ public class UpsEditor extends AppCompatActivity {
                     sshRB.setChecked(true);
                     ipmRB.setChecked(false);
                     nisRB.setChecked(false);
+                    sshOptionsLayout.setVisibility(View.VISIBLE);
+                    credentialOptionsLayout.setVisibility(View.VISIBLE);
+                    ipmOptionsLayout.setVisibility(View.GONE);
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_NIS:
                     nisRB.setChecked(true);
                     ipmRB.setChecked(false);
                     sshRB.setChecked(false);
+                    sshOptionsLayout.setVisibility(View.GONE);
+                    credentialOptionsLayout.setVisibility(View.GONE);
+                    ipmOptionsLayout.setVisibility(View.GONE);
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_IPM:
                     ipmRB.setChecked(true);
                     nisRB.setChecked(false);
                     sshRB.setChecked(false);
+                    sshOptionsLayout.setVisibility(View.GONE);
+                    credentialOptionsLayout.setVisibility(View.VISIBLE);
+                    ipmOptionsLayout.setVisibility(View.VISIBLE);
                     break;
             }
 
