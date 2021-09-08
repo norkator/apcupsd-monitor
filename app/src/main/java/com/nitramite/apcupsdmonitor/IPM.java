@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
-import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Array;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,10 +94,7 @@ public class IPM {
             Context context, String baseUrl, String port, String userName,
             String password, String challenge
     ) throws Exception {
-        String hmac = EatonHMAC(context, password, challenge);
-        if (hmac == null) {
-            throw new Exception("HMAC generation has failed. Cannot proceed with login.");
-        }
+        String hmac = EatonHMAC.GetEatonHMAC(password, challenge);
         RequestBody formBody = new FormBody.Builder()
                 .add("login", userName)
                 .add("password", hmac)
@@ -261,32 +255,6 @@ public class IPM {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    /**
-     * Get hash for login
-     *
-     * @param context of app
-     * @param key     which is user
-     * @param data    which is challenge
-     * @return hash
-     * @throws IOException if calculating hmac fails
-     */
-    private String EatonHMAC(Context context, String key, String data) throws IOException {
-        V8 runtime = V8.createV8Runtime();
-        InputStream inputStream = context.getResources().openRawResource(R.raw.ipm);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder ipmScript = new StringBuilder();
-        for (String line; (line = bufferedReader.readLine()) != null; ) {
-            ipmScript.append(line).append('\n');
-        }
-
-        runtime.executeScript(ipmScript.toString());
-        String hash = runtime.executeStringFunction("hmac", new V8Array(runtime).push(key).push(data));
-        Log.i(TAG, "Hash from V8: " + hash);
-        // runtime.release();
-        return hash;
     }
 
 
