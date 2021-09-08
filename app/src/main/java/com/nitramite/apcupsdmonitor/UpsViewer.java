@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -45,6 +46,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     private LinearLayout upsDetailsView, upsStatisticsView;
     private CardView eventsCardView;
     private TextView statisticsNotEnoughData;
+    private WebView webView;
 
     // Chart
     private BarChart chart;
@@ -54,12 +56,14 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     private ArrayList<String> barLabels;
 
     // Variables
+    private UPS ups = null;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
     private String upsId = null;
     private SharedPreferences sharedPreferences;
     private ArrayList<String> eventsArrayList = null;
     private String rawStatusOutput = "";
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,8 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
 
 
         // Find views and set defaults
+        webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
         upsDetailsView = findViewById(R.id.upsDetailsView);
         upsDetailsView.setVisibility(View.VISIBLE);
         eventsCardView = findViewById(R.id.eventsCardView);
@@ -100,7 +106,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
 
     private void getUpsData() {
         try {
-            UPS ups = databaseHelper.getAllUps(upsId).get(0);
+            ups = databaseHelper.getAllUps(upsId).get(0);
             drawData(ups, ups.getUPS_STATUS_STR());
             rawStatusOutput = ups.getUPS_STATUS_STR();
             eventsArrayList = databaseHelper.getAllEvents(upsId);
@@ -108,6 +114,17 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             closeProgressDialog();
         } catch (IndexOutOfBoundsException e) {
             UpsViewer.this.finish();
+        }
+        toggleWebView();
+    }
+
+
+    private void toggleWebView() {
+        if (ups != null) {
+            webView.setWebViewClient(new UnsecureWebViewClient());
+            webView.loadUrl("https://" + ups.UPS_SERVER_ADDRESS + ":" + ups.UPS_SERVER_PORT + "/");
+        } else {
+            Toast.makeText(UpsViewer.this, getString(R.string.ups_undefined_cannot_load_web_page), Toast.LENGTH_SHORT).show();
         }
     }
 
