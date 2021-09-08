@@ -28,7 +28,6 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
         android:baselineAligned="false"
         android:orientation="vertical"
         android:visibility="gone" />

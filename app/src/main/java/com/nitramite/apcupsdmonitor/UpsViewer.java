@@ -115,7 +115,6 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         } catch (IndexOutOfBoundsException e) {
             UpsViewer.this.finish();
         }
-        toggleWebView();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -516,7 +515,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
             if (ups.UPS_CONNECTION_TYPE.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
                 if (webView.getVisibility() == View.VISIBLE) {
                     webView.setVisibility(View.GONE);
-                    webView.destroy();
+                    // webView.destroy();
                 } else {
                     webView.setVisibility(View.VISIBLE);
                     webView.setWebViewClient(new UnsecureWebViewClient());

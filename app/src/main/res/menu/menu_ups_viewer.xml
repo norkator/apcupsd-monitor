@@ -11,9 +11,9 @@
 
     <item
         android:id="@+id/action_web_view"
-        android:icon="@drawable/ic_error_small"
+        android:icon="@drawable/ic_web"
         android:title="@string/toggle_web_interface"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         tools:ignore="AlwaysShowAction,HardcodedText" />
 
     <item
