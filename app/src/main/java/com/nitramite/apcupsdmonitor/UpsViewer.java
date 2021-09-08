@@ -518,7 +518,8 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
                     // webView.destroy();
                 } else {
                     webView.setVisibility(View.VISIBLE);
-                    webView.loadUrl("http://" + ups.UPS_SERVER_ADDRESS + ":" + ups.UPS_SERVER_PORT + "/");
+                    webView.setWebViewClient(new UnsecureWebViewClient());
+                    webView.loadUrl("https://" + ups.UPS_SERVER_ADDRESS + ":" + ups.UPS_SERVER_PORT + "/");
                 }
             } else {
                 genericErrorDialog("Error", getString(R.string.no_web_interface));
