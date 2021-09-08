@@ -49,8 +49,8 @@
     <string name="port_to_use_for_connection">Port to use for connection</string>
     <string name="server_username_ssh">Server username</string>
     <string name="ssh_server_username">Server username (SSH, IPM etc)</string>
-    <string name="server_password_ssh">Server password (SSH, IPM etc)</string>
-    <string name="ssh_server_password">SSH Server password</string>
+    <string name="server_password_ssh">Server password</string>
+    <string name="ssh_server_password">Server password (SSH, IPM etc)</string>
     <string name="private_key_authentication_ssh">Private key authentication (SSH)</string>
     <string name="if_enabled_ssh_connection_uses_private_key">If enabled, ssh connection uses private key instead of password. This is far more secure option</string>
     <string name="private_key_passphrase_ssh">Private key passphrase (SSH)</string>
