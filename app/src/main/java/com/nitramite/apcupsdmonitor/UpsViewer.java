@@ -118,17 +118,6 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         toggleWebView();
     }
 
-
-    private void toggleWebView() {
-        if (ups != null) {
-            webView.setWebViewClient(new UnsecureWebViewClient());
-            webView.loadUrl("https://" + ups.UPS_SERVER_ADDRESS + ":" + ups.UPS_SERVER_PORT + "/");
-        } else {
-            Toast.makeText(UpsViewer.this, getString(R.string.ups_undefined_cannot_load_web_page), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
     // ---------------------------------------------------------------------------------------------
 
 
@@ -519,6 +508,29 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     }
 
 
+    /**
+     * Web interface view for some UPSes
+     */
+    private void toggleWebView() {
+        if (ups != null) {
+            if (ups.UPS_CONNECTION_TYPE.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
+                if (webView.getVisibility() == View.VISIBLE) {
+                    webView.setVisibility(View.GONE);
+                    webView.destroy();
+                } else {
+                    webView.setVisibility(View.VISIBLE);
+                    webView.setWebViewClient(new UnsecureWebViewClient());
+                    webView.loadUrl("https://" + ups.UPS_SERVER_ADDRESS + ":" + ups.UPS_SERVER_PORT + "/");
+                }
+            } else {
+                genericErrorDialog("Error", getString(R.string.no_web_interface));
+            }
+        } else {
+            genericErrorDialog("Error", getString(R.string.ups_undefined_cannot_load_web_page));
+        }
+    }
+
+
     // Generic use error dialog
     private void genericErrorDialog(final String title, final String description) {
         //if (activityActive && !this.isFinishing()) {
@@ -557,6 +569,10 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             startConnectorTask();
+            return true;
+        }
+        if (id == R.id.action_web_view) {
+            toggleWebView();
             return true;
         }
         if (id == R.id.action_statistics) {

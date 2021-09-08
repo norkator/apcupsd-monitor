@@ -186,5 +186,7 @@
     <string name="node_id_ipm">Node ID (IPM)</string>
     <string name="node_id_eaton_ipm_hint">Node id for Eaton IPM like UW222A0123</string>
     <string name="ups_undefined_cannot_load_web_page">UPS is undefined. Cannot load web page.</string>
+    <string name="no_web_interface">This UPS does not have web interface</string>
+    <string name="toggle_web_interface">Toggle web interface</string>
 
 </resources>

@@ -23,6 +23,17 @@
         android:visibility="gone" />
 
 
+    <!-- Web interface view -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+
     <!-- Main information view -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -503,12 +514,6 @@
         </FrameLayout>
 
     </androidx.cardview.widget.CardView>
-
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 
     <!-- Log reader -->
