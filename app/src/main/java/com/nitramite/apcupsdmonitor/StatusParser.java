@@ -43,12 +43,17 @@ public class StatusParser {
         }
 
         protected String clean(final String line) {
-            String[] split = line.split(": "); // See : and space, important
-            String cleaned = split.length > 0 ? split[1] : "";
-            for (String s : this.trim) {
-                cleaned = cleaned.replace(s, "");
+            try {
+                String[] split = line.split(": "); // See : and space, important
+                String cleaned = split.length > 0 ? split[1] : "";
+                for (String s : this.trim) {
+                    cleaned = cleaned.replace(s, "");
+                }
+                return cleaned.trim();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                return null;
             }
-            return cleaned.trim();
         }
     }
 
