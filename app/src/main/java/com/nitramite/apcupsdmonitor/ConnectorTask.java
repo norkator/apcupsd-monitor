@@ -1,5 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -47,7 +48,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
     private Integer arrayPosition = 0;
     private String upsId = null; // If provided, updates only one ups
-    private TaskMode taskMode; // Activity or service task, on service skip getting events
+    private final TaskMode taskMode; // Activity or service task, on service skip getting events
     private String address = null;
     private Integer port = 22;
     private String sshUsername = null;
@@ -63,21 +64,23 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     private String privateKeyFileLocation = null;
 
     // Interface
-    private ConnectorInterface apcupsdInterface;
+    private final ConnectorInterface apcupsdInterface;
 
     // SSH Library
     private Session session = null;
 
     // Database
-    private DatabaseHelper databaseHelper;
+    private final DatabaseHelper databaseHelper;
 
     // APC Socket
     private Socket socket;
 
-    private Context context;
+    @SuppressLint("StaticFieldLeak")
+    private final Context context;
 
 
     // Constructor
+    @SuppressWarnings("deprecation")
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
         Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
                 (upsId_ == null ? "all ups statuses" : "one ups status"));
@@ -173,9 +176,13 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 );
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
-                contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
+                if (ipm.getNodeStatus() != null) {
+                    contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
+                }
                 databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
-                databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
+                if (ipm.getEvents().size() > 0) {
+                    databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
+                }
                 // next
                 arrayPosition++;
                 upsTaskHelper();
