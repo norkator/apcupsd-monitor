@@ -10,8 +10,8 @@ android {
         minSdkVersion 22
         targetSdkVersion 30
 
-        versionCode 44
-        versionName "1.15.2" // Use Semver
+        versionCode 45
+        versionName "1.16.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
