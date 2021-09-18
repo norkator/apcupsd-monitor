@@ -6,13 +6,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -504,19 +503,10 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     private void donateDialog() {
         new AlertDialog.Builder(this)
                 .setIcon(R.mipmap.logo)
-                .setTitle("Donate")
-                .setMessage(
-                        "Donate only if you have find this application useful so far.\n\n" +
-                                "Via donating you help future development. " +
-                                "For example I have plan to implement multi UPS support as a next big step."
-                )
-                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        inAppPurchase(Constants.IAP_ITEM_SKU_DONATE_MEDIUM);
-                    }
-                })
-                .setNegativeButton("Return", null)
+                .setTitle(R.string.donate_title)
+                .setMessage(R.string.donate_description)
+                .setPositiveButton(getString(R.string.continue_btn), (dialog, which) -> inAppPurchase(Constants.IAP_ITEM_SKU_DONATE_MEDIUM))
+                .setNegativeButton(getString(R.string.return_btn), null)
                 .show();
     }
 
