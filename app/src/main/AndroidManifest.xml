@@ -20,13 +20,16 @@
         tools:targetApi="q">
         <activity
             android:name=".UpsEditor"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".UpsViewer"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".MainMenu"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,8 +40,12 @@
             android:name=".Preferences"
             android:label="Setting"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Settings" /> <!-- Service declarations -->
-        <receiver android:name=".Widget">
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+        <!-- Service declarations -->
+        <receiver
+            android:name=".Widget"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
