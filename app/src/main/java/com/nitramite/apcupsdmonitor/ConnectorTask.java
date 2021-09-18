@@ -1,5 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -47,7 +48,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
     private Integer arrayPosition = 0;
     private String upsId = null; // If provided, updates only one ups
-    private TaskMode taskMode; // Activity or service task, on service skip getting events
+    private final TaskMode taskMode; // Activity or service task, on service skip getting events
     private String address = null;
     private Integer port = 22;
     private String sshUsername = null;
@@ -63,21 +64,23 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     private String privateKeyFileLocation = null;
 
     // Interface
-    private ConnectorInterface apcupsdInterface;
+    private final ConnectorInterface apcupsdInterface;
 
     // SSH Library
     private Session session = null;
 
     // Database
-    private DatabaseHelper databaseHelper;
+    private final DatabaseHelper databaseHelper;
 
     // APC Socket
     private Socket socket;
 
-    private Context context;
+    @SuppressLint("StaticFieldLeak")
+    private final Context context;
 
 
     // Constructor
+    @SuppressWarnings("deprecation")
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
         Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
                 (upsId_ == null ? "all ups statuses" : "one ups status"));
@@ -139,48 +142,57 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
             // Determine connection type
-            if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_NIS)) {
-                // APCUPSD SOCKET
-                if (validAPCUPSDRequirements()) {
-                    if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
-                        getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
-                    } else {
-                        onConnectionError(ups.UPS_ID);
-                    }
-                } else {
-                    apcupsdInterface.onMissingPreferences();
-                }
-            } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_SSH)) {
-                // SSH
-                if (validSSHRequirements()) {
-                    if (connectSSHServer(ups.UPS_ID)) {
-                        if (ups.UPS_IS_APC_NMC) {
-                            getUPSStatusNMC(ups.UPS_ID, ups.getUpsLoadEvents());
+            switch (connectionType) {
+                case ConnectionType.UPS_CONNECTION_TYPE_NIS:
+                    // APCUPSD SOCKET
+                    if (validAPCUPSDRequirements()) {
+                        if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
+                            getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
                         } else {
-                            getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                            onConnectionError(ups.UPS_ID);
                         }
                     } else {
-                        onConnectionError(ups.UPS_ID);
+                        apcupsdInterface.onMissingPreferences();
                     }
-                } else {
-                    apcupsdInterface.onMissingPreferences();
-                }
-            } else if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_IPM)) {
-                // Eaton IPM
-                IPM ipm = new IPM(
-                        context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
-                        ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
-                );
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
-                contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
-                databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
-                databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
-                // next
-                arrayPosition++;
-                upsTaskHelper();
-            } else {
-                Log.w(TAG, "Unsupported UPS connection type");
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_SSH:
+                    // SSH
+                    if (validSSHRequirements()) {
+                        if (connectSSHServer(ups.UPS_ID)) {
+                            if (ups.UPS_IS_APC_NMC) {
+                                getUPSStatusNMC(ups.UPS_ID, ups.getUpsLoadEvents());
+                            } else {
+                                getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                            }
+                        } else {
+                            onConnectionError(ups.UPS_ID);
+                        }
+                    } else {
+                        apcupsdInterface.onMissingPreferences();
+                    }
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_IPM:
+                    // Eaton IPM
+                    IPM ipm = new IPM(
+                            context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
+                            ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
+                    );
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+                    if (ipm.getNodeStatus() != null) {
+                        contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
+                    }
+                    databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
+                    if (ipm.getEvents().size() > 0) {
+                        databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
+                    }
+                    // next
+                    arrayPosition++;
+                    upsTaskHelper();
+                    break;
+                default:
+                    Log.w(TAG, "Unsupported UPS connection type");
+                    break;
             }
         } else {
             apcupsdInterface.onTaskCompleted();
