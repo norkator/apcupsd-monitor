@@ -1,29 +1,105 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-public class Preferences extends com.fnp.materialpreferences.PreferenceActivity {
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.Locale;
+
+public class Preferences extends AppCompatActivity {
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainMenu.class));
+    }
+
+    //  Logging
+    private static final String TAG = Preferences.class.getSimpleName();
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        // super.attachBaseContext(localeUtils.updateBaseContextLocale(base));
+        // MultiDex.install(this);
+    }
+
+
+    protected <T extends Fragment> T initFragment(@IdRes int target,
+                                                  @NonNull T fragment) {
+        return initFragment(target, fragment, null);
+    }
+
+    protected <T extends Fragment> T initFragment(@IdRes int target,
+                                                  @NonNull T fragment,
+                                                  @Nullable Locale locale) {
+        return initFragment(target, fragment, locale, null);
+    }
+
+    protected <T extends Fragment> T initFragment(@IdRes int target,
+                                                  @NonNull T fragment,
+                                                  @Nullable Locale locale,
+                                                  @Nullable Bundle extras) {
+        Bundle args = new Bundle();
+
+        if (extras != null) {
+            args.putAll(extras);
+        }
+
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(target, fragment)
+                .commitAllowingStateLoss();
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyPreferenceFragment myPreferenceFragment = new MyPreferenceFragment();
-        setPreferenceFragment(myPreferenceFragment);
+        setContentView(R.layout.activity_preferences);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         // Activity result back to menu
         setResult(RESULT_OK, null);
 
-        // Exec pending transactions
-        myPreferenceFragment.getFragmentManager().executePendingTransactions();
+        MyPreferenceFragment myPreferenceFragment = new MyPreferenceFragment();
+        initFragment(R.id.content, myPreferenceFragment);
     }
 
-    public static class MyPreferenceFragment extends com.fnp.materialpreferences.PreferenceFragment {
+    public static class MyPreferenceFragment extends PreferenceFragmentCompat {
+
         @Override
-        public int addPreferencesFromResource() {
-            return R.xml.preferences; // Your preference file
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            addPreferencesFromResource(R.xml.preferences);
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                Preferences.this.onBackPressed();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-} // End of class
+
+}

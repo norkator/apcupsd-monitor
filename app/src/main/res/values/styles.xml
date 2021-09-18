@@ -10,17 +10,10 @@
         <item name="eventsTextBackgroundColor">@color/whiteColor</item>
     </style>
 
-    <!-- Preferences theme -->
-    <style name="Theme.Settings" parent="AppTheme">
-        <item name="windowNoTitle">false</item>
-        <item name="windowActionBar">true</item>
-        <item name="actionBarStyle">@style/AppTheme.actionBarStyle</item>
-        <item name="android:editTextColor">@color/prefsEditTextColor</item>
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
     </style>
-    <style name="AppTheme.actionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="background">?attr/colorPrimary</item>
-        <item name="contentInsetStart">72dp</item>
-        <item name="contentInsetLeft">72dp</item>
-    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
