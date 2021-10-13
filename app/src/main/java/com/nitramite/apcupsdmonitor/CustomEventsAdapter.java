@@ -36,6 +36,8 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
         event.setText(positionStr);
         if (
                 positionStr.contains("Power failure") || positionStr.contains("powered by the UPS battery")
+                        || positionStr.contains("UPS fault")
+                        || positionStr.contains("The UPS output is off")
         ) {
             if (this.eventsColoring) {
                 event.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
