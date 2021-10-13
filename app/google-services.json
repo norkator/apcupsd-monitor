@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1020588376604",
+    "firebase_url": "https://apcupsdmonitor-d99cc.firebaseio.com",
+    "project_id": "apcupsdmonitor-d99cc",
+    "storage_bucket": "apcupsdmonitor-d99cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020588376604:android:99f551fce531a578a215d9",
+        "android_client_info": {
+          "package_name": "com.nitramite.apcupsdmonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020588376604-dc9a4s4n6d0akhonnhg0crjo1l8196t8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "dummyapikey-dummyapikey"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020588376604-dc9a4s4n6d0akhonnhg0crjo1l8196t8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
