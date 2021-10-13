@@ -139,8 +139,12 @@ public class IPM {
             sb.append("UPSMODE : ").append(node.optString("System.Mode")).append("\n");
             sb.append("MODEL : ").append(node.optString("System.Name")).append("\n");
 
+            boolean present = node.optInt("System.PresentStatus.ACPresent") == 1;
+            // boolean fanFailure = node.optInt("UPS.PowerSummary.PresentStatus.FanFailure") == 1;
+            boolean internalFailure = node.optInt("UPS.PowerSummary.PresentStatus.InternalFailure") == 1;
+
             // most obvious bit is here
-            sb.append("STATUS : ").append(node.optInt("System.PresentStatus.ACPresent") == 1 ? "ONLINE" : "OFFLINE").append("\n");
+            sb.append("STATUS : ").append(internalFailure ? "FAILURE" : present ? "ONLINE" : "OFFLINE").append("\n");
 
             sb.append("LINEV : ").append(node.optString("UPS.PowerConverter.Input[1].Voltage")).append(" Volts").append("\n");
             sb.append("LOADPCT : ").append(node.optString("System.PercentLoad")).append("\n");
