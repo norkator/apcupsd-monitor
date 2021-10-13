@@ -32,5 +32,5 @@ obj/
 app/release/app-release.apk
 /app/release/app-release.aab
 app/app-release.apk
-app/google-services.json
+# app/google-services.json
 app/src/main/java/com/nitramite/apcupsdmonitor/ipm.json
