@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
@@ -201,6 +202,7 @@ public class IPM {
                 Log.i(TAG, "IPM node " + upsNodeId + " event: " + sb.toString());
                 events.add(sb.toString());
             }
+            Collections.reverse(events);
             return true;
         }
     }
