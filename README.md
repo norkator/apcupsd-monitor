@@ -73,7 +73,7 @@ Contributions
 * If you are planning to make new feature or bigger change, open issue and let's talk about it first.
 Because it needs to serve everyone.
 * If you feel my code is horrible, feel free to tell me about it. No hard feelings, lets improve together.
-* Have huge need to write tests? you are really welcome to do so. Jenkinsfile has unit tests disabled because we have none.
+* Have huge need to write more tests? you are really welcome to do so.
 
 
 Authors
