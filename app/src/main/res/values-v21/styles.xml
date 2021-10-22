@@ -9,6 +9,7 @@
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:itemBackground">@color/color_white</item>
         <item name="android:actionMenuTextColor">@color/black</item>
+        <item name="eventsTextBackgroundColor">@color/materialGray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
