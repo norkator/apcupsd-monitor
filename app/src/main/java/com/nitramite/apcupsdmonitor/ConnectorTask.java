@@ -98,7 +98,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         try {
             upsArrayList.clear();
             arrayPosition = 0;
-            upsArrayList = databaseHelper.getAllUps(this.upsId);
+            upsArrayList = databaseHelper.getAllUps(this.upsId, true);
             if (upsArrayList.size() > 0) {
                 upsTaskHelper();
             } else {

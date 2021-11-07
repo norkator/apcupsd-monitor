@@ -80,7 +80,7 @@ public class Widget extends AppWidgetProvider {
      * @return arrayList
      */
     private ArrayList<UPS> getUpsData(DatabaseHelper databaseHelper) {
-        return databaseHelper.getAllUps(null);
+        return databaseHelper.getAllUps(null, false);
     }
 
 

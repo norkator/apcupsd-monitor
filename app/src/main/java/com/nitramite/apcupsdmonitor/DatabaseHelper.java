@@ -152,12 +152,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    ArrayList<UPS> getAllUps(String upsId) {
+    ArrayList<UPS> getAllUps(String upsId, boolean connectorTask) {
         ArrayList<UPS> upsArrayList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res;
         if (upsId == null) {
-            res = db.rawQuery("SELECT * FROM " + UPS_TABLE + " ORDER BY " + UPS_ID + " ASC", null);
+            res = db.rawQuery("SELECT * FROM " + UPS_TABLE + (connectorTask ? " WHERE ups_enabled = 1" : "") + " ORDER BY " + UPS_ID + " ASC", null);
         } else {
             res = db.rawQuery("SELECT * FROM " + UPS_TABLE + " WHERE " + UPS_ID + " = ? ORDER BY " + UPS_ID + " ASC", new String[]{upsId});
         }
