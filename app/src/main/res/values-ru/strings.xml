@@ -111,6 +111,7 @@
     <string name="you_dont_have_events_to_use">У вас еще нет событий, которые можно использовать для расчета статистики.</string>
     <string name="debug_output">Вывод отладки</string>
     <string name="debug_output_is_null">Вывод отладки равен нулю</string>
+    <string name="ups_disabled">ОТКЛЮЧЕН</string>
 
     <!-- Swipe adapter -->
     <string name="delete">УДАЛЯТЬ</string>

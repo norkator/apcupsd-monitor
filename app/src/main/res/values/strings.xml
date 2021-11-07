@@ -111,6 +111,7 @@
     <string name="you_dont_have_events_to_use">You don\'t yet have events to use for calculating statistics.</string>
     <string name="debug_output">Debug output</string>
     <string name="debug_output_is_null">Debug output is null</string>
+    <string name="ups_disabled">DISABLED</string>
 
     <!-- Swipe adapter -->
     <string name="delete">DELETE</string>

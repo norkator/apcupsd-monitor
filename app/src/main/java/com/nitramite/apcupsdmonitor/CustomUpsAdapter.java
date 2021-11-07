@@ -93,7 +93,10 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
 
         // Set status (Always shown)
-        if (upsArrayList.get(position).upsIsReachable()) {
+        if (!upsArrayList.get(position).UPS_ENABLED) {
+            status.setText(R.string.ups_disabled);
+            status.setBackgroundColor(ContextCompat.getColor(context, R.color.materialGray));
+        } else if (upsArrayList.get(position).upsIsReachable()) {
             status.setText(upsArrayList.get(position).getSTATUS());
             if (upsArrayList.get(position).isOnline()) {
                 status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
