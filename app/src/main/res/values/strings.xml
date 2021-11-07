@@ -74,6 +74,7 @@
     <string name="private_key_file_imported_success">Private key file imported.</string>
     <string name="private_key_file_imported_failed">Failed to import private key file.</string>
     <string name="ups_enabled">UPS Enabled</string>
+    <string name="ups_enable_toggle_description">UPS can be disabled momentarily if its not connected. Update process will then skip this UPS.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
