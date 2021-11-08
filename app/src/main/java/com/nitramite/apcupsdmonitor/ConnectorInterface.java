@@ -10,6 +10,8 @@ public interface ConnectorInterface {
 
     void onTaskCompleted(); // Dismiss loading indicator
 
+    void onTaskError(String exception);
+
     void onMissingPreferences(); // Navigate to preferences page
 
     void onConnectionError(final String upsId);
