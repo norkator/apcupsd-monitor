@@ -1,9 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
@@ -33,9 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-// Had methods to query information from ConnectorTask
-@SuppressWarnings("FieldCanBeLocal")
-public class ConnectorTask extends AsyncTask<String, String, String> {
+
+public class ConnectorTask {
 
     // Logging
     private final static String TAG = ConnectorTask.class.getSimpleName();
@@ -45,23 +42,11 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     private String eventsLocation = Constants.EVENTS_LOCATION;
 
     // Variables
+    private ArrayList<Thread> threads;
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
-    private Integer arrayPosition = 0;
+    private Integer completed = 0;
     private String upsId = null; // If provided, updates only one ups
     private final TaskMode taskMode; // Activity or service task, on service skip getting events
-    private String address = null;
-    private Integer port = 22;
-    private String sshUsername = null;
-    private String sshPassword = null;
-    private Boolean strictHostKeyChecking = false;
-    private String sshHostName = null;
-    private String sshHostFingerPrint = null;
-    private String sshHostKey = null;
-
-    // Private key variables
-    private Boolean privateKeyFileEnabled = false;
-    private String privateKeyFilePassphrase = "";
-    private String privateKeyFileLocation = null;
 
     // Interface
     private final ConnectorInterface apcupsdInterface;
@@ -75,78 +60,59 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // APC Socket
     private Socket socket;
 
-    @SuppressLint("StaticFieldLeak")
-    private final Context context;
-
 
     // Constructor
-    @SuppressWarnings("deprecation")
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
         Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
                 (upsId_ == null ? "all ups statuses" : "one ups status"));
-        this.context = context;
         taskMode = taskMode_;
         this.upsId = upsId_;
         databaseHelper = new DatabaseHelper(context);
         this.apcupsdInterface = apcupsdInterface;
-        this.execute();
+        this.doInBackground(context);
     }
 
 
-    @Override
-    protected String doInBackground(String... params) {
+    void doInBackground(Context context) {
         try {
+            threads = new ArrayList<>();
             upsArrayList.clear();
-            arrayPosition = 0;
+            this.completed = 0;
             upsArrayList = databaseHelper.getAllUps(this.upsId, true);
             if (upsArrayList.size() > 0) {
-                upsTaskHelper();
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                    }
+                };
+                thread.start();
             } else {
                 apcupsdInterface.noUpsConfigured();
             }
         } catch (RuntimeException e) {
-            Log.i(TAG, e.toString());
+            this.apcupsdInterface.onTaskError(e.toString());
         }
-        return null;
     }
 
 
     /**
-     * Goes thru added ups devices and load statuses and events
+     * Thread task goes through added ups devices and load statuses and events
      */
-    private void upsTaskHelper() {
-        if (arrayPosition < upsArrayList.size()) {
-            if (arrayPosition > 0) {
-                apcupsdInterface.onRefreshList(); // Refresh list view
-            }
+    private class UPSTaskThread extends Thread {
 
-            UPS ups = upsArrayList.get(arrayPosition);
-            final String connectionType = ups.UPS_CONNECTION_TYPE;
+        UPSTaskThread(UPS ups) {
+        }
 
-            this.statusCommand = ups.UPS_SERVER_STATUS_COMMAND;
-            this.eventsLocation = ups.UPS_SERVER_EVENTS_LOCATION;
-            this.address = ups.UPS_SERVER_ADDRESS;
-            this.port = portStringToInteger(ups.UPS_SERVER_PORT);
-            this.sshUsername = ups.UPS_SERVER_USERNAME;
-            this.sshPassword = ups.UPS_SERVER_PASSWORD;
-            this.strictHostKeyChecking = ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1");
-
-            this.sshHostName = ups.UPS_SERVER_HOST_NAME;
-            this.sshHostFingerPrint = ups.UPS_SERVER_HOST_FINGER_PRINT;
-            this.sshHostKey = ups.UPS_SERVER_HOST_KEY;
-
-            // Private key feature
-            this.privateKeyFileEnabled = ups.UPS_USE_PRIVATE_KEY_AUTH.equals("1");
-            this.privateKeyFilePassphrase = ups.UPS_PRIVATE_KEY_PASSWORD;
-            this.privateKeyFileLocation = ups.UPS_PRIVATE_KEY_PATH;
-
+        public void run(Context context, UPS ups) {
+            Thread.currentThread().setName(ups.UPS_ID);
 
             // Determine connection type
-            switch (connectionType) {
+            switch (ups.UPS_CONNECTION_TYPE) {
                 case ConnectionType.UPS_CONNECTION_TYPE_NIS:
                     // APCUPSD SOCKET
-                    if (validAPCUPSDRequirements()) {
-                        if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
+                    if (validAPCUPSDRequirements(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
+                        if (connectSocketServer(ups.UPS_ID, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
                             getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
                         } else {
                             onConnectionError(ups.UPS_ID);
@@ -157,10 +123,13 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_SSH:
                     // SSH
-                    if (validSSHRequirements()) {
-                        if (connectSSHServer(ups.UPS_ID)) {
+                    if (validSSHRequirements(
+                            ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT),
+                            ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_PRIVATE_KEY_PATH
+                    )) {
+                        if (connectSSHServer(ups)) {
                             if (ups.UPS_IS_APC_NMC) {
-                                getUPSStatusNMC(ups.UPS_ID, ups.getUpsLoadEvents());
+                                getUPSStatusNMC(ups, ups.getUpsLoadEvents());
                             } else {
                                 getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
                             }
@@ -186,16 +155,11 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     if (ipm.getEvents().size() > 0) {
                         databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
                     }
-                    // next
-                    arrayPosition++;
-                    upsTaskHelper();
                     break;
                 default:
                     Log.w(TAG, "Unsupported UPS connection type");
                     break;
             }
-        } else {
-            apcupsdInterface.onTaskCompleted();
         }
     }
 
@@ -205,53 +169,47 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
         contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_NOT_REACHABLE);
         databaseHelper.insertUpdateUps(upsId, contentValues);
         apcupsdInterface.onConnectionError(upsId);
-        arrayPosition++;
-        upsTaskHelper();
-    }
-
-    @Override
-    protected void onPostExecute(String param) {
     }
 
 
-    private Boolean validAPCUPSDRequirements() {
-        return this.address != null && this.port != -1;
+    private Boolean validAPCUPSDRequirements(String address, Integer port) {
+        return address != null && port != -1;
     }
 
-    private Boolean validSSHRequirements() {
-        return this.address != null && this.port != -1 && this.sshUsername != null && (this.sshPassword != null || this.privateKeyFileLocation != null);
+    private Boolean validSSHRequirements(String address, Integer port, String sshUsername, String sshPassword, String privateKeyFileLocation) {
+        return address != null && port != -1 && sshUsername != null && (sshPassword != null || privateKeyFileLocation != null);
     }
 
 
     // ---------------------------------------------------------------------------------------------
 
     // Connect ssh server
-    private Boolean connectSSHServer(final String upsId) {
+    private Boolean connectSSHServer(UPS ups) {
         JSch sshClient = null;
         try {
             sshClient = new JSch();
 
-            if (this.privateKeyFileEnabled && privateKeyFileLocation != null) {
+            if (ups.UPS_USE_PRIVATE_KEY_AUTH.equals("1") && ups.UPS_PRIVATE_KEY_PATH != null) {
                 // Use private key
-                sshClient.addIdentity(privateKeyFileLocation, privateKeyFilePassphrase);
-                session = sshClient.getSession(this.sshUsername, this.address, this.port);
+                sshClient.addIdentity(ups.UPS_PRIVATE_KEY_PATH, ups.UPS_PRIVATE_KEY_PASSWORD);
+                session = sshClient.getSession(ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
             } else {
                 // Use username and password
-                session = sshClient.getSession(this.sshUsername, this.address, this.port);
-                session.setPassword(this.sshPassword);
+                session = sshClient.getSession(ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
+                session.setPassword(ups.UPS_SERVER_PASSWORD);
             }
 
 
-            if (!this.strictHostKeyChecking) {
+            if (!ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1")) {
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect(5000);
                 return true;
             } else {
                 // https://stackoverflow.com/questions/43646043/jsch-how-to-let-user-confirm-host-fingerprint
                 session.setConfig("StrictHostKeyChecking", "yes");
-                if (this.sshHostKey != null) {
-                    byte[] keyBytes = Base64.decode(this.sshHostKey, Base64.DEFAULT);
-                    sshClient.getHostKeyRepository().add(new HostKey(this.sshHostName, keyBytes), null);
+                if (ups.UPS_SERVER_HOST_KEY != null) {
+                    byte[] keyBytes = Base64.decode(ups.UPS_SERVER_HOST_KEY, Base64.DEFAULT);
+                    sshClient.getHostKeyRepository().add(new HostKey(ups.UPS_SERVER_HOST_NAME, keyBytes), null);
                 }
                 session.connect();
                 return true;
@@ -293,7 +251,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // ---------------------------------------------------------------------------------------------
 
     // Get ups status for APC NMC cards
-    private void getUPSStatusNMC(final String upsId, final boolean loadEvents) {
+    private void getUPSStatusNMC(final UPS ups, final boolean loadEvents) {
         try {
             Channel channel = session.openChannel("shell");
             InputStream in = channel.getInputStream();
@@ -327,10 +285,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             databaseHelper.insertUpdateUps(upsId, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getNMCEvents(upsId, loadEvents);
-            } else {
-                arrayPosition++;
-                upsTaskHelper();
+                getNMCEvents(ups, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
@@ -378,9 +333,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
                 getUPSEvents(upsId, loadEvents);
-            } else {
-                arrayPosition++;
-                upsTaskHelper();
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
@@ -455,16 +407,14 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 sessionDisconnect();
             }
         }
-        arrayPosition++;
-        upsTaskHelper();
     }
 
-    private void getNMCEvents(final String upsId, final boolean loadEvents) {
+    private void getNMCEvents(final UPS ups, final boolean loadEvents) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
             Log.i(TAG, "Loading events...");
             try {
-                this.connectSSHServer(upsId);
+                this.connectSSHServer(ups);
 
                 ChannelExec channel = (ChannelExec) session.openChannel("exec");
                 channel.setCommand("apc-scp -f event.txt");
@@ -493,8 +443,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 sessionDisconnect();
             }
         }
-        arrayPosition++;
-        upsTaskHelper();
     }
 
     private void getUPSEventsAPCUPSD(final String upsId, final Boolean loadEvents) {
@@ -530,9 +478,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 databaseHelper.insertEvents(upsId, events);
 
             }
-
-            arrayPosition++;
-            upsTaskHelper();
 
         } catch (Exception e) {
             Log.i(TAG, e.toString());
