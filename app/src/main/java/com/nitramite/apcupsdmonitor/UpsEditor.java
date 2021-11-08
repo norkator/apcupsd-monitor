@@ -87,6 +87,7 @@ public class UpsEditor extends AppCompatActivity {
         final Switch loadUpsEventsSwitch = findViewById(R.id.loadUpsEventsSwitch);
         final EditText eventsLocationET = findViewById(R.id.eventsLocationET);
         final EditText nodeIdET = findViewById(R.id.nodeIdET);
+        final Switch upsEnabledSwitch = findViewById(R.id.upsEnabledSwitch);
 
 
         final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
@@ -174,7 +175,7 @@ public class UpsEditor extends AppCompatActivity {
             eventsLocationET.setText(Constants.EVENTS_LOCATION);
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
-            UPS ups = databaseHelper.getAllUps(upsId).get(0);
+            UPS ups = databaseHelper.getAllUps(upsId, false).get(0);
 
             switch (ups.UPS_CONNECTION_TYPE) {
                 case ConnectionType.UPS_CONNECTION_TYPE_SSH:
@@ -220,6 +221,7 @@ public class UpsEditor extends AppCompatActivity {
             eventsLocationET.setText(ups.UPS_SERVER_EVENTS_LOCATION);
             loadUpsEventsSwitch.setChecked(ups.getUpsLoadEvents());
             nodeIdET.setText(ups.UPS_NODE_ID);
+            upsEnabledSwitch.setChecked(ups.UPS_ENABLED);
         }
 
 
@@ -261,6 +263,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
             contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
+            contentValues.put(DatabaseHelper.UPS_ENABLED, upsEnabledSwitch.isChecked() ? 1 : 0);
             databaseHelper.insertUpdateUps(upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();

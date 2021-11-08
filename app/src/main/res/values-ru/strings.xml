@@ -73,6 +73,8 @@
     <string name="ups_editor_update_existing">Редактор ИБП (обновить существующие)</string>
     <string name="private_key_file_imported_success">Файл закрытого ключа импортирован.</string>
     <string name="private_key_file_imported_failed">Не удалось импортировать файл закрытого ключа.</string>
+    <string name="ups_enabled">ИБП Включено</string>
+    <string name="ups_enable_toggle_description">ИБП можно на мгновение отключить, если он не подключен. Затем процесс обновления пропустит этот ИБП.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
@@ -109,6 +111,7 @@
     <string name="you_dont_have_events_to_use">У вас еще нет событий, которые можно использовать для расчета статистики.</string>
     <string name="debug_output">Вывод отладки</string>
     <string name="debug_output_is_null">Вывод отладки равен нулю</string>
+    <string name="ups_disabled">ОТКЛЮЧЕН</string>
 
     <!-- Swipe adapter -->
     <string name="delete">УДАЛЯТЬ</string>

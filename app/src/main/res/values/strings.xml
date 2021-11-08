@@ -73,6 +73,8 @@
     <string name="ups_editor_update_existing">UPS Editor (Update existing)</string>
     <string name="private_key_file_imported_success">Private key file imported.</string>
     <string name="private_key_file_imported_failed">Failed to import private key file.</string>
+    <string name="ups_enabled">UPS Enabled</string>
+    <string name="ups_enable_toggle_description">UPS can be disabled momentarily if its not connected. Update process will then skip this UPS.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
@@ -109,6 +111,7 @@
     <string name="you_dont_have_events_to_use">You don\'t yet have events to use for calculating statistics.</string>
     <string name="debug_output">Debug output</string>
     <string name="debug_output_is_null">Debug output is null</string>
+    <string name="ups_disabled">DISABLED</string>
 
     <!-- Swipe adapter -->
     <string name="delete">DELETE</string>
