@@ -17,6 +17,7 @@ import com.jcraft.jsch.SftpException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -80,10 +81,22 @@ public class ConnectorTask {
             this.completed = 0;
             upsArrayList = databaseHelper.getAllUps(this.upsId, true);
             if (upsArrayList.size() > 0) {
-
                 Thread thread = new Thread() {
+                    @SuppressWarnings("BusyWait")
                     @Override
                     public void run() {
+                        for (int i = 0; i < upsArrayList.size(); i++) {
+                            threads.add(new UPSTaskThread(upsArrayList.get(i)));
+                        }
+                        for (int t = 0; t < threads.size(); t++) {
+                            try {
+                                threads.get(t).start();
+                                sleep(100);
+                            } catch (InterruptedException | IllegalThreadStateException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, e.toString());
+                            }
+                        }
                     }
                 };
                 thread.start();
@@ -97,6 +110,18 @@ public class ConnectorTask {
 
 
     /**
+     * Called when any of UPS updates is finished
+     */
+    private void oneReady() {
+        apcupsdInterface.onRefreshList(); // Refresh list view
+        this.completed++;
+        if (completed == threads.size()) {
+            apcupsdInterface.onTaskCompleted();
+        }
+    }
+
+
+    /**
      * Thread task goes through added ups devices and load statuses and events
      */
     private class UPSTaskThread extends Thread {
@@ -104,6 +129,7 @@ public class ConnectorTask {
         UPSTaskThread(UPS ups) {
         }
 
+        @SuppressWarnings("unused")
         public void run(Context context, UPS ups) {
             Thread.currentThread().setName(ups.UPS_ID);
 
@@ -112,14 +138,18 @@ public class ConnectorTask {
                 case ConnectionType.UPS_CONNECTION_TYPE_NIS:
                     // APCUPSD SOCKET
                     if (validAPCUPSDRequirements(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
-                        if (connectSocketServer(ups.UPS_ID, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
+                        try {
+                            connectSocketServer(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
                             getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
-                        } else {
+                        } catch (IOError e) {
+                            apcupsdInterface.onCommandError(e.toString());
+                        } catch (IOException e) {
                             onConnectionError(ups.UPS_ID);
                         }
                     } else {
                         apcupsdInterface.onMissingPreferences();
                     }
+                    oneReady();
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_SSH:
                     // SSH
@@ -127,18 +157,21 @@ public class ConnectorTask {
                             ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT),
                             ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_PRIVATE_KEY_PATH
                     )) {
-                        if (connectSSHServer(ups)) {
-                            if (ups.UPS_IS_APC_NMC) {
-                                getUPSStatusNMC(ups, ups.getUpsLoadEvents());
-                            } else {
-                                getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                        try {
+                            if (connectSSHServer(ups)) {
+                                if (ups.UPS_IS_APC_NMC) {
+                                    getUPSStatusNMC(ups, ups.getUpsLoadEvents());
+                                } else {
+                                    getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                                }
                             }
-                        } else {
+                        } catch (NullPointerException e) {
                             onConnectionError(ups.UPS_ID);
                         }
                     } else {
                         apcupsdInterface.onMissingPreferences();
                     }
+                    oneReady();
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_IPM:
                     // Eaton IPM
@@ -155,8 +188,10 @@ public class ConnectorTask {
                     if (ipm.getEvents().size() > 0) {
                         databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
                     }
+                    oneReady();
                     break;
                 default:
+                    oneReady();
                     Log.w(TAG, "Unsupported UPS connection type");
                     break;
             }
@@ -224,8 +259,6 @@ public class ConnectorTask {
                 );
             }
             return false;
-        } catch (NullPointerException e) {
-            return false;
         }
     }
 
@@ -233,19 +266,10 @@ public class ConnectorTask {
     // ---------------------------------------------------------------------------------------------
 
     // Socket connection
-    private Boolean connectSocketServer(final String upsId, final String ip, final int port) {
-        try {
-            InetAddress serverAddress = InetAddress.getByName(ip);
-            socket = new Socket(serverAddress, port);
-            socket.setSoTimeout(10 * 1000);
-            return true;
-        } catch (UnknownHostException e1) {
-            e1.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    private void connectSocketServer(final String ip, final int port) throws IOException {
+        InetAddress serverAddress = InetAddress.getByName(ip);
+        socket = new Socket(serverAddress, port);
+        socket.setSoTimeout(10 * 1000);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -342,40 +366,33 @@ public class ConnectorTask {
     }
 
 
-    private void getUPSStatusAPCUPSD(final String upsId, final boolean loadEvents) {
+    private void getUPSStatusAPCUPSD(final String upsId, final boolean loadEvents) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
-            DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+        byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
+        DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
 
-            dOut.write(message);           // write the message
-            // dOut.flush();
+        dOut.write(message);           // write the message
+        // dOut.flush();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 3) {
-                    final String line_ = line.substring(2, line.length()) + "\n";
-                    stringBuilder.append(line_);
-                    // Log.i(TAG, line_);
-                    if (line_.contains("END APC")) {
-                        break;
-                    }
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        String line = null;
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 3) {
+                final String line_ = line.substring(2, line.length()) + "\n";
+                stringBuilder.append(line_);
+                // Log.i(TAG, line_);
+                if (line_.contains("END APC")) {
+                    break;
                 }
             }
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
-            contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
-            databaseHelper.insertUpdateUps(upsId, contentValues);
-
-            getUPSEventsAPCUPSD(upsId, loadEvents);
-
-        } catch (Exception e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
         }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+        contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
+        databaseHelper.insertUpdateUps(upsId, contentValues);
+
+        getUPSEventsAPCUPSD(upsId, loadEvents);
     }
 
 

@@ -57,6 +57,11 @@ public class StatusService implements ConnectorInterface {
     }
 
     @Override
+    public void onTaskError(String exception) {
+        Log.e(TAG, exception);
+    }
+
+    @Override
     public void onMissingPreferences() {
         Log.i(TAG, "onMissingPreferences");
     }

@@ -146,6 +146,11 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
     }
 
     @Override
+    public void onTaskError(String exception) {
+        runOnUiThread(() -> genericErrorDialog(getString(R.string.error), exception));
+    }
+
+    @Override
     public void onMissingPreferences() {
     }
 
