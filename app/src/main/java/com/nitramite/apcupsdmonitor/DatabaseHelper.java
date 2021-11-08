@@ -149,19 +149,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     void insertUpdateUps(SQLiteDatabase db, String upsId, ContentValues contentValues) {
         if (db == null) {
             SQLiteDatabase db_ = this.getWritableDatabase();
-            long result;
             if (upsId == null) {
-                result = db_.insert(UPS_TABLE, null, contentValues);
+                db_.insert(UPS_TABLE, null, contentValues);
             } else {
-                result = db_.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
+                db_.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
             }
             db_.close();
         } else {
-            long result;
             if (upsId == null) {
-                result = db.insert(UPS_TABLE, null, contentValues);
+                db.insert(UPS_TABLE, null, contentValues);
             } else {
-                result = db.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
+                db.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
             }
         }
     }

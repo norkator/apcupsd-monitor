@@ -47,7 +47,6 @@ public class ConnectorTask {
     private ArrayList<Thread> threads;
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
     private Integer completed = 0;
-    private String upsId = null; // If provided, updates only one ups
     private final TaskMode taskMode; // Activity or service task, on service skip getting events
 
     // Interface
@@ -64,23 +63,22 @@ public class ConnectorTask {
 
 
     // Constructor
-    ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
-        Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
-                (upsId_ == null ? "all ups statuses" : "one ups status"));
+    ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId) {
+        Log.i(TAG, "Connector provided ups id: " + upsId + " meaning we update " +
+                (upsId == null ? "all ups statuses" : "one ups status"));
         taskMode = taskMode_;
-        this.upsId = upsId_;
         databaseHelper = new DatabaseHelper(context);
         this.apcupsdInterface = apcupsdInterface;
-        this.doInBackground(context);
+        this.doInBackground(context, upsId);
     }
 
 
-    void doInBackground(Context context) {
+    void doInBackground(Context context, String upsId) {
         try {
             threads = new ArrayList<>();
             upsArrayList.clear();
             this.completed = 0;
-            upsArrayList = databaseHelper.getAllUps(this.upsId, true);
+            upsArrayList = databaseHelper.getAllUps(upsId, true);
             SQLiteDatabase writablePool = databaseHelper.getWritablePool();
 
             if (upsArrayList.size() > 0) {
@@ -143,6 +141,10 @@ public class ConnectorTask {
         public void run() {
             Thread.currentThread().setName(ups.UPS_ID);
 
+            if (ups.UPS_CONNECTION_TYPE == null) {
+                ups.UPS_CONNECTION_TYPE = ConnectionType.UPS_CONNECTION_TYPE_NA;
+            }
+
             // Determine connection type
             switch (ups.UPS_CONNECTION_TYPE) {
                 case ConnectionType.UPS_CONNECTION_TYPE_NIS:
@@ -171,7 +173,7 @@ public class ConnectorTask {
                                 if (ups.UPS_IS_APC_NMC) {
                                     getUPSStatusNMC(writablePool, ups, ups.getUpsLoadEvents());
                                 } else {
-                                    getUPSStatusSSH(writablePool, ups.UPS_ID, ups.getUpsLoadEvents());
+                                    getUPSStatusSSH(writablePool, ups, ups.getUpsLoadEvents());
                                 }
                             }
                         } catch (NullPointerException e) {
@@ -259,7 +261,7 @@ public class ConnectorTask {
         } catch (JSchException e) {
             if (e.toString().contains("reject HostKey")) {
                 apcupsdInterface.onAskToTrustKey(
-                        upsId,
+                        ups.UPS_ID,
                         session.getHostKey().getHost(),
                         session.getHostKey().getFingerPrint(sshClient),
                         session.getHostKey().getKey()
@@ -313,7 +315,7 @@ public class ConnectorTask {
             contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             String output = stringBuilder.toString();
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, output);
-            databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
+            databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
                 getNMCEvents(writablePool, ups, loadEvents);
@@ -326,7 +328,7 @@ public class ConnectorTask {
     }
 
     // Get ups status
-    private void getUPSStatusSSH(SQLiteDatabase writablePool, final String upsId, final boolean loadEvents) {
+    private void getUPSStatusSSH(SQLiteDatabase writablePool, final UPS ups, final boolean loadEvents) {
         try {
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -337,7 +339,6 @@ public class ConnectorTask {
             InputStream input = channel.getInputStream();
             channel.connect();
 
-
             // Can be replaced by test string (/*input*/ testInputStream)
             InputStreamReader inputReader = new InputStreamReader(
                     input
@@ -346,7 +347,6 @@ public class ConnectorTask {
                     // Mock.APCNetworkCardMockData()
                     // Mock.APCNetworkCardMockDataAP9630()
             );
-
 
             BufferedReader bufferedReader = new BufferedReader(inputReader);
             String line = null;
@@ -360,10 +360,10 @@ public class ConnectorTask {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
-            databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
+            databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(writablePool, upsId, loadEvents);
+                getUPSEvents(writablePool, ups.UPS_ID, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
@@ -460,7 +460,7 @@ public class ConnectorTask {
 
                 channel.disconnect();
                 sessionDisconnect();
-                databaseHelper.insertEvents(writablePool, upsId, events);
+                databaseHelper.insertEvents(writablePool, ups.UPS_ID, events);
             } catch (JSchException | IOException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
