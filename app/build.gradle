@@ -10,8 +10,8 @@ android {
         minSdkVersion 22
         targetSdkVersion 30
 
-        versionCode 48
-        versionName "1.17.2" // Use Semver
+        versionCode 49
+        versionName "1.18.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'joda-time:joda-time:2.10.13'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     // For the notifications
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
     // Tests
