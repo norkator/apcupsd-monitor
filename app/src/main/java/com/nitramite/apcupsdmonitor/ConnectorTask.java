@@ -27,7 +27,6 @@ import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +37,6 @@ public class ConnectorTask {
 
     // Logging
     private final static String TAG = ConnectorTask.class.getSimpleName();
-
-    // Command variables
-    private String statusCommand = Constants.STATUS_COMMAND_APCUPSD;
-    private String eventsLocation = Constants.EVENTS_LOCATION;
 
     // Variables
     private ArrayList<Thread> threads;
@@ -333,7 +328,7 @@ public class ConnectorTask {
 
             StringBuilder stringBuilder = new StringBuilder();
             Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(this.statusCommand);
+            ((ChannelExec) channel).setCommand(Constants.STATUS_COMMAND_APCUPSD);
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err);
             InputStream input = channel.getInputStream();
@@ -415,7 +410,7 @@ public class ConnectorTask {
                 ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
                 channelSftp.connect();
                 final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                channelSftp.get(this.eventsLocation, byteArrayOutputStream);
+                channelSftp.get(Constants.EVENTS_LOCATION, byteArrayOutputStream);
                 BufferedReader bufferedReader = new BufferedReader(new StringReader(byteArrayOutputStream.toString()));
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
