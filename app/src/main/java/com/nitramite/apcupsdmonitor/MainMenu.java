@@ -48,7 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener, SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener,
+        SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
 
     // http://www.apcupsd.org/manual/manual.html
 
@@ -299,6 +300,11 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onTaskError(String exception) {
+        runOnUiThread(() -> genericErrorDialog(getString(R.string.error), exception));
     }
 
     @Override
