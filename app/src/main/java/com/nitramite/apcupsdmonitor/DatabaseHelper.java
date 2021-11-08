@@ -129,6 +129,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public SQLiteDatabase getWritablePool() {
+        return this.getWritableDatabase();
+    }
+
+    public void closePool(SQLiteDatabase db) {
+        db.close();
+    }
+
     // ---------------------------------------------------------------------------------------------
 
 
@@ -137,18 +145,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param upsId         String
      * @param contentValues Values
-     * @return db id
      */
-    Long insertUpdateUps(String upsId, ContentValues contentValues) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        long result;
-        if (upsId == null) {
-            result = db.insert(UPS_TABLE, null, contentValues);
+    void insertUpdateUps(SQLiteDatabase db, String upsId, ContentValues contentValues) {
+        if (db == null) {
+            SQLiteDatabase db_ = this.getWritableDatabase();
+            long result;
+            if (upsId == null) {
+                result = db_.insert(UPS_TABLE, null, contentValues);
+            } else {
+                result = db_.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
+            }
+            db_.close();
         } else {
-            result = db.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
+            long result;
+            if (upsId == null) {
+                result = db.insert(UPS_TABLE, null, contentValues);
+            } else {
+                result = db.update(UPS_TABLE, contentValues, " id = ?", new String[]{upsId});
+            }
         }
-        db.close();
-        return result;
     }
 
 
@@ -201,8 +216,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    void insertEvents(String upsId, ArrayList<String> events) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    void insertEvents(SQLiteDatabase db, String upsId, ArrayList<String> events) {
+        // SQLiteDatabase db = this.getWritableDatabase();
         db.delete(EVENTS_TABLE, EVENT_UPS_ID + " = ?", new String[]{upsId});
         for (int i = 0; i < events.size(); i++) {
             ContentValues contentValues = new ContentValues();
@@ -210,7 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(EVENT_STR, events.get(i));
             db.insert(EVENTS_TABLE, null, contentValues);
         }
-        db.close();
+        // db.close();
     }
 
 

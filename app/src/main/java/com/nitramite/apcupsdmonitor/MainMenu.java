@@ -271,7 +271,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                             contentValues.put(DatabaseHelper.UPS_SERVER_HOST_NAME, hostName);
                             contentValues.put(DatabaseHelper.UPS_SERVER_HOST_FINGER_PRINT, hostFingerPrint);
                             contentValues.put(DatabaseHelper.UPS_SERVER_HOST_KEY, hostKey);
-                            databaseHelper.insertUpdateUps(upsId, contentValues);
+                            databaseHelper.insertUpdateUps(null, upsId, contentValues);
                             startConnectorTask(); // Load again
                         })
                         .setNegativeButton(R.string.no, (dialog, id) ->
