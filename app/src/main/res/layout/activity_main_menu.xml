@@ -7,17 +7,10 @@
     android:orientation="vertical"
     tools:context=".MainMenu">
 
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <!-- Custom material style progressbar -->
             <ProgressBar
@@ -33,6 +26,10 @@
                 android:max="100"
                 android:visibility="gone" />
 
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
             <!-- Main content lv -->
             <ListView
@@ -43,11 +40,9 @@
                 android:divider="@null"
                 android:dividerHeight="0dp" />
 
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </LinearLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAddNewUpsBtn"
@@ -55,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        android:contentDescription="@string/add_new_ups" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
