@@ -31,17 +31,17 @@ public class IPM {
     private final OkHttpClient client = new OkHttpClient();
 
 
-    IPM(Context context, String baseUrl, String port, String username, String password, String upsNodeId) {
+    IPM(Boolean useHttps, String baseUrl, String port, String username, String password, String upsNodeId) {
         try {
-            String challenge = getChallenge(baseUrl, port);
+            String challenge = getChallenge(useHttps, baseUrl, port);
             Log.i(TAG, "Challenge: " + challenge);
-            String sessionId = getLoginSessionId(context, baseUrl, port, username, password, challenge);
+            String sessionId = getLoginSessionId(useHttps, baseUrl, port, username, password, challenge);
             Log.i(TAG, sessionId);
 
-            boolean statusLoaded = loadNodeStatus(baseUrl, port, sessionId, upsNodeId);
+            boolean statusLoaded = loadNodeStatus(useHttps, baseUrl, port, sessionId, upsNodeId);
             Log.i(TAG, "Status loaded: " + statusLoaded);
 
-            boolean eventsLoaded = loadEvents(baseUrl, port, sessionId, upsNodeId);
+            boolean eventsLoaded = loadEvents(useHttps, baseUrl, port, sessionId, upsNodeId);
             Log.i(TAG, "Events loaded: " + eventsLoaded);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -59,9 +59,9 @@ public class IPM {
      * @throws IOException   if http call fails
      * @throws JSONException if parsing challenge fails
      */
-    private String getChallenge(String baseUrl, String port) throws IOException, JSONException {
+    private String getChallenge(Boolean useHttps, String baseUrl, String port) throws IOException, JSONException {
         Request request = new Request.Builder()
-                .url("https://" + baseUrl + ":" + port + "/server/user_srv.js?action=queryLoginChallenge")
+                .url((useHttps ? "https://" : "http://") + baseUrl + ":" + port + "/server/user_srv.js?action=queryLoginChallenge")
                 .build();
         try (Response response = client.newCall(request).execute()) {
             JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
@@ -73,7 +73,7 @@ public class IPM {
     /**
      * Login to IPM to get sessionId
      *
-     * @param context   of app
+     * @param useHttps  for connection
      * @param baseUrl   of IPM server
      * @param port      of IPM server
      * @param userName  of IPM server
@@ -83,7 +83,7 @@ public class IPM {
      * @throws Exception if login fails
      */
     private String getLoginSessionId(
-            Context context, String baseUrl, String port, String userName,
+            Boolean useHttps, String baseUrl, String port, String userName,
             String password, String challenge
     ) throws Exception {
         String hmac = EatonHMAC.GetEatonHMAC(password, challenge);
@@ -92,7 +92,7 @@ public class IPM {
                 .add("password", hmac)
                 .build();
         Request request = new Request.Builder()
-                .url("https://" + baseUrl + ":" + port + "/server/user_srv.js?action=loginUser")
+                .url((useHttps ? "https://" : "http://") + baseUrl + ":" + port + "/server/user_srv.js?action=loginUser")
                 .post(formBody)
                 .build();
         try (Response response = client.newCall(request).execute()) {
@@ -111,7 +111,7 @@ public class IPM {
 
     @SuppressWarnings("ConstantConditions")
     private boolean loadNodeStatus(
-            String baseUrl, String port, String sessionId, String upsNodeId
+            Boolean useHttps, String baseUrl, String port, String sessionId, String upsNodeId
     ) throws Exception {
         events.clear();
         RequestBody formBody = new FormBody.Builder()
@@ -119,7 +119,7 @@ public class IPM {
                 .add("nodes", "[\"" + upsNodeId + "\"]")
                 .build();
         Request request = new Request.Builder()
-                .url("https://" + baseUrl + ":" + port + "/server/data_srv.js?action=loadNodeData")
+                .url((useHttps ? "https://" : "http://") + baseUrl + ":" + port + "/server/data_srv.js?action=loadNodeData")
                 .post(formBody)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Cookie", "mc2LastLogin=admin; sessionID=" + sessionId)
@@ -175,7 +175,7 @@ public class IPM {
      * @throws Exception if loading fails
      */
     private Boolean loadEvents(
-            String baseUrl, String port, String sessionId, String upsNodeId
+            Boolean useHttps, String baseUrl, String port, String sessionId, String upsNodeId
     ) throws Exception {
         events.clear();
         RequestBody formBody = new FormBody.Builder()
@@ -183,7 +183,7 @@ public class IPM {
                 .add("nodeID", upsNodeId)
                 .build();
         Request request = new Request.Builder()
-                .url("https://" + baseUrl + ":" + port + "/server/events_srv.js?action=loadNodeEvents")
+                .url((useHttps ? "https://" : "http://") + baseUrl + ":" + port + "/server/events_srv.js?action=loadNodeEvents")
                 .post(formBody)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Cookie", "mc2LastLogin=admin; sessionID=" + sessionId)
