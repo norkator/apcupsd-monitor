@@ -264,7 +264,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
             contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_ENABLED, upsEnabledSwitch.isChecked() ? 1 : 0);
-            databaseHelper.insertUpdateUps(upsId, contentValues);
+            databaseHelper.insertUpdateUps(null, upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();
         });

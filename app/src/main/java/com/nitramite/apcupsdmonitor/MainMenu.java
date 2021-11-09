@@ -48,7 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener, SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener,
+        SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
 
     // http://www.apcupsd.org/manual/manual.html
 
@@ -123,21 +124,15 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
         upsListView = findViewById(R.id.upsListView);
 
-        upsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainMenu.this, UpsViewer.class);
-                intent.putExtra("UPS_ID", upsArrayList.get(i).UPS_ID);
-                startActivity(intent);
-            }
+        upsListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent intent = new Intent(MainMenu.this, UpsViewer.class);
+            intent.putExtra("UPS_ID", upsArrayList.get(i).UPS_ID);
+            startActivity(intent);
         });
 
-        upsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                directionRightEdit(position);
-                return true;
-            }
+        upsListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            directionRightEdit(position);
+            return true;
         });
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -257,26 +252,23 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     @Override
     public void onAskToTrustKey(final String upsId, final String hostName, final String hostFingerPrint, final String hostKey) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                closeProgressDialog();
-                new AlertDialog.Builder(MainMenu.this)
-                        .setIcon(R.mipmap.logo)
-                        .setMessage(getString(R.string.trust_host) + " " + hostName + " " + getString(R.string.with_following_key_fingerprint) + "\n\n" + hostFingerPrint)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.yes, (dialog, id) -> {
-                            ContentValues contentValues = new ContentValues();
-                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_NAME, hostName);
-                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_FINGER_PRINT, hostFingerPrint);
-                            contentValues.put(DatabaseHelper.UPS_SERVER_HOST_KEY, hostKey);
-                            databaseHelper.insertUpdateUps(upsId, contentValues);
-                            startConnectorTask(); // Load again
-                        })
-                        .setNegativeButton(R.string.no, (dialog, id) ->
-                                genericSuccessDialog(getString(R.string.note), getString(R.string.host_fingerprint_message)))
-                        .show();
-            }
+        runOnUiThread(() -> {
+            closeProgressDialog();
+            new AlertDialog.Builder(MainMenu.this)
+                    .setIcon(R.mipmap.logo)
+                    .setMessage(getString(R.string.trust_host) + " " + hostName + " " + getString(R.string.with_following_key_fingerprint) + "\n\n" + hostFingerPrint)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(DatabaseHelper.UPS_SERVER_HOST_NAME, hostName);
+                        contentValues.put(DatabaseHelper.UPS_SERVER_HOST_FINGER_PRINT, hostFingerPrint);
+                        contentValues.put(DatabaseHelper.UPS_SERVER_HOST_KEY, hostKey);
+                        databaseHelper.insertUpdateUps(null, upsId, contentValues);
+                        startConnectorTask(); // Load again
+                    })
+                    .setNegativeButton(R.string.no, (dialog, id) ->
+                            genericSuccessDialog(getString(R.string.note), getString(R.string.host_fingerprint_message)))
+                    .show();
         });
     }
 
@@ -299,6 +291,11 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onTaskError(String exception) {
+        runOnUiThread(() -> genericErrorDialog(getString(R.string.error), exception));
     }
 
     @Override

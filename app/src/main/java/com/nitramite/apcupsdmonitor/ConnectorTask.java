@@ -1,9 +1,8 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 import android.util.Log;
 
@@ -19,6 +18,7 @@ import com.jcraft.jsch.SftpException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,129 +27,125 @@ import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-// Had methods to query information from ConnectorTask
-@SuppressWarnings("FieldCanBeLocal")
-public class ConnectorTask extends AsyncTask<String, String, String> {
+
+public class ConnectorTask {
 
     // Logging
     private final static String TAG = ConnectorTask.class.getSimpleName();
 
-    // Command variables
-    private String statusCommand = Constants.STATUS_COMMAND_APCUPSD;
-    private String eventsLocation = Constants.EVENTS_LOCATION;
-
     // Variables
+    private ArrayList<Thread> threads;
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
-    private Integer arrayPosition = 0;
-    private String upsId = null; // If provided, updates only one ups
+    private Integer completed = 0;
     private final TaskMode taskMode; // Activity or service task, on service skip getting events
-    private String address = null;
-    private Integer port = 22;
-    private String sshUsername = null;
-    private String sshPassword = null;
-    private Boolean strictHostKeyChecking = false;
-    private String sshHostName = null;
-    private String sshHostFingerPrint = null;
-    private String sshHostKey = null;
-
-    // Private key variables
-    private Boolean privateKeyFileEnabled = false;
-    private String privateKeyFilePassphrase = "";
-    private String privateKeyFileLocation = null;
 
     // Interface
     private final ConnectorInterface apcupsdInterface;
 
-    // SSH Library
-    private Session session = null;
-
     // Database
     private final DatabaseHelper databaseHelper;
 
-    // APC Socket
-    private Socket socket;
-
-    @SuppressLint("StaticFieldLeak")
-    private final Context context;
-
 
     // Constructor
-    @SuppressWarnings("deprecation")
-    ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId_) {
-        Log.i(TAG, "Connector provided ups id: " + upsId_ + " meaning we update " +
-                (upsId_ == null ? "all ups statuses" : "one ups status"));
-        this.context = context;
+    ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId) {
+        Log.i(TAG, "Connector provided ups id: " + upsId + " meaning we update " +
+                (upsId == null ? "all ups statuses" : "one ups status"));
         taskMode = taskMode_;
-        this.upsId = upsId_;
         databaseHelper = new DatabaseHelper(context);
         this.apcupsdInterface = apcupsdInterface;
-        this.execute();
+        this.doInBackground(context, upsId);
     }
 
 
-    @Override
-    protected String doInBackground(String... params) {
+    void doInBackground(Context context, String upsId) {
         try {
+            threads = new ArrayList<>();
             upsArrayList.clear();
-            arrayPosition = 0;
-            upsArrayList = databaseHelper.getAllUps(this.upsId, true);
+            this.completed = 0;
+            upsArrayList = databaseHelper.getAllUps(upsId, true);
+            SQLiteDatabase writablePool = databaseHelper.getWritablePool();
+
             if (upsArrayList.size() > 0) {
-                upsTaskHelper();
+                Thread thread = new Thread() {
+                    @SuppressWarnings("BusyWait")
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < upsArrayList.size(); i++) {
+                            threads.add(new UPSTaskThread(context, writablePool, upsArrayList.get(i)));
+                        }
+                        for (int t = 0; t < threads.size(); t++) {
+                            try {
+                                threads.get(t).start();
+                                sleep(100);
+                            } catch (InterruptedException | IllegalThreadStateException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, e.toString());
+                            }
+                        }
+                    }
+                };
+                thread.start();
             } else {
                 apcupsdInterface.noUpsConfigured();
             }
         } catch (RuntimeException e) {
-            Log.i(TAG, e.toString());
+            this.apcupsdInterface.onTaskError(e.toString());
         }
-        return null;
     }
 
 
     /**
-     * Goes thru added ups devices and load statuses and events
+     * Called when any of UPS updates is finished
      */
-    private void upsTaskHelper() {
-        if (arrayPosition < upsArrayList.size()) {
-            if (arrayPosition > 0) {
-                apcupsdInterface.onRefreshList(); // Refresh list view
+    private void oneReady(SQLiteDatabase writablePool) {
+        apcupsdInterface.onRefreshList(); // Refresh list view
+        this.completed++;
+        if (completed == threads.size()) {
+            databaseHelper.closePool(writablePool);
+            apcupsdInterface.onTaskCompleted();
+        }
+    }
+
+
+    /**
+     * Thread task goes through added ups devices and load statuses and events
+     */
+    private class UPSTaskThread extends Thread {
+
+        private final Context context;
+        private final SQLiteDatabase writablePool;
+        private final UPS ups;
+
+        UPSTaskThread(Context context, SQLiteDatabase writablePool, UPS ups) {
+            this.context = context;
+            this.writablePool = writablePool;
+            this.ups = ups;
+        }
+
+        public void run() {
+            Thread.currentThread().setName(ups.UPS_ID);
+
+            if (ups.UPS_CONNECTION_TYPE == null) {
+                ups.UPS_CONNECTION_TYPE = ConnectionType.UPS_CONNECTION_TYPE_NA;
             }
 
-            UPS ups = upsArrayList.get(arrayPosition);
-            final String connectionType = ups.UPS_CONNECTION_TYPE;
-
-            this.statusCommand = ups.UPS_SERVER_STATUS_COMMAND;
-            this.eventsLocation = ups.UPS_SERVER_EVENTS_LOCATION;
-            this.address = ups.UPS_SERVER_ADDRESS;
-            this.port = portStringToInteger(ups.UPS_SERVER_PORT);
-            this.sshUsername = ups.UPS_SERVER_USERNAME;
-            this.sshPassword = ups.UPS_SERVER_PASSWORD;
-            this.strictHostKeyChecking = ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1");
-
-            this.sshHostName = ups.UPS_SERVER_HOST_NAME;
-            this.sshHostFingerPrint = ups.UPS_SERVER_HOST_FINGER_PRINT;
-            this.sshHostKey = ups.UPS_SERVER_HOST_KEY;
-
-            // Private key feature
-            this.privateKeyFileEnabled = ups.UPS_USE_PRIVATE_KEY_AUTH.equals("1");
-            this.privateKeyFilePassphrase = ups.UPS_PRIVATE_KEY_PASSWORD;
-            this.privateKeyFileLocation = ups.UPS_PRIVATE_KEY_PATH;
-
-
             // Determine connection type
-            switch (connectionType) {
+            switch (ups.UPS_CONNECTION_TYPE) {
                 case ConnectionType.UPS_CONNECTION_TYPE_NIS:
                     // APCUPSD SOCKET
-                    if (validAPCUPSDRequirements()) {
-                        if (connectSocketServer(ups.UPS_ID, this.address, this.port)) {
-                            getUPSStatusAPCUPSD(ups.UPS_ID, ups.getUpsLoadEvents());
-                        } else {
-                            onConnectionError(ups.UPS_ID);
+                    if (validAPCUPSDRequirements(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
+                        try {
+                            Socket socket = connectSocketServer(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
+                            getUPSStatusAPCUPSD(writablePool, socket, ups.UPS_ID, ups.getUpsLoadEvents());
+                        } catch (IOError e) {
+                            apcupsdInterface.onCommandError(e.toString());
+                        } catch (IOException e) {
+                            onConnectionError(writablePool, ups.UPS_ID);
                         }
                     } else {
                         apcupsdInterface.onMissingPreferences();
@@ -157,15 +153,21 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_SSH:
                     // SSH
-                    if (validSSHRequirements()) {
-                        if (connectSSHServer(ups.UPS_ID)) {
-                            if (ups.UPS_IS_APC_NMC) {
-                                getUPSStatusNMC(ups.UPS_ID, ups.getUpsLoadEvents());
-                            } else {
-                                getUPSStatusSSH(ups.UPS_ID, ups.getUpsLoadEvents());
+                    if (validSSHRequirements(
+                            ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT),
+                            ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_PRIVATE_KEY_PATH
+                    )) {
+                        try {
+                            Session session = connectSSHServer(ups);
+                            if (session != null && session.isConnected()) {
+                                if (ups.UPS_IS_APC_NMC) {
+                                    getUPSStatusNMC(writablePool, session, ups, ups.getUpsLoadEvents());
+                                } else {
+                                    getUPSStatusSSH(writablePool, session, ups, ups.getUpsLoadEvents());
+                                }
                             }
-                        } else {
-                            onConnectionError(ups.UPS_ID);
+                        } catch (NullPointerException e) {
+                            onConnectionError(writablePool, ups.UPS_ID);
                         }
                     } else {
                         apcupsdInterface.onMissingPreferences();
@@ -182,92 +184,86 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     if (ipm.getNodeStatus() != null) {
                         contentValues.put(DatabaseHelper.UPS_STATUS_STR, ipm.getNodeStatus());
                     }
-                    databaseHelper.insertUpdateUps(ups.UPS_ID, contentValues);
+                    databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
                     if (ipm.getEvents().size() > 0) {
-                        databaseHelper.insertEvents(ups.UPS_ID, ipm.getEvents());
+                        databaseHelper.insertEvents(writablePool, ups.UPS_ID, ipm.getEvents());
                     }
-                    // next
-                    arrayPosition++;
-                    upsTaskHelper();
                     break;
                 default:
                     Log.w(TAG, "Unsupported UPS connection type");
                     break;
             }
-        } else {
-            apcupsdInterface.onTaskCompleted();
+            oneReady(writablePool);
         }
     }
 
 
-    private void onConnectionError(final String upsId) {
+    private void onConnectionError(SQLiteDatabase writablePool, final String upsId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_NOT_REACHABLE);
-        databaseHelper.insertUpdateUps(upsId, contentValues);
+        databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
         apcupsdInterface.onConnectionError(upsId);
-        arrayPosition++;
-        upsTaskHelper();
-    }
-
-    @Override
-    protected void onPostExecute(String param) {
     }
 
 
-    private Boolean validAPCUPSDRequirements() {
-        return this.address != null && this.port != -1;
+    private Boolean validAPCUPSDRequirements(String address, Integer port) {
+        return address != null && port != -1;
     }
 
-    private Boolean validSSHRequirements() {
-        return this.address != null && this.port != -1 && this.sshUsername != null && (this.sshPassword != null || this.privateKeyFileLocation != null);
+    private Boolean validSSHRequirements(String address, Integer port, String sshUsername, String sshPassword, String privateKeyFileLocation) {
+        return address != null && port != -1 && sshUsername != null && (sshPassword != null || privateKeyFileLocation != null);
     }
 
 
     // ---------------------------------------------------------------------------------------------
 
-    // Connect ssh server
-    private Boolean connectSSHServer(final String upsId) {
+    /**
+     * Connect ssh server and return session
+     *
+     * @param ups objects
+     * @return ssh session
+     */
+    private Session connectSSHServer(UPS ups) {
         JSch sshClient = null;
+        Session session = null;
         try {
             sshClient = new JSch();
 
-            if (this.privateKeyFileEnabled && privateKeyFileLocation != null) {
+            if (ups.UPS_USE_PRIVATE_KEY_AUTH.equals("1") && ups.UPS_PRIVATE_KEY_PATH != null) {
                 // Use private key
-                sshClient.addIdentity(privateKeyFileLocation, privateKeyFilePassphrase);
-                session = sshClient.getSession(this.sshUsername, this.address, this.port);
+                sshClient.addIdentity(ups.UPS_PRIVATE_KEY_PATH, ups.UPS_PRIVATE_KEY_PASSWORD);
+                session = sshClient.getSession(ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
             } else {
                 // Use username and password
-                session = sshClient.getSession(this.sshUsername, this.address, this.port);
-                session.setPassword(this.sshPassword);
+                session = sshClient.getSession(ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
+                session.setPassword(ups.UPS_SERVER_PASSWORD);
             }
 
 
-            if (!this.strictHostKeyChecking) {
+            if (!ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1")) {
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect(5000);
-                return true;
+                return session;
             } else {
                 // https://stackoverflow.com/questions/43646043/jsch-how-to-let-user-confirm-host-fingerprint
                 session.setConfig("StrictHostKeyChecking", "yes");
-                if (this.sshHostKey != null) {
-                    byte[] keyBytes = Base64.decode(this.sshHostKey, Base64.DEFAULT);
-                    sshClient.getHostKeyRepository().add(new HostKey(this.sshHostName, keyBytes), null);
+                if (ups.UPS_SERVER_HOST_KEY != null) {
+                    byte[] keyBytes = Base64.decode(ups.UPS_SERVER_HOST_KEY, Base64.DEFAULT);
+                    sshClient.getHostKeyRepository().add(new HostKey(ups.UPS_SERVER_HOST_NAME, keyBytes), null);
                 }
                 session.connect();
-                return true;
+                return session;
             }
         } catch (JSchException e) {
             if (e.toString().contains("reject HostKey")) {
                 apcupsdInterface.onAskToTrustKey(
-                        upsId,
+                        ups.UPS_ID,
                         session.getHostKey().getHost(),
                         session.getHostKey().getFingerPrint(sshClient),
                         session.getHostKey().getKey()
                 );
             }
-            return false;
-        } catch (NullPointerException e) {
-            return false;
+            return session;
         }
     }
 
@@ -275,25 +271,19 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // ---------------------------------------------------------------------------------------------
 
     // Socket connection
-    private Boolean connectSocketServer(final String upsId, final String ip, final int port) {
-        try {
-            InetAddress serverAddress = InetAddress.getByName(ip);
-            socket = new Socket(serverAddress, port);
-            socket.setSoTimeout(10 * 1000);
-            return true;
-        } catch (UnknownHostException e1) {
-            e1.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    private Socket connectSocketServer(final String ip, final int port) throws IOException {
+        InetAddress serverAddress = InetAddress.getByName(ip);
+        Socket socket = new Socket(serverAddress, port);
+        socket.setSoTimeout(10 * 1000);
+        return socket;
     }
 
     // ---------------------------------------------------------------------------------------------
 
     // Get ups status for APC NMC cards
-    private void getUPSStatusNMC(final String upsId, final boolean loadEvents) {
+    private void getUPSStatusNMC(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         try {
             Channel channel = session.openChannel("shell");
             InputStream in = channel.getInputStream();
@@ -324,33 +314,31 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             String output = stringBuilder.toString();
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, output);
-            databaseHelper.insertUpdateUps(upsId, contentValues);
+            databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getNMCEvents(upsId, loadEvents);
-            } else {
-                arrayPosition++;
-                upsTaskHelper();
+                getNMCEvents(writablePool, session, ups, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
             apcupsdInterface.onCommandError(e.toString());
-            sessionDisconnect();
+            sessionDisconnect(session);
         }
     }
 
     // Get ups status
-    private void getUPSStatusSSH(final String upsId, final boolean loadEvents) {
+    private void getUPSStatusSSH(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         try {
 
             StringBuilder stringBuilder = new StringBuilder();
             Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(this.statusCommand);
+            ((ChannelExec) channel).setCommand(Constants.STATUS_COMMAND_APCUPSD);
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err);
             InputStream input = channel.getInputStream();
             channel.connect();
-
 
             // Can be replaced by test string (/*input*/ testInputStream)
             InputStreamReader inputReader = new InputStreamReader(
@@ -360,7 +348,6 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                     // Mock.APCNetworkCardMockData()
                     // Mock.APCNetworkCardMockDataAP9630()
             );
-
 
             BufferedReader bufferedReader = new BufferedReader(inputReader);
             String line = null;
@@ -374,56 +361,48 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
             contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
-            databaseHelper.insertUpdateUps(upsId, contentValues);
+            databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(upsId, loadEvents);
-            } else {
-                arrayPosition++;
-                upsTaskHelper();
+                getUPSEvents(writablePool, session, ups.UPS_ID, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
             apcupsdInterface.onCommandError(e.toString());
-            sessionDisconnect();
+            sessionDisconnect(session);
         }
     }
 
 
-    private void getUPSStatusAPCUPSD(final String upsId, final boolean loadEvents) {
+    private void getUPSStatusAPCUPSD(
+            SQLiteDatabase writablePool, Socket socket, final String upsId, final boolean loadEvents
+    ) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
-            DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+        byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
+        DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
 
-            dOut.write(message);           // write the message
-            // dOut.flush();
+        dOut.write(message);           // write the message
+        // dOut.flush();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 3) {
-                    final String line_ = line.substring(2, line.length()) + "\n";
-                    stringBuilder.append(line_);
-                    // Log.i(TAG, line_);
-                    if (line_.contains("END APC")) {
-                        break;
-                    }
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        String line = null;
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 3) {
+                final String line_ = line.substring(2, line.length()) + "\n";
+                stringBuilder.append(line_);
+                // Log.i(TAG, line_);
+                if (line_.contains("END APC")) {
+                    break;
                 }
             }
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
-            contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
-            databaseHelper.insertUpdateUps(upsId, contentValues);
-
-            getUPSEventsAPCUPSD(upsId, loadEvents);
-
-        } catch (Exception e) {
-            Log.i(TAG, e.toString());
-            apcupsdInterface.onCommandError(e.toString());
-            e.printStackTrace();
         }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+        contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
+        databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
+
+        getUPSEventsAPCUPSD(writablePool, socket, upsId, loadEvents);
     }
 
 
@@ -431,7 +410,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
 
 
     // Get ups events
-    private void getUPSEvents(final String upsId, final boolean loadEvents) {
+    private void getUPSEvents(
+            SQLiteDatabase writablePool, Session session, final String upsId, final boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
             Log.i(TAG, "Loading events...");
@@ -439,7 +420,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
                 channelSftp.connect();
                 final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                channelSftp.get(this.eventsLocation, byteArrayOutputStream);
+                channelSftp.get(Constants.EVENTS_LOCATION, byteArrayOutputStream);
                 BufferedReader bufferedReader = new BufferedReader(new StringReader(byteArrayOutputStream.toString()));
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
@@ -447,24 +428,24 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 }
                 bufferedReader.close();
                 channelSftp.disconnect();
-                sessionDisconnect();
-                databaseHelper.insertEvents(upsId, events);
+                sessionDisconnect(session);
+                databaseHelper.insertEvents(writablePool, upsId, events);
             } catch (JSchException | IOException | SftpException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
-                sessionDisconnect();
+                sessionDisconnect(session);
             }
         }
-        arrayPosition++;
-        upsTaskHelper();
     }
 
-    private void getNMCEvents(final String upsId, final boolean loadEvents) {
+    private void getNMCEvents(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
             Log.i(TAG, "Loading events...");
             try {
-                this.connectSSHServer(upsId);
+                this.connectSSHServer(ups);
 
                 ChannelExec channel = (ChannelExec) session.openChannel("exec");
                 channel.setCommand("apc-scp -f event.txt");
@@ -485,19 +466,19 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 }
 
                 channel.disconnect();
-                sessionDisconnect();
-                databaseHelper.insertEvents(upsId, events);
+                sessionDisconnect(session);
+                databaseHelper.insertEvents(writablePool, ups.UPS_ID, events);
             } catch (JSchException | IOException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
-                sessionDisconnect();
+                sessionDisconnect(session);
             }
         }
-        arrayPosition++;
-        upsTaskHelper();
     }
 
-    private void getUPSEventsAPCUPSD(final String upsId, final Boolean loadEvents) {
+    private void getUPSEventsAPCUPSD(
+            SQLiteDatabase writablePool, Socket socket, final String upsId, final Boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         try {
 
@@ -527,12 +508,9 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
                 in.close();
                 dOut.close();
 
-                databaseHelper.insertEvents(upsId, events);
+                databaseHelper.insertEvents(writablePool, upsId, events);
 
             }
-
-            arrayPosition++;
-            upsTaskHelper();
 
         } catch (Exception e) {
             Log.i(TAG, e.toString());
@@ -545,7 +523,7 @@ public class ConnectorTask extends AsyncTask<String, String, String> {
     // ---------------------------------------------------------------------------------------------
 
     // Disconnect ssh session
-    private void sessionDisconnect() {
+    private void sessionDisconnect(Session session) {
         session.disconnect();
     }
 
