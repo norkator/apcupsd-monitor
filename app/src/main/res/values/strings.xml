@@ -37,6 +37,7 @@
     <string name="connection_error_three">Target server has apcupsd daemon running and for example command</string>
     <string name="connection_error_four">is working.\n\n</string>
     <string name="connection_error_five">In case you are using direct APCUPSD TCP port connection, see setup tutorial for testing connection.</string>
+    <string name="add_new_ups">Add new ups</string>
 
     <!-- UpsEditor -->
     <string name="click_here_for_setup_tutorial">Click here for setup tutorial</string>
