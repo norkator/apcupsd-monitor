@@ -47,9 +47,6 @@ public class ConnectorTask {
     // Interface
     private final ConnectorInterface apcupsdInterface;
 
-    // SSH Library
-    private Session session = null;
-
     // Database
     private final DatabaseHelper databaseHelper;
 
@@ -161,11 +158,12 @@ public class ConnectorTask {
                             ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_PRIVATE_KEY_PATH
                     )) {
                         try {
-                            if (connectSSHServer(ups)) {
+                            Session session = connectSSHServer(ups);
+                            if (session != null && session.isConnected()) {
                                 if (ups.UPS_IS_APC_NMC) {
-                                    getUPSStatusNMC(writablePool, ups, ups.getUpsLoadEvents());
+                                    getUPSStatusNMC(writablePool, session, ups, ups.getUpsLoadEvents());
                                 } else {
-                                    getUPSStatusSSH(writablePool, ups, ups.getUpsLoadEvents());
+                                    getUPSStatusSSH(writablePool, session, ups, ups.getUpsLoadEvents());
                                 }
                             }
                         } catch (NullPointerException e) {
@@ -219,9 +217,15 @@ public class ConnectorTask {
 
     // ---------------------------------------------------------------------------------------------
 
-    // Connect ssh server
-    private Boolean connectSSHServer(UPS ups) {
+    /**
+     * Connect ssh server and return session
+     *
+     * @param ups objects
+     * @return ssh session
+     */
+    private Session connectSSHServer(UPS ups) {
         JSch sshClient = null;
+        Session session = null;
         try {
             sshClient = new JSch();
 
@@ -239,7 +243,7 @@ public class ConnectorTask {
             if (!ups.UPS_SERVER_SSH_STRICT_HOST_KEY_CHECKING.equals("1")) {
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect(5000);
-                return true;
+                return session;
             } else {
                 // https://stackoverflow.com/questions/43646043/jsch-how-to-let-user-confirm-host-fingerprint
                 session.setConfig("StrictHostKeyChecking", "yes");
@@ -248,7 +252,7 @@ public class ConnectorTask {
                     sshClient.getHostKeyRepository().add(new HostKey(ups.UPS_SERVER_HOST_NAME, keyBytes), null);
                 }
                 session.connect();
-                return true;
+                return session;
             }
         } catch (JSchException e) {
             if (e.toString().contains("reject HostKey")) {
@@ -259,7 +263,7 @@ public class ConnectorTask {
                         session.getHostKey().getKey()
                 );
             }
-            return false;
+            return session;
         }
     }
 
@@ -277,7 +281,9 @@ public class ConnectorTask {
     // ---------------------------------------------------------------------------------------------
 
     // Get ups status for APC NMC cards
-    private void getUPSStatusNMC(SQLiteDatabase writablePool, final UPS ups, final boolean loadEvents) {
+    private void getUPSStatusNMC(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         try {
             Channel channel = session.openChannel("shell");
             InputStream in = channel.getInputStream();
@@ -311,17 +317,19 @@ public class ConnectorTask {
             databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getNMCEvents(writablePool, ups, loadEvents);
+                getNMCEvents(writablePool, session, ups, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
             apcupsdInterface.onCommandError(e.toString());
-            sessionDisconnect();
+            sessionDisconnect(session);
         }
     }
 
     // Get ups status
-    private void getUPSStatusSSH(SQLiteDatabase writablePool, final UPS ups, final boolean loadEvents) {
+    private void getUPSStatusSSH(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         try {
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -356,12 +364,12 @@ public class ConnectorTask {
             databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(writablePool, ups.UPS_ID, loadEvents);
+                getUPSEvents(writablePool, session, ups.UPS_ID, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
             apcupsdInterface.onCommandError(e.toString());
-            sessionDisconnect();
+            sessionDisconnect(session);
         }
     }
 
@@ -402,7 +410,9 @@ public class ConnectorTask {
 
 
     // Get ups events
-    private void getUPSEvents(SQLiteDatabase writablePool, final String upsId, final boolean loadEvents) {
+    private void getUPSEvents(
+            SQLiteDatabase writablePool, Session session, final String upsId, final boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
             Log.i(TAG, "Loading events...");
@@ -418,17 +428,19 @@ public class ConnectorTask {
                 }
                 bufferedReader.close();
                 channelSftp.disconnect();
-                sessionDisconnect();
+                sessionDisconnect(session);
                 databaseHelper.insertEvents(writablePool, upsId, events);
             } catch (JSchException | IOException | SftpException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
-                sessionDisconnect();
+                sessionDisconnect(session);
             }
         }
     }
 
-    private void getNMCEvents(SQLiteDatabase writablePool, final UPS ups, final boolean loadEvents) {
+    private void getNMCEvents(
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
             Log.i(TAG, "Loading events...");
@@ -454,12 +466,12 @@ public class ConnectorTask {
                 }
 
                 channel.disconnect();
-                sessionDisconnect();
+                sessionDisconnect(session);
                 databaseHelper.insertEvents(writablePool, ups.UPS_ID, events);
             } catch (JSchException | IOException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
-                sessionDisconnect();
+                sessionDisconnect(session);
             }
         }
     }
@@ -511,7 +523,7 @@ public class ConnectorTask {
     // ---------------------------------------------------------------------------------------------
 
     // Disconnect ssh session
-    private void sessionDisconnect() {
+    private void sessionDisconnect(Session session) {
         session.disconnect();
     }
 
