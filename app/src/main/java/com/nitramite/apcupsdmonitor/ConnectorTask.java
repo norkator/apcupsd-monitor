@@ -53,9 +53,6 @@ public class ConnectorTask {
     // Database
     private final DatabaseHelper databaseHelper;
 
-    // APC Socket
-    private Socket socket;
-
 
     // Constructor
     ConnectorTask(final ConnectorInterface apcupsdInterface, Context context, TaskMode taskMode_, final String upsId) {
@@ -146,8 +143,8 @@ public class ConnectorTask {
                     // APCUPSD SOCKET
                     if (validAPCUPSDRequirements(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT))) {
                         try {
-                            connectSocketServer(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
-                            getUPSStatusAPCUPSD(writablePool, ups.UPS_ID, ups.getUpsLoadEvents());
+                            Socket socket = connectSocketServer(ups.UPS_SERVER_ADDRESS, portStringToInteger(ups.UPS_SERVER_PORT));
+                            getUPSStatusAPCUPSD(writablePool, socket, ups.UPS_ID, ups.getUpsLoadEvents());
                         } catch (IOError e) {
                             apcupsdInterface.onCommandError(e.toString());
                         } catch (IOException e) {
@@ -270,10 +267,11 @@ public class ConnectorTask {
     // ---------------------------------------------------------------------------------------------
 
     // Socket connection
-    private void connectSocketServer(final String ip, final int port) throws IOException {
+    private Socket connectSocketServer(final String ip, final int port) throws IOException {
         InetAddress serverAddress = InetAddress.getByName(ip);
-        socket = new Socket(serverAddress, port);
+        Socket socket = new Socket(serverAddress, port);
         socket.setSoTimeout(10 * 1000);
+        return socket;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -368,7 +366,9 @@ public class ConnectorTask {
     }
 
 
-    private void getUPSStatusAPCUPSD(SQLiteDatabase writablePool, final String upsId, final boolean loadEvents) throws IOException {
+    private void getUPSStatusAPCUPSD(
+            SQLiteDatabase writablePool, Socket socket, final String upsId, final boolean loadEvents
+    ) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         byte[] message = {0x00, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73};
         DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
@@ -394,7 +394,7 @@ public class ConnectorTask {
         contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
         databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
 
-        getUPSEventsAPCUPSD(writablePool, upsId, loadEvents);
+        getUPSEventsAPCUPSD(writablePool, socket, upsId, loadEvents);
     }
 
 
@@ -464,7 +464,9 @@ public class ConnectorTask {
         }
     }
 
-    private void getUPSEventsAPCUPSD(SQLiteDatabase writablePool, final String upsId, final Boolean loadEvents) {
+    private void getUPSEventsAPCUPSD(
+            SQLiteDatabase writablePool, Socket socket, final String upsId, final Boolean loadEvents
+    ) {
         ArrayList<String> events = new ArrayList<>();
         try {
 
