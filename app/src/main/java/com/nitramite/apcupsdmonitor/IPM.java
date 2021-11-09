@@ -64,6 +64,7 @@ public class IPM {
                 .url((useHttps ? "https://" : "http://") + baseUrl + ":" + port + "/server/user_srv.js?action=queryLoginChallenge")
                 .build();
         try (Response response = client.newCall(request).execute()) {
+            // Sample: {"challenge":"4a501e785ee3d084bddc531352bead1cb2906765"}
             JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
             return jsonObject.optString("challenge");
         }
