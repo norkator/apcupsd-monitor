@@ -58,11 +58,11 @@ public class ConnectorTask {
         taskMode = taskMode_;
         databaseHelper = new DatabaseHelper(context);
         this.apcupsdInterface = apcupsdInterface;
-        this.doInBackground(context, upsId);
+        this.doInBackground(upsId);
     }
 
 
-    void doInBackground(Context context, String upsId) {
+    void doInBackground(String upsId) {
         try {
             threads = new ArrayList<>();
             upsArrayList.clear();
@@ -76,7 +76,7 @@ public class ConnectorTask {
                     @Override
                     public void run() {
                         for (int i = 0; i < upsArrayList.size(); i++) {
-                            threads.add(new UPSTaskThread(context, writablePool, upsArrayList.get(i)));
+                            threads.add(new UPSTaskThread(writablePool, upsArrayList.get(i)));
                         }
                         for (int t = 0; t < threads.size(); t++) {
                             try {
@@ -117,12 +117,10 @@ public class ConnectorTask {
      */
     private class UPSTaskThread extends Thread {
 
-        private final Context context;
         private final SQLiteDatabase writablePool;
         private final UPS ups;
 
-        UPSTaskThread(Context context, SQLiteDatabase writablePool, UPS ups) {
-            this.context = context;
+        UPSTaskThread(SQLiteDatabase writablePool, UPS ups) {
             this.writablePool = writablePool;
             this.ups = ups;
         }
@@ -176,7 +174,7 @@ public class ConnectorTask {
                 case ConnectionType.UPS_CONNECTION_TYPE_IPM:
                     // Eaton IPM
                     IPM ipm = new IPM(
-                            context, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
+                            true, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
                             ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
                     );
                     ContentValues contentValues = new ContentValues();
