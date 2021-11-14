@@ -332,7 +332,7 @@ public class ConnectorTask {
 
             StringBuilder stringBuilder = new StringBuilder();
             Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(Constants.STATUS_COMMAND_APCUPSD);
+            ((ChannelExec) channel).setCommand(ups.UPS_SERVER_STATUS_COMMAND);
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err);
             InputStream input = channel.getInputStream();
@@ -362,7 +362,7 @@ public class ConnectorTask {
             databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
 
             if (this.taskMode == TaskMode.MODE_ACTIVITY) {
-                getUPSEvents(writablePool, session, ups.UPS_ID, loadEvents);
+                getUPSEvents(writablePool, session, ups, loadEvents);
             }
         } catch (JSchException | IOException e) {
             e.printStackTrace();
@@ -409,7 +409,7 @@ public class ConnectorTask {
 
     // Get ups events
     private void getUPSEvents(
-            SQLiteDatabase writablePool, Session session, final String upsId, final boolean loadEvents
+            SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
     ) {
         ArrayList<String> events = new ArrayList<>();
         if (loadEvents) {
@@ -418,7 +418,7 @@ public class ConnectorTask {
                 ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
                 channelSftp.connect();
                 final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                channelSftp.get(Constants.EVENTS_LOCATION, byteArrayOutputStream);
+                channelSftp.get(ups.UPS_SERVER_EVENTS_LOCATION, byteArrayOutputStream);
                 BufferedReader bufferedReader = new BufferedReader(new StringReader(byteArrayOutputStream.toString()));
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
@@ -427,7 +427,7 @@ public class ConnectorTask {
                 bufferedReader.close();
                 channelSftp.disconnect();
                 sessionDisconnect(session);
-                databaseHelper.insertEvents(writablePool, upsId, events);
+                databaseHelper.insertEvents(writablePool, ups.UPS_ID, events);
             } catch (JSchException | IOException | SftpException e) {
                 e.printStackTrace();
                 apcupsdInterface.onCommandError(e.toString());
