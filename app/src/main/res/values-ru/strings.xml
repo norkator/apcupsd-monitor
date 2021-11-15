@@ -46,7 +46,7 @@
     <string name="server_address">Адрес сервера</string>
     <string name="server_ip_or_domain_address">IP-адрес сервера или адрес домена</string>
     <string name="server_port">Порт сервера</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551. Eaton IPM 4680.</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">Порт SSH по умолчанию - 22. Порт TCP по умолчанию APCUPSD - 3551. Eaton IPM HTTPS 4680 а также HTTP 4679.</string>
     <string name="port_to_use_for_connection">Порт для подключения</string>
     <string name="server_username_ssh">Имя пользователя сервера (SSH)</string>
     <string name="ssh_server_username">Имя пользователя</string>
@@ -76,6 +76,8 @@
     <string name="private_key_file_imported_failed">Не удалось импортировать файл закрытого ключа.</string>
     <string name="ups_enabled">ИБП Включено</string>
     <string name="ups_enable_toggle_description">ИБП можно на мгновение отключить, если он не подключен. Затем процесс обновления пропустит этот ИБП.</string>
+    <string name="use_https">Использовать HTTPS</string>
+    <string name="http_https_connection_description">HTTPS использует безопасный зашифрованный канал связи, что рекомендуется. Для HTTPS вам понадобится действующий сертификат. Использовать открытый текст HTTP только как последний вариант.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
