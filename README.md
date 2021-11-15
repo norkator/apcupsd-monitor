@@ -52,9 +52,13 @@ Always be careful when opening UPS software interfaces to public internet. These
 for security researchers and bad people. Learn to create VPN tunnel from your device to your network instead and route 
 traffic trough that. Or use only in local network via WLAN.
 
+
 APCUPSD
 -----
-* No special notes.
+* SSH supported with custom command options.
+    * APC NMC (Network Management Card AOS)
+    * Synology UPSC with `upsc ups` command.
+* NIS protocol supported which is best option for closed|internal network use.
 
 Eaton
 -----
