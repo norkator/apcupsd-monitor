@@ -174,7 +174,7 @@ public class ConnectorTask {
                 case ConnectionType.UPS_CONNECTION_TYPE_IPM:
                     // Eaton IPM
                     IPM ipm = new IPM(
-                            true, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
+                            ups.UPS_USE_HTTPS, ups.UPS_SERVER_ADDRESS, ups.UPS_SERVER_PORT,
                             ups.UPS_SERVER_USERNAME, ups.UPS_SERVER_PASSWORD, ups.UPS_NODE_ID
                     );
                     ContentValues contentValues = new ContentValues();
