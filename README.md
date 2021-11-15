@@ -9,6 +9,11 @@ Watch Youtube video for better description.
 I brought this project on Github so other people can add features for their own use. 
 See license and contribution rules below. 
 
+Приложение для Android для мониторинга состояний устройств ИБП APC и EATON IPM и просмотра событий.
+Посмотрите видео на Youtube для лучшего описания.
+Я разместил этот проект на Github, чтобы другие люди могли добавлять функции для собственного использования.
+См. Правила лицензирования и внесения взносов ниже.
+
 
 Table of contents
 =================
@@ -54,12 +59,21 @@ APCUPSD
 Eaton
 -----
 * Node ID is same as serial number. Node ID - это то же самое, что и серийный номер.
-* This app is developed towards IPM version -> `1.69.253`
-* Use IPM with https (default) installation way, which means web UI opens from port 4680.
-    * This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds. Possible solution for certificates https://certbot.eff.org/lets-encrypt/windows-other.html
+* This app is developed towards IPM version -> `1.69.253` or higher. Используйте IPM версии `1.69.253` или выше.
+* IPM with **https** (default) installation way, which means web UI opens from port **4680**.
+    * This app requires valid https certificate with https mode enabled so try have one with your IPM server. 
+        * This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds. 
+        * Possible solution for certificates https://certbot.eff.org/lets-encrypt/windows-other.html
     * It might be possible to have ip address with valid certificate but I personally don't know. 
-    See https://stackoverflow.com/questions/2043617/is-it-possible-to-have-ssl-certificate-for-ip-address-not-domain-name.
-    * IPM требует действующего сертификата https для работы с этим приложением.
+        * See https://stackoverflow.com/questions/2043617/is-it-possible-to-have-ssl-certificate-for-ip-address-not-domain-name.
+    * Для работы с этим приложением в режиме HTTPS требуется действующий сертификат https.
+* IPM with cleartext **http** >> **NOT RECOMMENDED**
+    * Use this only if you have no other way.
+    * Change IPM configuration to allow http, this means port **4679**.
+    ![eaton_unsecure](graphics/eaton_unsecure.png)
+    * Switch app https settings toggle to false.
+    * Cleartext required special code from app side, which Google may drop support any time.
+    * Открытый текст требовал специального кода со стороны приложения, который Google может прекратить поддерживать в любой момент.
     
 
 
@@ -96,4 +110,5 @@ License
 ============
 See repo license section or license file.
 
-Permission to release this app on any Play Store as a new app is forbidden!
+Permission to release this app on any Play Store as a new app is forbidden!  
+Запрещается выпускать это приложение в любом магазине Play в качестве нового приложения!
