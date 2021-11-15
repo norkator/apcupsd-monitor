@@ -53,9 +53,14 @@ APCUPSD
 
 Eaton
 -----
+* Node ID is same as serial number. Node ID - это то же самое, что и серийный номер.
 * This app is developed towards IPM version -> `1.69.253`
 * Use IPM with https (default) installation way, which means web UI opens from port 4680.
-* This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds. Possible solution for certificates https://certbot.eff.org/lets-encrypt/windows-other.html
+    * This app requires valid https certificate so try have one with your IPM server. This is forced by Google in a way that app will get deleted from Google Play if it contains vulnerable workarounds. Possible solution for certificates https://certbot.eff.org/lets-encrypt/windows-other.html
+    * It might be possible to have ip address with valid certificate but I personally don't know. 
+    See https://stackoverflow.com/questions/2043617/is-it-possible-to-have-ssl-certificate-for-ip-address-not-domain-name.
+    * IPM требует действующего сертификата https для работы с этим приложением.
+    
 
 
 Requirements
