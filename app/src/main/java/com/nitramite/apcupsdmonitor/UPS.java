@@ -34,6 +34,7 @@ public class UPS {
     public boolean UPS_IS_APC_NMC = false;
     public String UPS_NODE_ID = null; // IPM this is serial number of your device
     public boolean UPS_ENABLED = true; // cab disable ups momentarily if user wants so
+    public boolean UPS_USE_HTTPS = true;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;

@@ -1,7 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;

@@ -46,7 +46,7 @@
     <string name="server_address">Server address</string>
     <string name="server_ip_or_domain_address">Server ip or domain address</string>
     <string name="server_port">Server port</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM 4680.</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM HTTPS 4680 and HTTP 4679.</string>
     <string name="port_to_use_for_connection">Port to use for connection</string>
     <string name="server_username_ssh">Server username</string>
     <string name="ssh_server_username">Server username (SSH, IPM etc)</string>
@@ -76,6 +76,8 @@
     <string name="private_key_file_imported_failed">Failed to import private key file.</string>
     <string name="ups_enabled">UPS Enabled</string>
     <string name="ups_enable_toggle_description">UPS can be disabled momentarily if its not connected. Update process will then skip this UPS.</string>
+    <string name="use_https">Use HTTPS</string>
+    <string name="http_https_connection_description">HTTPS uses secure encrypted communication channel which is recommended way. With HTTPS you will need valid certificate. Use cleartext HTTP only as last option.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>
