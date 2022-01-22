@@ -201,5 +201,6 @@
     <string name="continue_btn">Continue</string>
     <string name="return_btn">Return</string>
     <string name="donate_description">Donations helps to keep this app up to date and helps with developing new features.</string>
+    <string name="server_address_hint_text">NUT address is defined with UPS name@address like: dummy@192.168.1.100</string>
 
 </resources>

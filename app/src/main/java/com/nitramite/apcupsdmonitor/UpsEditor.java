@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,6 +92,10 @@ public class UpsEditor extends AppCompatActivity {
         final EditText nodeIdET = findViewById(R.id.nodeIdET);
         final Switch upsEnabledSwitch = findViewById(R.id.upsEnabledSwitch);
         final Switch httpsEnabledSwitch = findViewById(R.id.httpsEnabledSwitch);
+
+        // Other views
+        final TextView serverAddressHintText = findViewById(R.id.serverAddressHintText);
+        serverAddressHintText.setVisibility(View.GONE);
 
 
         final Spinner cmdPresetSelection = findViewById(R.id.cmdPresetSelection);
@@ -181,6 +186,8 @@ public class UpsEditor extends AppCompatActivity {
             credentialOptionsLayout.setVisibility(View.VISIBLE);
             ipmOptionsLayout.setVisibility(View.VISIBLE);
             httpHttpsOptionsLayout.setVisibility(View.GONE);
+            serverAddressHintText.setVisibility(View.VISIBLE);
+            nodeIdET.setVisibility(View.GONE);
             nisRB.setChecked(false);
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
@@ -232,7 +239,9 @@ public class UpsEditor extends AppCompatActivity {
                     sshRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
                     credentialOptionsLayout.setVisibility(View.VISIBLE);
-                    ipmOptionsLayout.setVisibility(View.VISIBLE);
+                    ipmOptionsLayout.setVisibility(View.GONE);
+                    httpsEnabledSwitch.setVisibility(View.GONE);
+                    serverAddressHintText.setVisibility(View.VISIBLE);
                     break;
             }
 
