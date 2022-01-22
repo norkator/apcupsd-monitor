@@ -81,6 +81,15 @@
                     android:text="@string/eaton_ipm"
                     tools:ignore="UnusedAttribute" />
 
+                <RadioButton
+                    android:id="@+id/nutRB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="@string/nut"
+                    tools:ignore="UnusedAttribute" />
+
             </LinearLayout>
 
 

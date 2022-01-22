@@ -53,6 +53,7 @@ public class UpsEditor extends AppCompatActivity {
     private RadioButton sshRB;
     private RadioButton nisRB;
     private RadioButton ipmRB;
+    private RadioButton nutRB;
 
     // File paths
     public static final String PATH = "/keys/";
@@ -73,6 +74,7 @@ public class UpsEditor extends AppCompatActivity {
         sshRB = findViewById(R.id.sshRB);
         nisRB = findViewById(R.id.nisRB);
         ipmRB = findViewById(R.id.ipmRB);
+        nutRB = findViewById(R.id.nutRB);
 
         // Editable views
         final EditText serverAddressET = findViewById(R.id.serverAddressET);
@@ -146,6 +148,7 @@ public class UpsEditor extends AppCompatActivity {
         ipmOptionsLayout = findViewById(R.id.ipmOptionsLayout);
         httpHttpsOptionsLayout = findViewById(R.id.httpHttpsOptionsLayout);
 
+        // Todo, please somebody find a better way for this setChecked, visibility mess
         sshRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.VISIBLE);
             credentialOptionsLayout.setVisibility(View.VISIBLE);
@@ -153,6 +156,7 @@ public class UpsEditor extends AppCompatActivity {
             httpHttpsOptionsLayout.setVisibility(View.GONE);
             nisRB.setChecked(false);
             ipmRB.setChecked(false);
+            nutRB.setChecked(false);
         });
         nisRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
@@ -161,6 +165,7 @@ public class UpsEditor extends AppCompatActivity {
             httpHttpsOptionsLayout.setVisibility(View.GONE);
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
+            nutRB.setChecked(false);
         });
         ipmRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
@@ -169,6 +174,16 @@ public class UpsEditor extends AppCompatActivity {
             httpHttpsOptionsLayout.setVisibility(View.VISIBLE);
             nisRB.setChecked(false);
             sshRB.setChecked(false);
+            nutRB.setChecked(false);
+        });
+        nutRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.VISIBLE);
+            ipmOptionsLayout.setVisibility(View.VISIBLE);
+            httpHttpsOptionsLayout.setVisibility(View.GONE);
+            nisRB.setChecked(false);
+            sshRB.setChecked(false);
+            ipmRB.setChecked(false);
         });
 
 
@@ -187,6 +202,7 @@ public class UpsEditor extends AppCompatActivity {
                     sshRB.setChecked(true);
                     ipmRB.setChecked(false);
                     nisRB.setChecked(false);
+                    nutRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.VISIBLE);
                     credentialOptionsLayout.setVisibility(View.VISIBLE);
                     ipmOptionsLayout.setVisibility(View.GONE);
@@ -195,12 +211,23 @@ public class UpsEditor extends AppCompatActivity {
                     nisRB.setChecked(true);
                     ipmRB.setChecked(false);
                     sshRB.setChecked(false);
+                    nutRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
                     credentialOptionsLayout.setVisibility(View.GONE);
                     ipmOptionsLayout.setVisibility(View.GONE);
                     break;
                 case ConnectionType.UPS_CONNECTION_TYPE_IPM:
                     ipmRB.setChecked(true);
+                    nisRB.setChecked(false);
+                    sshRB.setChecked(false);
+                    nutRB.setChecked(false);
+                    sshOptionsLayout.setVisibility(View.GONE);
+                    credentialOptionsLayout.setVisibility(View.VISIBLE);
+                    ipmOptionsLayout.setVisibility(View.VISIBLE);
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_NUT:
+                    nutRB.setChecked(true);
+                    ipmRB.setChecked(false);
                     nisRB.setChecked(false);
                     sshRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
@@ -329,6 +356,8 @@ public class UpsEditor extends AppCompatActivity {
             return ConnectionType.UPS_CONNECTION_TYPE_NIS;
         } else if (ipmRB.isChecked()) {
             return ConnectionType.UPS_CONNECTION_TYPE_IPM;
+        } else if (nutRB.isChecked()) {
+            return ConnectionType.UPS_CONNECTION_TYPE_NUT;
         } else {
             return ConnectionType.UPS_CONNECTION_TYPE_NA;
         }

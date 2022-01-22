@@ -46,7 +46,7 @@
     <string name="server_address">Server address</string>
     <string name="server_ip_or_domain_address">Server ip or domain address</string>
     <string name="server_port">Server port</string>
-    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM HTTPS 4680 and HTTP 4679.</string>
+    <string name="ssh_default_port_is_22_apcupsd_default_tcp_port_is_3551">SSH default port is 22. APCUPSD default tcp port is 3551. Eaton IPM HTTPS 4680 and HTTP 4679. NUT server default port is 3493.</string>
     <string name="port_to_use_for_connection">Port to use for connection</string>
     <string name="server_username_ssh">Server username</string>
     <string name="ssh_server_username">Server username (SSH, IPM etc)</string>
@@ -191,6 +191,7 @@
     <!-- Others -->
     <string name="apcupsd_nis">APCUPSD NIS</string>
     <string name="eaton_ipm">Eaton IPM</string>
+    <string name="nut">NUT</string>
     <string name="node_id_ipm">Node ID (IPM)</string>
     <string name="node_id_eaton_ipm_hint">Node id for Eaton IPM like UW222A0123</string>
     <string name="ups_undefined_cannot_load_web_page">UPS is undefined. Cannot load web page.</string>
