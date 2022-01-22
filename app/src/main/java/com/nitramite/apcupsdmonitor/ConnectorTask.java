@@ -187,6 +187,17 @@ public class ConnectorTask {
                         databaseHelper.insertEvents(writablePool, ups.UPS_ID, ipm.getEvents());
                     }
                     break;
+                case ConnectionType.UPS_CONNECTION_TYPE_NUT:
+                    try {
+                        String[] nutFQDN = ups.UPS_SERVER_ADDRESS.split("@");
+                        Socket socket = connectSocketServer(nutFQDN[1], portStringToInteger(ups.UPS_SERVER_PORT));
+                        getUPSStatusNUT(writablePool, socket, ups, nutFQDN[0]);
+                    } catch (IOError e) {
+                        apcupsdInterface.onCommandError(e.toString());
+                    } catch (IOException e) {
+                        onConnectionError(writablePool, ups.UPS_ID);
+                    }
+                    break;
                 default:
                     Log.w(TAG, "Unsupported UPS connection type");
                     break;
@@ -324,7 +335,7 @@ public class ConnectorTask {
         }
     }
 
-    // Get ups status
+
     private void getUPSStatusSSH(
             SQLiteDatabase writablePool, Session session, final UPS ups, final boolean loadEvents
     ) {
@@ -401,6 +412,38 @@ public class ConnectorTask {
         databaseHelper.insertUpdateUps(writablePool, upsId, contentValues);
 
         getUPSEventsAPCUPSD(writablePool, socket, upsId, loadEvents);
+    }
+
+
+    private void getUPSStatusNUT(
+            SQLiteDatabase writablePool, Socket socket, final UPS ups, final String nutUpsName
+    ) {
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+
+            dOut.writeBytes("LIST VAR " + nutUpsName + "\n");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                String line_ = line.replace("VAR " + nutUpsName + " ", "");
+                stringBuilder.append(line_);
+                Log.i(TAG, line_);
+                if (line.contains("END LIST VAR")) {
+                    break;
+                }
+            }
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+            contentValues.put(DatabaseHelper.UPS_STATUS_STR, stringBuilder.toString());
+            databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, contentValues);
+        } catch (IOException e) {
+            e.printStackTrace();
+            apcupsdInterface.onCommandError(e.toString());
+        }
     }
 
 
