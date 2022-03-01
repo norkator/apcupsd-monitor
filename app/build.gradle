@@ -42,7 +42,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.0'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.billingclient:billing:4.0.0'
+    implementation 'com.android.billingclient:billing:4.1.0'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'joda-time:joda-time:2.10.13'
