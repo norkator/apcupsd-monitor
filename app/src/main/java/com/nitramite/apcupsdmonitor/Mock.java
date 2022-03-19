@@ -54,44 +54,44 @@ public class Mock {
             "END APC : 2021-02-16 19:18:32 +0100\n";
     public static final String NUT_MOCK_DATA =
             "battery.charge: 100\n" +
-            "battery.charge.low: 10\n" +
-            "battery.charge.warning: 20\n" +
-            "battery.mfr.date: CPS\n" +
-            "battery.runtime: 1620\n" +
-            "battery.runtime.low: 300\n" +
-            "battery.type: PbAcid\n" +
-            "battery.voltage: 16.0\n" +
-            "battery.voltage.nominal: 24\n" +
-            "device.mfr: CPS\n" +
-            "device.model: CP900EPFCLCD\n" +
-            "device.serial: 000000000000\n" +
-            "device.type: ups\n" +
-            "driver.name: usbhid-ups\n" +
-            "driver.parameter.pollfreq: 30\n" +
-            "driver.parameter.pollinterval: 5\n" +
-            "driver.parameter.port: auto\n" +
-            "driver.version: DSM6-2-25364-191230\n" +
-            "driver.version.data: CyberPower HID 0.3\n" +
-            "driver.version.internal: 0.38\n" +
-            "input.transfer.high: 260\n" +
-            "input.transfer.low: 170\n" +
-            "input.voltage: 228.0\n" +
-            "input.voltage.nominal: 230\n" +
-            "output.voltage: 260.0\n" +
-            "ups.beeper.status: enabled\n" +
-            "ups.delay.shutdown: 20\n" +
-            "ups.delay.start: 30\n" +
-            "ups.load: 24\n" +
-            "ups.mfr: CPS\n" +
-            "ups.model: CP900EPFCLCD\n" +
-            "ups.productid: 0501\n" +
-            "ups.realpower.nominal: 540\n" +
-            "ups.serial: 000000000000\n" +
-            "ups.status: OL\n" +
-            "ups.test.result: No test initiated\n" +
-            "ups.timer.shutdown: -60\n" +
-            "ups.timer.start: -60\n" +
-            "ups.vendorid: 0764\n";
+                    "battery.charge.low: 10\n" +
+                    "battery.charge.warning: 20\n" +
+                    "battery.mfr.date: CPS\n" +
+                    "battery.runtime: 1620\n" +
+                    "battery.runtime.low: 300\n" +
+                    "battery.type: PbAcid\n" +
+                    "battery.voltage: 16.0\n" +
+                    "battery.voltage.nominal: 24\n" +
+                    "device.mfr: CPS\n" +
+                    "device.model: CP900EPFCLCD\n" +
+                    "device.serial: 000000000000\n" +
+                    "device.type: ups\n" +
+                    "driver.name: usbhid-ups\n" +
+                    "driver.parameter.pollfreq: 30\n" +
+                    "driver.parameter.pollinterval: 5\n" +
+                    "driver.parameter.port: auto\n" +
+                    "driver.version: DSM6-2-25364-191230\n" +
+                    "driver.version.data: CyberPower HID 0.3\n" +
+                    "driver.version.internal: 0.38\n" +
+                    "input.transfer.high: 260\n" +
+                    "input.transfer.low: 170\n" +
+                    "input.voltage: 228.0\n" +
+                    "input.voltage.nominal: 230\n" +
+                    "output.voltage: 260.0\n" +
+                    "ups.beeper.status: enabled\n" +
+                    "ups.delay.shutdown: 20\n" +
+                    "ups.delay.start: 30\n" +
+                    "ups.load: 24\n" +
+                    "ups.mfr: CPS\n" +
+                    "ups.model: CP900EPFCLCD\n" +
+                    "ups.productid: 0501\n" +
+                    "ups.realpower.nominal: 540\n" +
+                    "ups.serial: 000000000000\n" +
+                    "ups.status: OL\n" +
+                    "ups.test.result: No test initiated\n" +
+                    "ups.timer.shutdown: -60\n" +
+                    "ups.timer.start: -60\n" +
+                    "ups.vendorid: 0764\n";
     public static final String APC_NMC_MOCK_DATA = "E000: Success\n" +
             "Status of UPS: On Line, No Alarms Present\n" +
             "Last Transfer: Due to software command or UPS's test control\n" +
@@ -189,6 +189,7 @@ public class Mock {
             "Calibration Result: Unknown\n" +
             "Calibration Date: Unknown";
 
+
     /**
      * APCUPSD Mock data
      */
@@ -256,6 +257,67 @@ public class Mock {
      */
     public static InputStream APCNetworkCardMockDataAP9630() {
         return new ByteArrayInputStream(APC_NMC_9630_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
+    }
+
+
+    private static final String NUT_UPS_MOCK_DATA = "BEGIN LIST VAR" +
+            "eatonbattery.charge \"11\"\n" +
+            "battery.charge.low \"35\"\n" +
+            "battery.runtime \"215\"\n" +
+            "battery.type \"PbAc\"\n" +
+            "device.mfr \"EATON\"\n" +
+            "device.model \"Ellipse ECO 650\"\n" +
+            "device.serial \"000000000\"\n" +
+            "device.type \"ups\"\n" +
+            "driver.name \"usbhid-ups\"\n" +
+            "driver.parameter.pollfreq \"30\"\n" +
+            "driver.parameter.pollinterval \"2\"\n" +
+            "driver.parameter.port \"/dev/uhid\"\n" +
+            "driver.parameter.synchronous \"no\"\n" +
+            "driver.version \"2.7.4\"\n" +
+            "driver.version.data \"MGE HID 1.40\"\n" +
+            "driver.version.internal \"0.41\"\n" +
+            "input.transfer.high \"264\"\n" +
+            "input.transfer.low \"184\"\n" +
+            "outlet.1.desc \"PowerShare Outlet 1\"\n" +
+            "outlet.1.\n" +
+            "id \"2\"\n" +
+            "outlet.1.\n" +
+            "status \"on\"\n" +
+            "outlet.1.\n" +
+            "switchable \"no\"\n" +
+            "outlet.2.\n" +
+            "desc \"PowerShare Outlet 2\"\n" +
+            "outlet.2.id \"3\"\n" +
+            "outlet.2.\n" +
+            "status \"on\"\n" +
+            "outlet.2.\n" +
+            "switchable \"no\"\n" +
+            "outlet.desc \"Main Outlet\"\n" +
+            "outlet.id \"1\"\n" +
+            "outlet.power \"25\"\n" +
+            "outlet.switchable \"no\"\n" +
+            "output.frequency.nominal \"50\"\n" +
+            "output.voltage \"230.0\"\n" +
+            "output.voltage.nominal \"230\"\n" +
+            "ups.beeper.status \"enabled\"\n" +
+            "ups.delay.shutdown \"20\"\n" +
+            "ups.delay.start \"30\"\n" +
+            "ups.firmware \"02\"\n" +
+            "ups.load \"8\"\n" +
+            "ups.mfr \"EATON\"\n" +
+            "ups.model \"Ellipse ECO 650\"\n" +
+            "ups.power.nominal \"650\"\n" +
+            "ups.productid \"ffff\"\n" +
+            "ups.serial \"000000000\"\n" +
+            "ups.status \"OL\"\n" +
+            "ups.timer.shutdown \"0\"\n" +
+            "ups.timer.start \"0\"\n" +
+            "ups.vendorid \"0463\"\n" +
+            "END LIST VAR eaton";
+
+    public static InputStream NutUpsMockData() {
+        return new ByteArrayInputStream(NUT_UPS_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
     }
 
 

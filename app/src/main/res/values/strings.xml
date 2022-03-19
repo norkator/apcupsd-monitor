@@ -202,5 +202,6 @@
     <string name="continue_btn">Continue</string>
     <string name="return_btn">Return</string>
     <string name="donate_description">Donations helps to keep this app up to date and helps with developing new features.</string>
+    <string name="nut_fqdn_error">Nut server address not in FQDN format. Must be something like \"name@192.168.1.1\". </string>
 
 </resources>
