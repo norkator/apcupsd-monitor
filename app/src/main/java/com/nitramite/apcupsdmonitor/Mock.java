@@ -260,7 +260,61 @@ public class Mock {
     }
 
 
-    private static final String NUT_UPS_MOCK_DATA = "BEGIN LIST VAR eatonbattery.charge \"11\"battery.charge.low \"35\"battery.runtime \"215\"battery.type \"PbAc\"device.mfr \"EATON\"device.model \"Ellipse ECO 650\"device.serial \"000000000\"device.type \"ups\"driver.name \"usbhid-ups\"driver.parameter.pollfreq \"30\"driver.parameter.pollinterval \"2\"driver.parameter.port \"/dev/uhid\"driver.parameter.synchronous \"no\"driver.version \"2.7.4\"driver.version.data \"MGE HID 1.40\"driver.version.internal \"0.41\"input.transfer.high \"264\"input.transfer.low \"184\"outlet.1.desc \"PowerShare Outlet 1\"outlet.1.id \"2\"outlet.1.status \"on\"outlet.1.switchable \"no\"outlet.2.desc \"PowerShare Outlet 2\"outlet.2.id \"3\"outlet.2.status \"on\"outlet.2.switchable \"no\"outlet.desc \"Main Outlet\"outlet.id \"1\"outlet.power \"25\"outlet.switchable \"no\"output.frequency.nominal \"50\"output.voltage \"230.0\"output.voltage.nominal \"230\"ups.beeper.status \"enabled\"ups.delay.shutdown \"20\"ups.delay.start \"30\"ups.firmware \"02\"ups.load \"8\"ups.mfr \"EATON\"ups.model \"Ellipse ECO 650\"ups.power.nominal \"650\"ups.productid \"ffff\"ups.serial \"000000000\"ups.status \"OL\"ups.timer.shutdown \"0\"ups.timer.start \"0\"ups.vendorid \"0463\"END LIST VAR eaton";
+    private static final String NUT_UPS_MOCK_DATA = "BEGIN LIST VAR" +
+            "eatonbattery.charge \"11\"\n" +
+            "battery.charge.low \"35\"\n" +
+            "battery.runtime \"215\"\n" +
+            "battery.type \"PbAc\"\n" +
+            "device.mfr \"EATON\"\n" +
+            "device.model \"Ellipse ECO 650\"\n" +
+            "device.serial \"000000000\"\n" +
+            "device.type \"ups\"\n" +
+            "driver.name \"usbhid-ups\"\n" +
+            "driver.parameter.pollfreq \"30\"\n" +
+            "driver.parameter.pollinterval \"2\"\n" +
+            "driver.parameter.port \"/dev/uhid\"\n" +
+            "driver.parameter.synchronous \"no\"\n" +
+            "driver.version \"2.7.4\"\n" +
+            "driver.version.data \"MGE HID 1.40\"\n" +
+            "driver.version.internal \"0.41\"\n" +
+            "input.transfer.high \"264\"\n" +
+            "input.transfer.low \"184\"\n" +
+            "outlet.1.desc \"PowerShare Outlet 1\"\n" +
+            "outlet.1.\n" +
+            "id \"2\"\n" +
+            "outlet.1.\n" +
+            "status \"on\"\n" +
+            "outlet.1.\n" +
+            "switchable \"no\"\n" +
+            "outlet.2.\n" +
+            "desc \"PowerShare Outlet 2\"\n" +
+            "outlet.2.id \"3\"\n" +
+            "outlet.2.\n" +
+            "status \"on\"\n" +
+            "outlet.2.\n" +
+            "switchable \"no\"\n" +
+            "outlet.desc \"Main Outlet\"\n" +
+            "outlet.id \"1\"\n" +
+            "outlet.power \"25\"\n" +
+            "outlet.switchable \"no\"\n" +
+            "output.frequency.nominal \"50\"\n" +
+            "output.voltage \"230.0\"\n" +
+            "output.voltage.nominal \"230\"\n" +
+            "ups.beeper.status \"enabled\"\n" +
+            "ups.delay.shutdown \"20\"\n" +
+            "ups.delay.start \"30\"\n" +
+            "ups.firmware \"02\"\n" +
+            "ups.load \"8\"\n" +
+            "ups.mfr \"EATON\"\n" +
+            "ups.model \"Ellipse ECO 650\"\n" +
+            "ups.power.nominal \"650\"\n" +
+            "ups.productid \"ffff\"\n" +
+            "ups.serial \"000000000\"\n" +
+            "ups.status \"OL\"\n" +
+            "ups.timer.shutdown \"0\"\n" +
+            "ups.timer.start \"0\"\n" +
+            "ups.vendorid \"0463\"\n" +
+            "END LIST VAR eaton";
 
     public static InputStream NutUpsMockData() {
         return new ByteArrayInputStream(NUT_UPS_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
