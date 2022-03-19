@@ -5,7 +5,6 @@
     <string name="app_name">APCUPSD Monitor</string>
 
     <!-- Generic -->
-
     <string name="stats">Статистика</string>
     <string name="loading">ЗАГРУЗКА</string>
     <string name="error">ошибка</string>
@@ -203,5 +202,6 @@
     <string name="continue_btn">Продолжать</string>
     <string name="return_btn">Возвращение</string>
     <string name="donate_description">Пожертвования помогают поддерживать это приложение в актуальном состоянии и помогают в разработке новых функций.</string>
+    <string name="nut_fqdn_error">Адрес Nut-сервера не в формате FQDN. Должно быть что-то вроде \"name@192.168.1.1\". </string>
 
 </resources>

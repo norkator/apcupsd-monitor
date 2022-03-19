@@ -43,6 +43,7 @@ public class ConnectorTask {
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
     private Integer completed = 0;
     private final TaskMode taskMode; // Activity or service task, on service skip getting events
+    private Context context;
 
     // Interface
     private final ConnectorInterface apcupsdInterface;
@@ -57,6 +58,7 @@ public class ConnectorTask {
                 (upsId == null ? "all ups statuses" : "one ups status"));
         taskMode = taskMode_;
         databaseHelper = new DatabaseHelper(context);
+        context = context;
         this.apcupsdInterface = apcupsdInterface;
         this.doInBackground(upsId);
     }
@@ -191,11 +193,14 @@ public class ConnectorTask {
                     try {
                         String[] nutFQDN = ups.UPS_SERVER_ADDRESS.split("@");
                         Socket socket = connectSocketServer(nutFQDN[1], portStringToInteger(ups.UPS_SERVER_PORT));
+                        // Socket socket = null;
                         getUPSStatusNUT(writablePool, socket, ups, nutFQDN[0]);
                     } catch (IOError e) {
                         apcupsdInterface.onCommandError(e.toString());
                     } catch (IOException e) {
                         onConnectionError(writablePool, ups.UPS_ID);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        apcupsdInterface.onCommandError(context.getString(R.string.nut_fqdn_error) + e.toString());
                     }
                     break;
                 default:
@@ -420,11 +425,16 @@ public class ConnectorTask {
     ) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
+            // if (socket != null) {
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
 
             dOut.writeBytes("LIST VAR " + nutUpsName + "\n");
+            // }
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream(), StandardCharsets.UTF_8)
+                    // Mock.NutUpsMockData(), StandardCharsets.UTF_8)
+            );
 
             String line = null;
             while ((line = in.readLine()) != null) {
