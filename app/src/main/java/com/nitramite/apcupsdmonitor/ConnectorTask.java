@@ -438,8 +438,11 @@ public class ConnectorTask {
 
             String line = null;
             while ((line = in.readLine()) != null) {
-                String line_ = line.replace("VAR " + nutUpsName + " ", "");
-                stringBuilder.append(line_);
+                String line_ = line
+                        .replace("VAR " + nutUpsName + " ", "")
+                        .replace(" \"", ": ")
+                        .replace("\"", "");
+                stringBuilder.append(line_).append("\n");;
                 Log.i(TAG, line_);
                 if (line.contains("END LIST VAR")) {
                     break;
