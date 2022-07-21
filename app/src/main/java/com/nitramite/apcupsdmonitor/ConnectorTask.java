@@ -201,6 +201,8 @@ public class ConnectorTask {
                         onConnectionError(writablePool, ups.UPS_ID);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         apcupsdInterface.onCommandError(context.getString(R.string.nut_fqdn_error) + e.toString());
+                    } catch (@SuppressWarnings({"TryWithIdenticalCatches", "RedundantSuppression"}) NullPointerException e) {
+                        apcupsdInterface.onCommandError(e.toString());
                     }
                     break;
                 default:
