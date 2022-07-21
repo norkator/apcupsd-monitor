@@ -1,5 +1,6 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -24,9 +25,7 @@ import java.util.ArrayList;
 
 public class Widget extends AppWidgetProvider {
 
-    //  Logging
     private static final String TAG = Widget.class.getSimpleName();
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -39,32 +38,31 @@ public class Widget extends AppWidgetProvider {
         onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    // onUpdate
+    @SuppressLint("UnspecifiedImmutableFlag")
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < appWidgetIds.length; i++) {
             try {
-                Intent intent = new Intent(context, MainMenu.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                Log.i(TAG, "Widget on update event");
                 DatabaseHelper databaseHelper = new DatabaseHelper(context);
                 ArrayList<UPS> upsArrayList = getUpsData(databaseHelper);
-
                 RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
                 setBitmap(rv, R.id.upsStatusImage, createUpsViewBitmap(context, upsArrayList));
 
 
-                // On click refresh trigger method
-                Log.i(TAG, "Widget on update event");
-                Intent updateIntent = new Intent(context, Widget.class);
-                updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                PendingIntent pendingUpdate = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingUpdate);
+                // intent to open app on widget click
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    Intent intentSync = new Intent(context, MainMenu.class);
+                    intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    PendingIntent pendingSync = PendingIntent.getActivity(
+                            context, 0, intentSync, PendingIntent.FLAG_IMMUTABLE
+                    );
+                    rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingSync);
+                }
 
-                // Finish
-                rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingIntent);
+
                 appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
-
                 AppWidgetManager.getInstance(context).updateAppWidget(appWidgetIds[i], rv);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -132,6 +130,16 @@ public class Widget extends AppWidgetProvider {
         return getBitmapFromView(mainLinearLayout);
     }
 
+    @Override
+    public void onEnabled(Context context) {
+        // Enter relevant functionality for when the first widget is created
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        // Enter relevant functionality for when the last widget is disabled
+    }
+
 
     private static Bitmap getBitmapFromView(View view) {
         try {
@@ -161,4 +169,5 @@ public class Widget extends AppWidgetProvider {
         views.setImageViewBitmap(resId, proxy);
     }
 
-} // End of class
+
+}
