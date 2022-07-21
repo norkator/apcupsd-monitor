@@ -204,4 +204,7 @@
     <string name="donate_description">Пожертвования помогают поддерживать это приложение в актуальном состоянии и помогают в разработке новых функций.</string>
     <string name="nut_fqdn_error">Адрес Nut-сервера не в формате FQDN. Должно быть что-то вроде \"name@192.168.1.1\". </string>
 
+    <!-- Widget -->
+    <string name="widget_description">Виджет статуса</string>
+
 </resources>
