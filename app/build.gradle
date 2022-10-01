@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.android.billingclient:billing:5.0.0'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'joda-time:joda-time:2.10.14'
+    implementation 'joda-time:joda-time:2.11.2'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
