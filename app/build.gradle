@@ -2,16 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 31
-    // buildToolsVersion "32.0.0"
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
-        targetSdkVersion 31
+        targetSdkVersion 32
 
-        versionCode 56
-        versionName "1.20.3" // Use Semver
+        versionCode 57
+        versionName "1.21.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,26 +29,28 @@ android {
             includeAndroidResources = true
         }
     }
+    namespace 'com.nitramite.apcupsdmonitor'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
     // AndroidX
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.android.billingclient:billing:5.0.0'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'joda-time:joda-time:2.10.14'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.6.1'
