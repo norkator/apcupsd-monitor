@@ -200,7 +200,9 @@ public class ConnectorTask {
                     } catch (IOException e) {
                         onConnectionError(writablePool, ups.UPS_ID);
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        apcupsdInterface.onCommandError(context.getString(R.string.nut_fqdn_error) + e.toString());
+                        apcupsdInterface.onCommandError(
+                                "Nut server address not in FQDN format. Must be something like \"name@192.168.1.1\". " + e.toString()
+                        );
                     } catch (@SuppressWarnings({"TryWithIdenticalCatches", "RedundantSuppression"}) NullPointerException e) {
                         apcupsdInterface.onCommandError(e.toString());
                     }
