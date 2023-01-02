@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.1.1'
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.8.1'
