@@ -80,7 +80,7 @@ public class StatusParser {
         return Arrays.asList(
                 //Name
                 new ParseField("UPSNAME", ups::setUPS_NAME),
-                new ParseField("device.mfr", ups::setUPS_NAME),
+                new ParseField("BEGIN LIST VAR", ups::setUPS_NAME),
                 new ParseField("Name", ups::setUPS_NAME, "Date"),
 
                 //Status
