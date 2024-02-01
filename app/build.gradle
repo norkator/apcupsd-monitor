@@ -2,13 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
-        targetSdkVersion 33
-
+        targetSdkVersion 34
         versionCode 58
         versionName "1.22.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -40,17 +39,17 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.billingclient:billing:6.0.1'
+    implementation 'com.android.billingclient:billing:6.1.0'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'joda-time:joda-time:2.12.5'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:23.2.1'
+    implementation 'com.google.firebase:firebase-messaging:23.4.0'
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.3.1'
