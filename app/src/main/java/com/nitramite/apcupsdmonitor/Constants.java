@@ -53,4 +53,8 @@ public class Constants {
     public final static String SP_UPDATE_INTERVAL = "SP_UPDATE_INTERVAL";
     public final static String SP_LAST_PUSH_UPDATE = "SP_LAST_PUSH_UPDATE";
 
+    // Others
+    public static final String SP_APP_LAUNCH_COUNT = "APP_LAUNCH_COUNT";
+    public static final String SP_HAS_REVIEWED = "HAS_REVIEWED";
+
 }

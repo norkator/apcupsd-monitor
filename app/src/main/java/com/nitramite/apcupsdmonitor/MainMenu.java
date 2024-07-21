@@ -33,7 +33,13 @@ import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.play.core.review.ReviewException;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.model.ReviewErrorCode;
 import com.nitramite.apcupsdmonitor.notifier.PushUtils;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
@@ -41,6 +47,7 @@ import com.wdullaer.swipeactionadapter.SwipeDirection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener,
@@ -60,6 +67,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     private ArrayList<UPS> upsArrayList = new ArrayList<>();
     private ListView upsListView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ReviewManager reviewManager;
 
     // Activity request codes
     public static final int ACTIVITY_RESULT_NEW_UPS_ADDED = 1;
@@ -105,6 +113,8 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
         setAppActivityRunning(true);
 
+        reviewManager = ReviewManagerFactory.create(this);
+
         // Floating action buttons
         FloatingActionButton floatingAddUpsBtn = findViewById(R.id.floatingAddNewUpsBtn);
         floatingAddUpsBtn.setOnClickListener(view -> {
@@ -137,6 +147,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
         // Get status data
         startConnectorTask();
+        reviewFlow();
     } // End of onCreate()
 
 
@@ -409,6 +420,37 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public void onRefresh() {
         startConnectorTask();
     }
+
+
+    private void reviewFlow() {
+        int launchCount = sharedPreferences.getInt(Constants.SP_APP_LAUNCH_COUNT, 0);
+        launchCount++;
+        sharedPreferences.edit().putInt(Constants.SP_APP_LAUNCH_COUNT, launchCount).apply();
+
+        if (launchCount % 5 == 0) {
+            Task<ReviewInfo> request = reviewManager.requestReviewFlow();
+            request.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    ReviewInfo reviewInfo = task.getResult();
+                    boolean hasReviewed = sharedPreferences.getBoolean(Constants.SP_HAS_REVIEWED, false);
+                    if (!hasReviewed) {
+                        Task<Void> flow = reviewManager.launchReviewFlow(MainMenu.this, reviewInfo);
+                        flow.addOnCompleteListener(t -> {
+                            sharedPreferences.edit().putBoolean(Constants.SP_HAS_REVIEWED, true).apply();
+                        });
+                    } else {
+                        Log.d(TAG, "User has already reviewed the app.");
+                    }
+                } else {
+                    @ReviewErrorCode int reviewErrorCode = ((ReviewException) Objects.requireNonNull(task.getException())).getErrorCode();
+                    Log.e(TAG, "Review flow error with code " + reviewErrorCode);
+                }
+            });
+        } else {
+            Log.d(TAG, "App launch count: " + launchCount + ". Not running review flow.");
+        }
+    }
+
 
     // ---------------------------------------------------------------------------------------------
 
