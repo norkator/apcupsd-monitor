@@ -1,11 +1,9 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -32,26 +29,22 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitramite.apcupsdmonitor.notifier.PushUtils;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener,
         SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
-
-    // http://www.apcupsd.org/manual/manual.html
 
     // Logging
     private final static String TAG = MainMenu.class.getSimpleName();
@@ -114,12 +107,9 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
         // Floating action buttons
         FloatingActionButton floatingAddUpsBtn = findViewById(R.id.floatingAddNewUpsBtn);
-        floatingAddUpsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainMenu.this, UpsEditor.class);
-                startActivityForResult(intent, ACTIVITY_RESULT_NEW_UPS_ADDED);
-            }
+        floatingAddUpsBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(MainMenu.this, UpsEditor.class);
+            startActivityForResult(intent, ACTIVITY_RESULT_NEW_UPS_ADDED);
         });
 
         upsListView = findViewById(R.id.upsListView);
@@ -415,18 +405,6 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     }
 
 
-    // Check if service is running
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     @Override
     public void onRefresh() {
         startConnectorTask();
@@ -479,7 +457,9 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     // Initialize in app billing feature
     private void initInAppBilling() {
         // In app billing
-        mBillingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build();
+        mBillingClient = BillingClient.newBuilder(this)
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
@@ -547,35 +527,40 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
 
-
-    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-        @Override
-        public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-            Toast.makeText(MainMenu.this, "Purchase acknowledged!", Toast.LENGTH_SHORT).show();
-        }
-    };
-
+    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener =
+            billingResult -> Toast.makeText(MainMenu.this, "Purchase acknowledged!", Toast.LENGTH_SHORT).show();
 
     public void inAppPurchase(final String IAP_ITEM_SKU) {
         if (mBillingClient.isReady()) {
 
-            List<String> skuList = new ArrayList<>();
-            skuList.add(IAP_ITEM_SKU);
+            List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+            productList.add(QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(IAP_ITEM_SKU)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build());
 
-            SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
-                    .setSkusList(skuList).setType(BillingClient.SkuType.INAPP).build();
+            QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+                    .setProductList(productList)
+                    .build();
 
-            mBillingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
-                @Override
-                public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
+            mBillingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null) {
                     try {
-                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                .setSkuDetails(skuDetailsList.get(0))
+                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                .setProductDetailsParamsList(
+                                        Collections.singletonList(
+                                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                                        .setProductDetails(productDetailsList.get(0))
+                                                        .build()
+                                        )
+                                )
                                 .build();
-                        mBillingClient.launchBillingFlow(MainMenu.this, flowParams);
+                        mBillingClient.launchBillingFlow(MainMenu.this, billingFlowParams);
                     } catch (IndexOutOfBoundsException e) {
                         genericErrorDialog(getString(R.string.error), e.toString());
                     }
+                } else {
+                    genericErrorDialog(getString(R.string.error), "Error querying product details");
                 }
             });
         } else {
@@ -584,25 +569,4 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         }
     }
 
-
-    /* In app Restore purchases */
-    public void restorePurchases() {
-        mBillingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-            @Override
-            public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
-                    if (purchaseHistoryRecordList.size() > 0) {
-                        for (PurchaseHistoryRecord purchase : purchaseHistoryRecordList) {
-                        }
-                    } else {
-                        genericErrorDialog(getString(R.string.error), "No purchases made");
-                    }
-                } else {
-                    genericErrorDialog(getString(R.string.error), "Error querying purchased items");
-                }
-            }
-        });
-    }
-
-
-} // End of class
+}

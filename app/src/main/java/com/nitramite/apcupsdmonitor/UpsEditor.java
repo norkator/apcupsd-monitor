@@ -92,6 +92,7 @@ public class UpsEditor extends AppCompatActivity {
         final EditText nodeIdET = findViewById(R.id.nodeIdET);
         final Switch upsEnabledSwitch = findViewById(R.id.upsEnabledSwitch);
         final Switch httpsEnabledSwitch = findViewById(R.id.httpsEnabledSwitch);
+        final EditText displayNameET = findViewById(R.id.displayNameET);
 
         // Other views
         final TextView serverAddressHintText = findViewById(R.id.serverAddressHintText);
@@ -264,6 +265,7 @@ public class UpsEditor extends AppCompatActivity {
             nodeIdET.setText(ups.UPS_NODE_ID);
             upsEnabledSwitch.setChecked(ups.UPS_ENABLED);
             httpsEnabledSwitch.setChecked(ups.UPS_USE_HTTPS);
+            displayNameET.setText(ups.UPS_DISPLAY_NAME);
         }
 
 
@@ -307,6 +309,7 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_ENABLED, upsEnabledSwitch.isChecked() ? 1 : 0);
             contentValues.put(DatabaseHelper.UPS_USE_HTTPS, httpsEnabledSwitch.isChecked() ? 1 : 0);
+            contentValues.put(DatabaseHelper.UPS_DISPLAY_NAME, displayNameET.getText().toString());
             databaseHelper.insertUpdateUps(null, upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();

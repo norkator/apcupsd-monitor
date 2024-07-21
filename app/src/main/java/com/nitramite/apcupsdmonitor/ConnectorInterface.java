@@ -18,4 +18,4 @@ public interface ConnectorInterface {
 
     void onCommandError(final String errorStr);
 
-} // End of interface()
+}

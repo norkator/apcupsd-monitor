@@ -31,7 +31,7 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.events_adapter, null, true);
-        TextView event = (TextView) rowView.findViewById(R.id.event);
+        TextView event = rowView.findViewById(R.id.event);
         final String positionStr = events.get(position);
         event.setText(positionStr);
         if (
@@ -58,4 +58,4 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
     }
 
 
-} // End of class
+}

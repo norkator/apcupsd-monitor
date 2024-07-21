@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean upgrade = false;
 
     // DATABASE VERSION
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     // 1 = v1.1.5
     // 2 = v1.2.2, added ups load events boolean
     // 3 = v1.8.7, added ups_reachable boolean
@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 5 = v1.15.0, added ups_node_id field for Eaton IPM use
     // 6 = v1.18.0, added ups_enabled to disable ups if needed
     // 7 = v1.19.0, added ups_use_https for http / https toggling cases
+    // 8 = v1.24.0, added display_name field
 
 
     // DATABASE NAME
@@ -67,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String UPS_NODE_ID = "ups_node_id"; // string node id
     static final String UPS_ENABLED = "ups_enabled";
     static final String UPS_USE_HTTPS = "ups_use_https";
+    static final String UPS_DISPLAY_NAME = "display_name";
 
     // -------------------------------------------------------------------
 
@@ -102,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "server_password TEXT, server_use_private_key_auth TEXT, server_private_key_password TEXT, server_private_key_path TEXT, server_strict_host_key_checking TEXT, " +
                 "server_status_command TEXT, server_events_location TEXT, server_host_name TEXT, server_host_finger_print TEXT, server_host_key TEXT, " +
                 "ups_status_str TEXT, ups_load_events TEXT, ups_reachable TEXT, is_apc_nmc INTEGER, ups_node_id TEXT, ups_enabled INTEGER DEFAULT 1, " +
-                "ups_use_https INTEGER DEFAULT 1)");
+                "ups_use_https INTEGER DEFAULT 1, display_name TEXT)");
 
         // Create events data table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + EVENTS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, ups_id TEXT, event_str TEXT)");
@@ -201,6 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ups.UPS_NODE_ID = res.getString(19);
             ups.UPS_ENABLED = res.getInt(20) == 1;
             ups.UPS_USE_HTTPS = res.getInt(21) == 1;
+            ups.UPS_DISPLAY_NAME = res.getString(22);
             upsArrayList.add(ups);
         }
         res.close();
@@ -298,4 +301,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // ---------------------------------------------------------------------------------------------
 
-} // End of class
+}

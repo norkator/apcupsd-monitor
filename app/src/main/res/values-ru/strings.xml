@@ -84,6 +84,8 @@
     <string name="node_id_ipm">Node ID (IPM)</string>
     <string name="node_id_eaton_ipm_hint">Идентификатор узла для Eaton IPM, например UW222A0123</string>
     <string name="server_address_hint_text">Адрес NUT определяется именем ИБП@адрес, например: dummy@192.168.1.100</string>
+    <string name="display_name">Отображаемое имя</string>
+    <string name="display_name_description">Если указано отображаемое имя, оно будет использоваться вместо предоставленного имени ИБП.</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>

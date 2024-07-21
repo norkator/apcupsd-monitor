@@ -35,6 +35,7 @@ public class UPS {
     public String UPS_NODE_ID = null; // IPM this is serial number of your device
     public boolean UPS_ENABLED = true; // cab disable ups momentarily if user wants so
     public boolean UPS_USE_HTTPS = true;
+    public String UPS_DISPLAY_NAME = null;
 
     // Variables | status and event strings
     private String UPS_STATUS_STR = null;
@@ -160,6 +161,9 @@ public class UPS {
     }
 
     public String getUPS_NAME() {
+        if (this.UPS_DISPLAY_NAME != null && !this.UPS_DISPLAY_NAME.isEmpty()) {
+            return this.UPS_DISPLAY_NAME;
+        }
         return (this.UPS_NAME == null ? "N/A" : this.UPS_NAME);
     }
 
@@ -273,4 +277,4 @@ public class UPS {
     }
 
 
-} // End of class
+}

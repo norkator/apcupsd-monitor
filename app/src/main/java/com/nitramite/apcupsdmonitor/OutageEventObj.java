@@ -28,4 +28,4 @@ class OutageEventObj {
     }
 
 
-} // End of class
+}

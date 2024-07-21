@@ -110,4 +110,4 @@ public class StatusService implements ConnectorInterface {
     }
 
 
-} // End of class
+}
