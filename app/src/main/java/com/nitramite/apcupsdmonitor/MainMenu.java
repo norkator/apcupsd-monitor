@@ -1,11 +1,9 @@
 package com.nitramite.apcupsdmonitor;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -33,26 +31,20 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.QueryPurchaseHistoryParams;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nitramite.apcupsdmonitor.notifier.PushUtils;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class MainMenu extends AppCompatActivity implements ConnectorInterface, PurchasesUpdatedListener,
         SwipeActionAdapter.SwipeActionListener, SwipeRefreshLayout.OnRefreshListener {
-
-    // http://www.apcupsd.org/manual/manual.html
 
     // Logging
     private final static String TAG = MainMenu.class.getSimpleName();
@@ -413,18 +405,6 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     }
 
 
-    // Check if service is running
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     @Override
     public void onRefresh() {
         startConnectorTask();
@@ -552,20 +532,34 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public void inAppPurchase(final String IAP_ITEM_SKU) {
         if (mBillingClient.isReady()) {
 
-            List<String> skuList = new ArrayList<>();
-            skuList.add(IAP_ITEM_SKU);
+            List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+            productList.add(QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(IAP_ITEM_SKU)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build());
 
-            SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
-                    .setSkusList(skuList).setType(BillingClient.SkuType.INAPP).build();
+            QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+                    .setProductList(productList)
+                    .build();
 
-            mBillingClient.querySkuDetailsAsync(skuDetailsParams, (billingResult, skuDetailsList) -> {
-                try {
-                    BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                            .setSkuDetails(skuDetailsList.get(0))
-                            .build();
-                    mBillingClient.launchBillingFlow(MainMenu.this, flowParams);
-                } catch (IndexOutOfBoundsException e) {
-                    genericErrorDialog(getString(R.string.error), e.toString());
+            mBillingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null) {
+                    try {
+                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                .setProductDetailsParamsList(
+                                        Collections.singletonList(
+                                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                                        .setProductDetails(productDetailsList.get(0))
+                                                        .build()
+                                        )
+                                )
+                                .build();
+                        mBillingClient.launchBillingFlow(MainMenu.this, billingFlowParams);
+                    } catch (IndexOutOfBoundsException e) {
+                        genericErrorDialog(getString(R.string.error), e.toString());
+                    }
+                } else {
+                    genericErrorDialog(getString(R.string.error), "Error querying product details");
                 }
             });
         } else {
@@ -573,25 +567,5 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
             initInAppBilling();
         }
     }
-
-
-    /* In app Restore purchases */
-    // public void restorePurchases() {
-    //     mBillingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-    //         @Override
-    //         public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-    //             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
-    //                 if (purchaseHistoryRecordList.size() > 0) {
-    //                     for (PurchaseHistoryRecord purchase : purchaseHistoryRecordList) {
-    //                     }
-    //                 } else {
-    //                     genericErrorDialog(getString(R.string.error), "No purchases made");
-    //                 }
-    //             } else {
-    //                 genericErrorDialog(getString(R.string.error), "Error querying purchased items");
-    //             }
-    //         }
-    //     });
-    // }
 
 }
