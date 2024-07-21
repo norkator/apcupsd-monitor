@@ -458,7 +458,8 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     private void initInAppBilling() {
         // In app billing
         mBillingClient = BillingClient.newBuilder(this)
-                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()).build();
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
