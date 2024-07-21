@@ -57,4 +57,5 @@ dependencies {
     testImplementation 'org.json:json:20230618'
     // Other
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.0.0'))
+    implementation('com.google.android.play:review:2.0.1')
 }
