@@ -84,6 +84,8 @@
     <string name="node_id_ipm">Node ID (IPM)</string>
     <string name="node_id_eaton_ipm_hint">Node id for Eaton IPM like UW222A0123</string>
     <string name="server_address_hint_text">NUT address is defined with UPS name@address like: dummy@192.168.1.100</string>
+    <string name="display_name">Display name</string>
+    <string name="display_name_description">If display name is provided then display name replaces data provided UPS name</string>
 
     <!-- UpsViewer -->
     <string name="m">M</string>

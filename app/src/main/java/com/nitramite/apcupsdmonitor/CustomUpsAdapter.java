@@ -62,7 +62,6 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
         CustomGauge chargePB = rowView.findViewById(R.id.chargePB);
         TextView percentageTv = rowView.findViewById(R.id.percentageTv);
 
-
         // Setting values and visibilities
         name.setText(upsArrayList.get(position).getUPS_NAME());
 
