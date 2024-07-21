@@ -31,6 +31,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
@@ -114,12 +115,9 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
         // Floating action buttons
         FloatingActionButton floatingAddUpsBtn = findViewById(R.id.floatingAddNewUpsBtn);
-        floatingAddUpsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainMenu.this, UpsEditor.class);
-                startActivityForResult(intent, ACTIVITY_RESULT_NEW_UPS_ADDED);
-            }
+        floatingAddUpsBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(MainMenu.this, UpsEditor.class);
+            startActivityForResult(intent, ACTIVITY_RESULT_NEW_UPS_ADDED);
         });
 
         upsListView = findViewById(R.id.upsListView);
@@ -479,7 +477,8 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     // Initialize in app billing feature
     private void initInAppBilling() {
         // In app billing
-        mBillingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build();
+        mBillingClient = BillingClient.newBuilder(this)
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
@@ -547,14 +546,8 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
 
-
-    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-        @Override
-        public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-            Toast.makeText(MainMenu.this, "Purchase acknowledged!", Toast.LENGTH_SHORT).show();
-        }
-    };
-
+    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener =
+            billingResult -> Toast.makeText(MainMenu.this, "Purchase acknowledged!", Toast.LENGTH_SHORT).show();
 
     public void inAppPurchase(final String IAP_ITEM_SKU) {
         if (mBillingClient.isReady()) {
@@ -565,17 +558,14 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
             SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
                     .setSkusList(skuList).setType(BillingClient.SkuType.INAPP).build();
 
-            mBillingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
-                @Override
-                public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
-                    try {
-                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                .setSkuDetails(skuDetailsList.get(0))
-                                .build();
-                        mBillingClient.launchBillingFlow(MainMenu.this, flowParams);
-                    } catch (IndexOutOfBoundsException e) {
-                        genericErrorDialog(getString(R.string.error), e.toString());
-                    }
+            mBillingClient.querySkuDetailsAsync(skuDetailsParams, (billingResult, skuDetailsList) -> {
+                try {
+                    BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                            .setSkuDetails(skuDetailsList.get(0))
+                            .build();
+                    mBillingClient.launchBillingFlow(MainMenu.this, flowParams);
+                } catch (IndexOutOfBoundsException e) {
+                    genericErrorDialog(getString(R.string.error), e.toString());
                 }
             });
         } else {
@@ -586,23 +576,22 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
 
     /* In app Restore purchases */
-    public void restorePurchases() {
-        mBillingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-            @Override
-            public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
-                    if (purchaseHistoryRecordList.size() > 0) {
-                        for (PurchaseHistoryRecord purchase : purchaseHistoryRecordList) {
-                        }
-                    } else {
-                        genericErrorDialog(getString(R.string.error), "No purchases made");
-                    }
-                } else {
-                    genericErrorDialog(getString(R.string.error), "Error querying purchased items");
-                }
-            }
-        });
-    }
-
+    // public void restorePurchases() {
+    //     mBillingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
+    //         @Override
+    //         public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
+    //             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
+    //                 if (purchaseHistoryRecordList.size() > 0) {
+    //                     for (PurchaseHistoryRecord purchase : purchaseHistoryRecordList) {
+    //                     }
+    //                 } else {
+    //                     genericErrorDialog(getString(R.string.error), "No purchases made");
+    //                 }
+    //             } else {
+    //                 genericErrorDialog(getString(R.string.error), "Error querying purchased items");
+    //             }
+    //         }
+    //     });
+    // }
 
 }
