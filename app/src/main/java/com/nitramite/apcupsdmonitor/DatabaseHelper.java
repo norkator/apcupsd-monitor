@@ -298,4 +298,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // ---------------------------------------------------------------------------------------------
 
-} // End of class
+}

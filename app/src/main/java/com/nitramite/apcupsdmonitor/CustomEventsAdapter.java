@@ -58,4 +58,4 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
     }
 
 
-} // End of class
+}

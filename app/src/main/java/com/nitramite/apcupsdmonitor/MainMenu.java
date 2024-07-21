@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -36,6 +35,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryPurchaseHistoryParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
@@ -605,4 +605,4 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     }
 
 
-} // End of class
+}
