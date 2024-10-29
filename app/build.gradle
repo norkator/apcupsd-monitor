@@ -39,17 +39,17 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.billingclient:billing:7.0.0'
+    implementation 'com.android.billingclient:billing:7.1.1'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'joda-time:joda-time:2.12.5'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:24.0.0'
+    implementation 'com.google.firebase:firebase-messaging:24.0.3'
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.12.0'
@@ -57,5 +57,5 @@ dependencies {
     testImplementation 'org.json:json:20230618'
     // Other
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.0.0'))
-    implementation('com.google.android.play:review:2.0.1')
+    implementation('com.google.android.play:review:2.0.2')
 }
