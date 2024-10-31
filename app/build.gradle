@@ -8,8 +8,8 @@ android {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
         targetSdkVersion 35
-        versionCode 60
-        versionName "1.24.0" // Use Semver
+        versionCode 61
+        versionName "1.25.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -39,7 +39,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.android.billingclient:billing:7.1.1'
