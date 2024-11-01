@@ -56,6 +56,6 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
     testImplementation 'org.json:json:20240303'
     // Other
-    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.0.0'))
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.0.21'))
     implementation('com.google.android.play:review:2.0.2')
 }
