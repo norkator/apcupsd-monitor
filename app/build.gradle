@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
-        targetSdkVersion 35
-        versionCode 61
-        versionName "1.25.0" // Use Semver
+        targetSdkVersion 36
+        versionCode 62
+        versionName "1.26.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,11 +35,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
     // AndroidX
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.android.billingclient:billing:7.1.1'
@@ -49,7 +49,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:24.0.3'
+    implementation 'com.google.firebase:firebase-messaging:24.1.1'
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.12.0'
