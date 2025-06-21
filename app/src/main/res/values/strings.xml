@@ -40,7 +40,6 @@
     <string name="add_new_ups">Add new ups</string>
 
     <!-- UpsEditor -->
-    <string name="click_here_for_setup_tutorial">Click here for setup tutorial</string>
     <string name="connection_type">Connection type</string>
     <string name="off_ssh_on_apcupsd_tcp_port">Options are SSH, APCUPSD TCP PORT or Eaton IPM</string>
     <string name="server_address">Server address</string>

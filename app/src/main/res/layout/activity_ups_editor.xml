@@ -8,23 +8,11 @@
     android:fitsSystemWindows="true"
     tools:context=".UpsEditor">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp">
-
-
-        <Button
-            android:id="@+id/tutorialBtn"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/click_here_for_setup_tutorial"
-            android:textColor="@color/bootStrapPrimary"
-            android:textSize="15sp" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +26,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:text="@string/connection_type"
                 android:textSize="18sp" />
 

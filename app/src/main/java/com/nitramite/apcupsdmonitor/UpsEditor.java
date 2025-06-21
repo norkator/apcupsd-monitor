@@ -268,15 +268,6 @@ public class UpsEditor extends AppCompatActivity {
             displayNameET.setText(ups.UPS_DISPLAY_NAME);
         }
 
-
-        Button tutorialBtn = findViewById(R.id.tutorialBtn);
-        tutorialBtn.setOnClickListener(view -> {
-            String url = "http://www.nitramite.com/apcupsdmonitor.html";
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
-        });
-
         Button selectPrivateKeyLocationBtn = findViewById(R.id.selectPrivateKeyLocationBtn);
         selectPrivateKeyLocationBtn.setOnClickListener(view -> {
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
@@ -285,10 +276,8 @@ public class UpsEditor extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(chooseFile, "Choose private key file"), IMPORT_FILE_REQUEST_CODE);
         });
 
-
         Button negativeBtn = findViewById(R.id.negativeBtn);
         negativeBtn.setOnClickListener(view -> UpsEditor.this.finish());
-
 
         Button positiveBtn = findViewById(R.id.positiveBtn);
         positiveBtn.setOnClickListener(view -> {
