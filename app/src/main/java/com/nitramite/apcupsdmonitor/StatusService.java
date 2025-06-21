@@ -1,5 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -79,7 +81,7 @@ public class StatusService implements ConnectorInterface {
     // Creates notification
     private static void showNotification(Context context, final String title, final String statusText) {
         Intent intent = new Intent(context, MainMenu.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

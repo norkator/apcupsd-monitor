@@ -40,7 +40,6 @@
     <string name="add_new_ups">Добавить новые ИБП</string>
 
     <!-- UpsEditor -->
-    <string name="click_here_for_setup_tutorial">Щелкните здесь, чтобы просмотреть руководство по установке</string>
     <string name="connection_type">Тип соединения</string>
     <string name="off_ssh_on_apcupsd_tcp_port">Options are SSH, APCUPSD TCP PORT or Eaton IPM</string>
     <string name="server_address">Адрес сервера</string>
