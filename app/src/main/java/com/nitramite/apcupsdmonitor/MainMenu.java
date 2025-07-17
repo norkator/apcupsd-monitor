@@ -585,14 +585,14 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                     .setProductList(productList)
                     .build();
 
-            mBillingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null) {
+            mBillingClient.queryProductDetailsAsync(params, (billingResult, queryProductDetailsResult) -> {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     try {
                         BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
                                 .setProductDetailsParamsList(
                                         Collections.singletonList(
                                                 BillingFlowParams.ProductDetailsParams.newBuilder()
-                                                        .setProductDetails(productDetailsList.get(0))
+                                                        .setProductDetails(queryProductDetailsResult.getProductDetailsList().get(0))
                                                         .build()
                                         )
                                 )
