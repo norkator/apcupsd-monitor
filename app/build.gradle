@@ -8,8 +8,8 @@ android {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
         targetSdkVersion 36
-        versionCode 62
-        versionName "1.26.0" // Use Semver
+        versionCode 63
+        versionName "1.27.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -19,8 +19,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     testOptions {
         unitTests {
