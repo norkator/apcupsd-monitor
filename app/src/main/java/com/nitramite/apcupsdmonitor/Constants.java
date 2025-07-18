@@ -15,6 +15,8 @@ public class Constants {
     // Shared preferences
     public final static String SP_USE_DARK_THEME = "SP_USE_DARK_THEME";
 
+    public final static String SP_UPS_LIST_ORDER_BY = "SP_UPS_LIST_ORDER_BY";
+
     final static String SP_STATUS_COMMAND = "SP_STATUS_COMMAND";
     final static String SP_EVENTS_LOCATION = "SP_EVENTS_LOCATION";
     final static String SP_EVENTS_COLORING = "SP_EVENTS_COLORING";
