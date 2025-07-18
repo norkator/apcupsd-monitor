@@ -16,7 +16,7 @@
         android:layout_marginEnd="3dp"
         android:layout_marginRight="3dp"
         android:layout_marginBottom="2dp"
-        card:cardCornerRadius="1dp"
+        card:cardCornerRadius="5dp"
         card:cardElevation="2dp"
         android:foreground="?android:attr/selectableItemBackground">
 
