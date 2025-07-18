@@ -22,6 +22,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/donateBigBtn"
+        android:title="@string/donate_more"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_rate_app"
         android:title="@string/menu_rate_app"
         app:showAsAction="never"

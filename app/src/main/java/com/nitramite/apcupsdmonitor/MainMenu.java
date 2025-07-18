@@ -76,7 +76,6 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     private ActivityResultLauncher<Intent> preferencesLauncher;
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -497,7 +496,11 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
             return true;
         }
         if (id == R.id.donateBtn) {
-            donateDialog();
+            donateMediumDialog();
+            return true;
+        }
+        if (id == R.id.donateBigBtn) {
+            donateBigDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -529,8 +532,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         });
     }
 
-
-    private void donateDialog() {
+    private void donateMediumDialog() {
         new AlertDialog.Builder(this)
                 .setIcon(R.mipmap.logo)
                 .setTitle(R.string.donate_title)
@@ -540,6 +542,15 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
                 .show();
     }
 
+    private void donateBigDialog() {
+        new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.logo)
+                .setTitle(R.string.donate_title)
+                .setMessage(R.string.donate_description)
+                .setPositiveButton(getString(R.string.continue_btn), (dialog, which) -> inAppPurchase(Constants.IAP_ITEM_SKU_DONATE_BIG))
+                .setNegativeButton(getString(R.string.return_btn), null)
+                .show();
+    }
 
     @Override
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {

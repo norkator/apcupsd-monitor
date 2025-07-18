@@ -4,6 +4,7 @@ public class Constants {
 
     // In app products
     static String IAP_ITEM_SKU_DONATE_MEDIUM = "iap_donate_medium";
+    static String IAP_ITEM_SKU_DONATE_BIG = "iap_donate_big";
 
     // Commands
     final static String STATUS_COMMAND_APCUPSD = "sudo apcaccess status";
