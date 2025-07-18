@@ -129,6 +129,12 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Settings</string>
+    <string name="general_settings">General settings</string>
+    <string name="order_by">UPS list order by</string>
+    <string name="order_by_summary">Choose how to order UPS listing</string>
+    <string name="order_by_id">UPS ID</string>
+    <string name="order_by_display_name_asc">Display name ascending</string>
+    <string name="order_by_display_name_desc">Display name descending</string>
     <string name="configure_displayed_main_screen_items">Configure displayed main screen items</string>
     <string name="prefs_configure_display_items">Configure displayed details items</string>
     <string name="prefs_ups_nam_title">Set UPS name as activity title</string>

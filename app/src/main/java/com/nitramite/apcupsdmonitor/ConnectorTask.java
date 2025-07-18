@@ -69,7 +69,7 @@ public class ConnectorTask {
             threads = new ArrayList<>();
             upsArrayList.clear();
             this.completed = 0;
-            upsArrayList = databaseHelper.getAllUps(upsId, true);
+            upsArrayList = databaseHelper.getAllUps("UPS_ID", upsId, true);
             SQLiteDatabase writablePool = databaseHelper.getWritablePool();
 
             if (upsArrayList.size() > 0) {

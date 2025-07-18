@@ -203,7 +203,7 @@ public class UpsEditor extends AppCompatActivity {
             eventsLocationET.setText(Constants.EVENTS_LOCATION);
         } else {
             setTitle(getString(R.string.ups_editor_update_existing));
-            UPS ups = databaseHelper.getAllUps(upsId, false).get(0);
+            UPS ups = databaseHelper.getAllUps("UPS_ID", upsId, false).get(0);
 
             switch (ups.UPS_CONNECTION_TYPE) {
                 case ConnectionType.UPS_CONNECTION_TYPE_SSH:

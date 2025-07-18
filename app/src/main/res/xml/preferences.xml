@@ -3,6 +3,16 @@
     android:key="first_level"
     android:title="@string/prefs_title">
 
+    <PreferenceCategory android:title="@string/general_settings">
+
+        <ListPreference
+            android:entries="@array/pref_application_ups_order_by_entries"
+            android:entryValues="@array/pref_application_ups_order_by_values"
+            android:key="SP_UPS_LIST_ORDER_BY"
+            android:summary="@string/order_by_summary"
+            android:title="@string/order_by" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/configure_displayed_main_screen_items">
 

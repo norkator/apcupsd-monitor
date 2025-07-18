@@ -176,7 +176,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
 
     private void getUpsData() {
-        upsArrayList = databaseHelper.getAllUps(null, false);
+        upsArrayList = databaseHelper.getAllUps(sharedPreferences.getString(Constants.SP_UPS_LIST_ORDER_BY, "UPS_ID"), null, false);
         CustomUpsAdapter customUpsAdapter = new CustomUpsAdapter(this, upsArrayList);
 
         mAdapter = new SwipeActionAdapter(customUpsAdapter);

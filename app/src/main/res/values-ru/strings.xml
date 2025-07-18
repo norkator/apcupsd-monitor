@@ -129,6 +129,12 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Настройки</string>
+    <string name="general_settings">Общие настройки</string>
+    <string name="order_by">Сортировать список UPS по</string>
+    <string name="order_by_summary">Выберите способ сортировки списка UPS</string>
+    <string name="order_by_id">ID UPS</string>
+    <string name="order_by_display_name_asc">Отображаемое имя (по возрастанию)</string>
+    <string name="order_by_display_name_desc">Отображаемое имя (по убыванию)</string>
     <string name="configure_displayed_main_screen_items">Настроить отображаемые элементы главного экрана</string>
     <string name="prefs_configure_display_items">Настроить отображаемые элементы сведений</string>
     <string name="prefs_ups_nam_title">Установить имя ИБП в качестве названия деятельности</string>

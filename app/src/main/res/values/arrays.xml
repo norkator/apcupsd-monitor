@@ -9,4 +9,15 @@
         <item>HH:mm:ss</item>
     </string-array>
 
+    <string-array name="pref_application_ups_order_by_entries">
+        <item>@string/order_by_id</item>
+        <item>@string/order_by_display_name_asc</item>
+        <item>@string/order_by_display_name_desc</item>
+    </string-array>
+    <string-array name="pref_application_ups_order_by_values">
+        <item>UPS_ID</item>
+        <item>UPS_DISPLAY_NAME_ASC</item>
+        <item>UPS_DISPLAY_NAME_DESC</item>
+    </string-array>
+
 </resources>

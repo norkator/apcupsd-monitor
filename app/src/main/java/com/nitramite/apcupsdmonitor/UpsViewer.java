@@ -106,7 +106,7 @@ public class UpsViewer extends AppCompatActivity implements ConnectorInterface {
 
     private void getUpsData() {
         try {
-            ups = databaseHelper.getAllUps(upsId, false).get(0);
+            ups = databaseHelper.getAllUps("UPS_ID", upsId, false).get(0);
             drawData(ups, ups.getUPS_STATUS_STR());
             rawStatusOutput = ups.getUPS_STATUS_STR();
             eventsArrayList = databaseHelper.getAllEvents(upsId);
