@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -69,8 +71,10 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     private SwipeRefreshLayout swipeRefreshLayout;
     private ReviewManager reviewManager;
 
-    // Activity request codes
     public static final int ACTIVITY_RESULT_NEW_UPS_ADDED = 1;
+
+    private ActivityResultLauncher<Intent> preferencesLauncher;
+
 
 
     @Override
@@ -148,7 +152,16 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         // Get status data
         startConnectorTask();
         reviewFlow();
-    } // End of onCreate()
+
+        preferencesLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        startConnectorTask();
+                    }
+                }
+        );
+    }
 
 
     // ---------------------------------------------------------------------------------------------
@@ -325,9 +338,6 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            startConnectorTask();
-        }
         if (requestCode == ACTIVITY_RESULT_NEW_UPS_ADDED) {
             getUpsData();
             startConnectorTask();
@@ -468,7 +478,8 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
             return true;
         }
         if (id == R.id.action_settings) {
-            startActivity(new Intent(MainMenu.this, Preferences.class));
+            Intent intent = new Intent(this, Preferences.class);
+            preferencesLauncher.launch(intent);
             return true;
         }
         if (id == R.id.action_rate_app) {

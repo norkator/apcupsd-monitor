@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,23 +17,12 @@ import androidx.preference.PreferenceFragmentCompat;
 import java.util.Locale;
 
 public class Preferences extends AppCompatActivity {
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, MainMenu.class));
-    }
-
-    //  Logging
     private static final String TAG = Preferences.class.getSimpleName();
 
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        // super.attachBaseContext(localeUtils.updateBaseContextLocale(base));
-        // MultiDex.install(this);
     }
 
 
@@ -73,11 +63,16 @@ public class Preferences extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
-        // Activity result back to menu
-        setResult(RESULT_OK, null);
-
         MyPreferenceFragment myPreferenceFragment = new MyPreferenceFragment();
         initFragment(R.id.content, myPreferenceFragment);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
     }
 
     public static class MyPreferenceFragment extends PreferenceFragmentCompat {
@@ -100,6 +95,5 @@ public class Preferences extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }
