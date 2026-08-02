@@ -38,6 +38,11 @@ public class CustomGauge extends View {
     private int mDividersCount;
     private boolean mDividerDrawFirst;
     private boolean mDividerDrawLast;
+    private Shader mPointShader;
+    private int mPointShaderWidth;
+    private int mPointShaderHeight;
+    private int mPointShaderStartColor;
+    private int mPointShaderEndColor;
 
     public CustomGauge(Context context) {
         super(context);
@@ -128,7 +133,7 @@ public class CustomGauge extends View {
         mPaint.setShader(null);
         canvas.drawArc(mRect, mStartAngle, mSweepAngle, false, mPaint);
         mPaint.setColor(mPointStartColor);
-        mPaint.setShader(new LinearGradient(getWidth(), getHeight(), 0, 0, mPointEndColor, mPointStartColor, Shader.TileMode.CLAMP));
+        mPaint.setShader(getPointShader());
         if (mPointSize > 0) {//if size of pointer is defined
             if (mPoint > mStartAngle + mPointSize / 2) {
                 canvas.drawArc(mRect, mPoint - mPointSize / 2, mPointSize, false, mPaint);
@@ -252,6 +257,7 @@ public class CustomGauge extends View {
 
     public void setPointStartColor(int pointStartColor) {
         mPointStartColor = pointStartColor;
+        mPointShader = null;
     }
 
     @SuppressWarnings("unused")
@@ -261,6 +267,26 @@ public class CustomGauge extends View {
 
     public void setPointEndColor(int pointEndColor) {
         mPointEndColor = pointEndColor;
+        mPointShader = null;
+    }
+
+    private Shader getPointShader() {
+        int width = getWidth();
+        int height = getHeight();
+        if (
+                mPointShader == null
+                        || mPointShaderWidth != width
+                        || mPointShaderHeight != height
+                        || mPointShaderStartColor != mPointStartColor
+                        || mPointShaderEndColor != mPointEndColor
+        ) {
+            mPointShader = new LinearGradient(width, height, 0, 0, mPointEndColor, mPointStartColor, Shader.TileMode.CLAMP);
+            mPointShaderWidth = width;
+            mPointShaderHeight = height;
+            mPointShaderStartColor = mPointStartColor;
+            mPointShaderEndColor = mPointEndColor;
+        }
+        return mPointShader;
     }
 
     @SuppressWarnings("unused")

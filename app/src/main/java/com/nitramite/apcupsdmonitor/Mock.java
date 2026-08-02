@@ -260,8 +260,8 @@ public class Mock {
     }
 
 
-    private static final String NUT_UPS_MOCK_DATA = "BEGIN LIST VAR" +
-            "eatonbattery.charge \"11\"\n" +
+    private static final String NUT_UPS_MOCK_DATA = "BEGIN LIST VAR eaton\n" +
+            "VAR eaton battery.charge \"11\"\n" +
             "battery.charge.low \"35\"\n" +
             "battery.runtime \"215\"\n" +
             "battery.type \"PbAc\"\n" +

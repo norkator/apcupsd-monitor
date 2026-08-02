@@ -2,20 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 37
+    compileSdk = 37
 
     defaultConfig {
-        applicationId "com.nitramite.apcupsdmonitor"
-        minSdkVersion 22
-        targetSdkVersion 37
-        versionCode 64
-        versionName "1.28.0" // Use Semver
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId = "com.nitramite.apcupsdmonitor"
+        minSdk = 23
+        targetSdk = 37
+        versionCode = 64
+        versionName = "1.28.0" // Use Semver
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -28,12 +28,12 @@ android {
             includeAndroidResources = true
         }
     }
-    namespace 'com.nitramite.apcupsdmonitor'
+    namespace = 'com.nitramite.apcupsdmonitor'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
-    implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+    implementation 'com.jcraft:jsch:0.1.55'
     // AndroidX
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'

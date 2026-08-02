@@ -1,6 +1,7 @@
 package com.nitramite.apcupsdmonitor;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 @SuppressWarnings("PointlessBitwiseExpression")
 public class EatonHMAC {
@@ -143,7 +144,7 @@ public class EatonHMAC {
             H4 = (H4 + E) & 0x0ffffffff;
         }
         String result = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
-        return result.toLowerCase();
+        return result.toLowerCase(Locale.ROOT);
     }
 
 

@@ -1,6 +1,8 @@
 package com.nitramite.apcupsdmonitor;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +31,22 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
 
 
     public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.events_adapter, null, true);
-        TextView event = rowView.findViewById(R.id.event);
+        ViewHolder holder;
+        if (view == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            view = inflater.inflate(R.layout.events_adapter, parent, false);
+            TextView event = view.findViewById(R.id.event);
+            holder = new ViewHolder(event, event.getTextColors());
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        TextView event = holder.event;
         final String positionStr = events.get(position);
         event.setText(positionStr);
+        event.setBackgroundColor(Color.TRANSPARENT);
+        event.setTextColor(holder.defaultTextColors);
         if (
                 positionStr.contains("Power failure") || positionStr.contains("powered by the UPS battery")
                         || positionStr.contains("UPS fault")
@@ -54,8 +67,17 @@ public class CustomEventsAdapter extends ArrayAdapter<String> {
                 event.setTextColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
             }
         }
-        return rowView;
+        return view;
     }
 
+    private static class ViewHolder {
+        final TextView event;
+        final ColorStateList defaultTextColors;
+
+        ViewHolder(TextView event, ColorStateList defaultTextColors) {
+            this.event = event;
+            this.defaultTextColors = defaultTextColors;
+        }
+    }
 
 }

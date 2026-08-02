@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FileDialog {
 
@@ -137,7 +138,7 @@ public class FileDialog {
                     if (!sel.canRead()) return false;
                     if (selectDirectoryOption) return sel.isDirectory();
                     else {
-                        boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
+                        boolean endsWith = fileEndsWith != null ? filename.toLowerCase(Locale.ROOT).endsWith(fileEndsWith) : true;
                         return endsWith || sel.isDirectory();
                     }
                 }
@@ -158,7 +159,7 @@ public class FileDialog {
     }
 
     private void setFileEndsWith(String fileEndsWith) {
-        this.fileEndsWith = fileEndsWith != null ? fileEndsWith.toLowerCase() : fileEndsWith;
+        this.fileEndsWith = fileEndsWith != null ? fileEndsWith.toLowerCase(Locale.ROOT) : fileEndsWith;
     }
 }
 

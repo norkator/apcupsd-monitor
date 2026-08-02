@@ -2,7 +2,7 @@ package com.nitramite.apcupsdmonitor;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,84 +37,112 @@ public class CustomUpsAdapter extends ArrayAdapter<UPS> {
 
 
     public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.ups_item, null, true);
-
-        // Find views
-        TextView name = rowView.findViewById(R.id.name);
-        TextView status = rowView.findViewById(R.id.status);
-
-        LinearLayout upsModelLayout = rowView.findViewById(R.id.upsModelLayout);
-        TextView model = rowView.findViewById(R.id.model);
-        TextView lineVoltageOnly = rowView.findViewById(R.id.lineVoltageOnly);
-        LinearLayout lineVoltageLayout = rowView.findViewById(R.id.lineVoltageLayout);
-        TextView batteryVoltageOnly = rowView.findViewById(R.id.batteryVoltageOnly);
-        LinearLayout batteryVoltageLayout = rowView.findViewById(R.id.batteryVoltageLayout);
-        TextView internalTemperature = rowView.findViewById(R.id.internalTemperature);
-        LinearLayout internalTemperatureLayout = rowView.findViewById(R.id.internalTemperatureLayout);
-        ProgressBar loadPercentPB = rowView.findViewById(R.id.loadPercentPB);
-        TextView loadPercent = rowView.findViewById(R.id.loadPercent);
-        LinearLayout batteryLoadPercentageLayout = rowView.findViewById(R.id.batteryLoadPercentageLayout);
-        TextView batteryTimeLeft = rowView.findViewById(R.id.batteryTimeLeft);
-        LinearLayout batteryTimeLeftLayout = rowView.findViewById(R.id.batteryTimeLeftLayout);
-
-        FrameLayout chargePercentageFrameLayout = rowView.findViewById(R.id.chargePercentageFrameLayout);
-        CustomGauge chargePB = rowView.findViewById(R.id.chargePB);
-        TextView percentageTv = rowView.findViewById(R.id.percentageTv);
-
-        // Setting values and visibilities
-        name.setText(upsArrayList.get(position).getUPS_NAME());
-
-        upsModelLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_UPS_MODEL, true) ? View.VISIBLE : View.GONE);
-        model.setText(upsArrayList.get(position).getMODEL());
-
-        lineVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LINE_VOLTAGE, true) ? View.VISIBLE : View.GONE);
-        lineVoltageOnly.setText(upsArrayList.get(position).getLineVoltageOnlyStr(rowView.getContext()));
-
-        batteryVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_VOLTAGE, true) ? View.VISIBLE : View.GONE);
-        batteryVoltageOnly.setText(upsArrayList.get(position).getBatteryVoltageOnlyStr(rowView.getContext()));
-
-        internalTemperatureLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_INTERNAL_TEMPERATURE, false) ? View.VISIBLE : View.GONE);
-        internalTemperature.setText(upsArrayList.get(position).getITEMP());
-
-        batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, false) ? View.VISIBLE : View.GONE);
-        loadPercent.setText(upsArrayList.get(position).getLoadPercentStr(rowView.getContext()));
-        try {
-            loadPercentPB.setProgress(upsArrayList.get(position).getLoadPercentInteger());
-        } catch (Exception ignored) {
-            batteryLoadPercentageLayout.setVisibility(View.INVISIBLE);
+        ViewHolder holder;
+        if (view == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            view = inflater.inflate(R.layout.ups_item, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
         }
 
-        batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, false) ? View.VISIBLE : View.GONE);
-        batteryTimeLeft.setText(upsArrayList.get(position).getBATTERY_TIME_LEFT(rowView.getContext()));
+        UPS ups = upsArrayList.get(position);
 
-        chargePercentageFrameLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_PERCENT_BATTERY_CHARGE, true) ? View.VISIBLE : View.GONE);
+        // Setting values and visibilities
+        holder.name.setText(ups.getUPS_NAME());
+
+        holder.upsModelLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_UPS_MODEL, true) ? View.VISIBLE : View.GONE);
+        holder.model.setText(ups.getMODEL());
+
+        holder.lineVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LINE_VOLTAGE, true) ? View.VISIBLE : View.GONE);
+        holder.lineVoltageOnly.setText(ups.getLineVoltageOnlyStr(view.getContext()));
+
+        holder.batteryVoltageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_VOLTAGE, true) ? View.VISIBLE : View.GONE);
+        holder.batteryVoltageOnly.setText(ups.getBatteryVoltageOnlyStr(view.getContext()));
+
+        holder.internalTemperatureLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_INTERNAL_TEMPERATURE, false) ? View.VISIBLE : View.GONE);
+        holder.internalTemperature.setText(ups.getITEMP());
+
+        holder.batteryLoadPercentageLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_LOAD_PERCENTAGE, false) ? View.VISIBLE : View.GONE);
+        holder.loadPercent.setText(ups.getLoadPercentStr(view.getContext()));
+        try {
+            holder.loadPercentPB.setProgress(ups.getLoadPercentInteger());
+        } catch (Exception ignored) {
+            holder.batteryLoadPercentageLayout.setVisibility(View.INVISIBLE);
+        }
+
+        holder.batteryTimeLeftLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_BATTERY_TIME_LEFT, false) ? View.VISIBLE : View.GONE);
+        holder.batteryTimeLeft.setText(ups.getBATTERY_TIME_LEFT(view.getContext()));
+
+        holder.chargePercentageFrameLayout.setVisibility(sharedPreferences.getBoolean(Constants.SP_MS_SHOW_PERCENT_BATTERY_CHARGE, true) ? View.VISIBLE : View.GONE);
 
 
         // Set status (Always shown)
-        if (!upsArrayList.get(position).UPS_ENABLED) {
-            status.setText(R.string.ups_disabled);
-            status.setBackgroundColor(ContextCompat.getColor(context, R.color.materialGray));
-        } else if (upsArrayList.get(position).upsIsReachable()) {
-            status.setText(upsArrayList.get(position).getSTATUS());
-            if (upsArrayList.get(position).isOnline()) {
-                status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
+        if (!ups.UPS_ENABLED) {
+            holder.status.setText(R.string.ups_disabled);
+            holder.status.setBackgroundColor(ContextCompat.getColor(context, R.color.materialGray));
+        } else if (ups.upsIsReachable()) {
+            holder.status.setText(ups.getSTATUS());
+            if (ups.isOnline()) {
+                holder.status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapSuccess));
             } else {
-                status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
+                holder.status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapDanger));
             }
         } else {
-            status.setText(context.getString(R.string.ups_unreachable));
-            status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapWarning));
+            holder.status.setText(context.getString(R.string.ups_unreachable));
+            holder.status.setBackgroundColor(ContextCompat.getColor(context, R.color.bootStrapWarning));
         }
 
 
         // Set battery charge level
-        chargePB.setValue(upsArrayList.get(position).getBatteryChargeLevelInteger());
-        String getBatteryChargeLevelInteger = upsArrayList.get(position).getBatteryChargeLevelInteger() + "%";
-        percentageTv.setText(getBatteryChargeLevelInteger);
+        holder.chargePB.setValue(ups.getBatteryChargeLevelInteger());
+        String getBatteryChargeLevelInteger = ups.getBatteryChargeLevelInteger() + "%";
+        holder.percentageTv.setText(getBatteryChargeLevelInteger);
 
-        return rowView;
+        return view;
     }
 
+    private static class ViewHolder {
+        final TextView name;
+        final TextView status;
+        final LinearLayout upsModelLayout;
+        final TextView model;
+        final TextView lineVoltageOnly;
+        final LinearLayout lineVoltageLayout;
+        final TextView batteryVoltageOnly;
+        final LinearLayout batteryVoltageLayout;
+        final TextView internalTemperature;
+        final LinearLayout internalTemperatureLayout;
+        final ProgressBar loadPercentPB;
+        final TextView loadPercent;
+        final LinearLayout batteryLoadPercentageLayout;
+        final TextView batteryTimeLeft;
+        final LinearLayout batteryTimeLeftLayout;
+        final FrameLayout chargePercentageFrameLayout;
+        final CustomGauge chargePB;
+        final TextView percentageTv;
+
+        ViewHolder(View view) {
+            name = view.findViewById(R.id.name);
+            status = view.findViewById(R.id.status);
+            upsModelLayout = view.findViewById(R.id.upsModelLayout);
+            model = view.findViewById(R.id.model);
+            lineVoltageOnly = view.findViewById(R.id.lineVoltageOnly);
+            lineVoltageLayout = view.findViewById(R.id.lineVoltageLayout);
+            batteryVoltageOnly = view.findViewById(R.id.batteryVoltageOnly);
+            batteryVoltageLayout = view.findViewById(R.id.batteryVoltageLayout);
+            internalTemperature = view.findViewById(R.id.internalTemperature);
+            internalTemperatureLayout = view.findViewById(R.id.internalTemperatureLayout);
+            loadPercentPB = view.findViewById(R.id.loadPercentPB);
+            loadPercent = view.findViewById(R.id.loadPercent);
+            batteryLoadPercentageLayout = view.findViewById(R.id.batteryLoadPercentageLayout);
+            batteryTimeLeft = view.findViewById(R.id.batteryTimeLeft);
+            batteryTimeLeftLayout = view.findViewById(R.id.batteryTimeLeftLayout);
+            chargePercentageFrameLayout = view.findViewById(R.id.chargePercentageFrameLayout);
+            chargePB = view.findViewById(R.id.chargePB);
+            percentageTv = view.findViewById(R.id.percentageTv);
+        }
+    }
 
 }

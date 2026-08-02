@@ -52,14 +52,12 @@ public class Widget extends AppWidgetProvider {
 
 
                 // intent to open app on widget click
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    Intent intentSync = new Intent(context, MainMenu.class);
-                    intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    PendingIntent pendingSync = PendingIntent.getActivity(
-                            context, 0, intentSync, PendingIntent.FLAG_IMMUTABLE
-                    );
-                    rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingSync);
-                }
+                Intent intentSync = new Intent(context, MainMenu.class);
+                intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                PendingIntent pendingSync = PendingIntent.getActivity(
+                        context, 0, intentSync, PendingIntent.FLAG_IMMUTABLE
+                );
+                rv.setOnClickPendingIntent(R.id.upsStatusImage, pendingSync);
 
 
                 appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
@@ -98,7 +96,7 @@ public class Widget extends AppWidgetProvider {
         mainLinearLayout.setLayoutParams(layoutParams);
 
         for (int i = 0; i < upsArrayList.size(); i++) {
-            View inflatedLayout = inflater.inflate(R.layout.ups_item_widget, null, true);
+            View inflatedLayout = inflater.inflate(R.layout.ups_item_widget, mainLinearLayout, false);
             TextView upsName = inflatedLayout.findViewById(R.id.upsName);
             TextView percentageTv = inflatedLayout.findViewById(R.id.percentageTv);
 
