@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 36
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.nitramite.apcupsdmonitor"
         minSdkVersion 22
-        targetSdkVersion 36
-        versionCode 63
-        versionName "1.27.0" // Use Semver
+        targetSdkVersion 37
+        versionCode 64
+        versionName "1.28.0" // Use Semver
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -37,25 +37,25 @@ dependencies {
     // AndroidX
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0'
     // Third party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.billingclient:billing:8.0.0'
+    implementation 'com.android.billingclient:billing:9.1.0'
     implementation 'com.wdullaer:swipeactionadapter:2.1.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'joda-time:joda-time:2.14.0'
-    implementation 'com.squareup.okhttp3:okhttp:5.1.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'joda-time:joda-time:2.14.3'
+    implementation 'com.squareup.okhttp3:okhttp:5.4.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // For the notifications
-    implementation 'com.google.firebase:firebase-messaging:24.1.2'
+    implementation 'com.google.firebase:firebase-messaging:25.1.1'
     // Tests
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.18.0'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:5.1.0'
-    testImplementation 'org.json:json:20250517'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.4.0'
+    testImplementation 'org.json:json:20260719'
     // Other
-    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.0.0'))
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.3.21'))
     implementation('com.google.android.play:review:2.0.2')
 }
