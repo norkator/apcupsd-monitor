@@ -80,6 +80,15 @@
                     android:text="@string/nut"
                     tools:ignore="UnusedAttribute" />
 
+                <RadioButton
+                    android:id="@+id/googleReviewRB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="@string/google_review"
+                    tools:ignore="UnusedAttribute" />
+
             </com.google.android.flexbox.FlexboxLayout>
 
 

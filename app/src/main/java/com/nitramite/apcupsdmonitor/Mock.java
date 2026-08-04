@@ -3,6 +3,7 @@ package com.nitramite.apcupsdmonitor;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /* Provides mock data */
 public class Mock {
@@ -318,6 +319,17 @@ public class Mock {
 
     public static InputStream NutUpsMockData() {
         return new ByteArrayInputStream(NUT_UPS_MOCK_DATA.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static ArrayList<String> GoogleReviewEvents() {
+        ArrayList<String> events = new ArrayList<>();
+        events.add("2026-08-04 08:12:04 Power failure.");
+        events.add("2026-08-04 08:12:05 Running on UPS batteries.");
+        events.add("2026-08-04 08:15:42 Power is back. UPS running on mains.");
+        events.add("2026-08-04 09:04:18 Battery charge is 100 percent.");
+        events.add("2026-08-04 10:31:07 Self test passed.");
+        events.add("2026-08-04 12:44:29 UPS communications restored.");
+        return events;
     }
 
 

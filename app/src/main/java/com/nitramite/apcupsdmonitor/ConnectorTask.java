@@ -207,6 +207,13 @@ public class ConnectorTask {
                         apcupsdInterface.onCommandError(e.toString());
                     }
                     break;
+                case ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW:
+                    ContentValues googleReviewValues = new ContentValues();
+                    googleReviewValues.put(DatabaseHelper.UPS_REACHABLE, UPS.UPS_REACHABLE);
+                    googleReviewValues.put(DatabaseHelper.UPS_STATUS_STR, Mock.APCUPSD_MOCK_DATA);
+                    databaseHelper.insertUpdateUps(writablePool, ups.UPS_ID, googleReviewValues);
+                    databaseHelper.insertEvents(writablePool, ups.UPS_ID, Mock.GoogleReviewEvents());
+                    break;
                 default:
                     Log.w(TAG, "Unsupported UPS connection type");
                     break;

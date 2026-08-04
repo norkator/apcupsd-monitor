@@ -47,6 +47,9 @@ public class UpsEditor extends AppCompatActivity {
     private boolean isApcNmc = false;
     private DatabaseHelper databaseHelper = new DatabaseHelper(this);
     private static final int IMPORT_FILE_REQUEST_CODE = 2;
+    private static final String GOOGLE_REVIEW_SERVER_ADDRESS = "198.51.100.42";
+    private static final String GOOGLE_REVIEW_SERVER_PORT = "3551";
+    private static final String GOOGLE_REVIEW_DISPLAY_NAME = "Google Review";
 
     // View elements
     private EditText privateKeyLocationET;
@@ -55,6 +58,7 @@ public class UpsEditor extends AppCompatActivity {
     private RadioButton nisRB;
     private RadioButton ipmRB;
     private RadioButton nutRB;
+    private RadioButton googleReviewRB;
 
     // File paths
     public static final String PATH = "/keys/";
@@ -76,6 +80,7 @@ public class UpsEditor extends AppCompatActivity {
         nisRB = findViewById(R.id.nisRB);
         ipmRB = findViewById(R.id.ipmRB);
         nutRB = findViewById(R.id.nutRB);
+        googleReviewRB = findViewById(R.id.googleReviewRB);
 
         // Editable views
         final EditText serverAddressET = findViewById(R.id.serverAddressET);
@@ -163,6 +168,7 @@ public class UpsEditor extends AppCompatActivity {
             nisRB.setChecked(false);
             ipmRB.setChecked(false);
             nutRB.setChecked(false);
+            googleReviewRB.setChecked(false);
         });
         nisRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
@@ -172,6 +178,7 @@ public class UpsEditor extends AppCompatActivity {
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
             nutRB.setChecked(false);
+            googleReviewRB.setChecked(false);
         });
         ipmRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
@@ -181,6 +188,7 @@ public class UpsEditor extends AppCompatActivity {
             nisRB.setChecked(false);
             sshRB.setChecked(false);
             nutRB.setChecked(false);
+            googleReviewRB.setChecked(false);
         });
         nutRB.setOnClickListener(v -> {
             sshOptionsLayout.setVisibility(View.GONE);
@@ -192,6 +200,23 @@ public class UpsEditor extends AppCompatActivity {
             nisRB.setChecked(false);
             sshRB.setChecked(false);
             ipmRB.setChecked(false);
+            googleReviewRB.setChecked(false);
+        });
+        googleReviewRB.setOnClickListener(v -> {
+            sshOptionsLayout.setVisibility(View.GONE);
+            credentialOptionsLayout.setVisibility(View.GONE);
+            ipmOptionsLayout.setVisibility(View.GONE);
+            httpHttpsOptionsLayout.setVisibility(View.GONE);
+            serverAddressHintText.setVisibility(View.GONE);
+            nodeIdET.setVisibility(View.VISIBLE);
+            serverAddressET.setText(GOOGLE_REVIEW_SERVER_ADDRESS);
+            serverPortET.setText(GOOGLE_REVIEW_SERVER_PORT);
+            displayNameET.setText(GOOGLE_REVIEW_DISPLAY_NAME);
+            loadUpsEventsSwitch.setChecked(true);
+            nisRB.setChecked(false);
+            sshRB.setChecked(false);
+            ipmRB.setChecked(false);
+            nutRB.setChecked(false);
         });
 
 
@@ -211,6 +236,7 @@ public class UpsEditor extends AppCompatActivity {
                     ipmRB.setChecked(false);
                     nisRB.setChecked(false);
                     nutRB.setChecked(false);
+                    googleReviewRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.VISIBLE);
                     credentialOptionsLayout.setVisibility(View.VISIBLE);
                     ipmOptionsLayout.setVisibility(View.GONE);
@@ -220,6 +246,7 @@ public class UpsEditor extends AppCompatActivity {
                     ipmRB.setChecked(false);
                     sshRB.setChecked(false);
                     nutRB.setChecked(false);
+                    googleReviewRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
                     credentialOptionsLayout.setVisibility(View.GONE);
                     ipmOptionsLayout.setVisibility(View.GONE);
@@ -229,6 +256,7 @@ public class UpsEditor extends AppCompatActivity {
                     nisRB.setChecked(false);
                     sshRB.setChecked(false);
                     nutRB.setChecked(false);
+                    googleReviewRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
                     credentialOptionsLayout.setVisibility(View.VISIBLE);
                     ipmOptionsLayout.setVisibility(View.VISIBLE);
@@ -238,11 +266,24 @@ public class UpsEditor extends AppCompatActivity {
                     ipmRB.setChecked(false);
                     nisRB.setChecked(false);
                     sshRB.setChecked(false);
+                    googleReviewRB.setChecked(false);
                     sshOptionsLayout.setVisibility(View.GONE);
                     credentialOptionsLayout.setVisibility(View.VISIBLE);
                     ipmOptionsLayout.setVisibility(View.GONE);
                     httpsEnabledSwitch.setVisibility(View.GONE);
                     serverAddressHintText.setVisibility(View.VISIBLE);
+                    break;
+                case ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW:
+                    googleReviewRB.setChecked(true);
+                    ipmRB.setChecked(false);
+                    nisRB.setChecked(false);
+                    sshRB.setChecked(false);
+                    nutRB.setChecked(false);
+                    sshOptionsLayout.setVisibility(View.GONE);
+                    credentialOptionsLayout.setVisibility(View.GONE);
+                    ipmOptionsLayout.setVisibility(View.GONE);
+                    httpHttpsOptionsLayout.setVisibility(View.GONE);
+                    serverAddressHintText.setVisibility(View.GONE);
                     break;
             }
 
@@ -281,10 +322,16 @@ public class UpsEditor extends AppCompatActivity {
 
         Button positiveBtn = findViewById(R.id.positiveBtn);
         positiveBtn.setOnClickListener(view -> {
+            String connectionType = getConnectionType();
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE, getConnectionType());
-            contentValues.put(DatabaseHelper.UPS_SERVER_ADDRESS, serverAddressET.getText().toString());
-            contentValues.put(DatabaseHelper.UPS_SERVER_PORT, serverPortET.getText().toString());
+            contentValues.put(DatabaseHelper.UPS_CONNECTION_TYPE, connectionType);
+            if (connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW)) {
+                contentValues.put(DatabaseHelper.UPS_SERVER_ADDRESS, GOOGLE_REVIEW_SERVER_ADDRESS);
+                contentValues.put(DatabaseHelper.UPS_SERVER_PORT, GOOGLE_REVIEW_SERVER_PORT);
+            } else {
+                contentValues.put(DatabaseHelper.UPS_SERVER_ADDRESS, serverAddressET.getText().toString());
+                contentValues.put(DatabaseHelper.UPS_SERVER_PORT, serverPortET.getText().toString());
+            }
             contentValues.put(DatabaseHelper.UPS_SERVER_USERNAME, serverUsernameET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_SERVER_PASSWORD, serverPasswordET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_USE_PRIVATE_KEY_AUTH, privateKeyAuthSwitch.isChecked() ? "1" : "0");
@@ -294,11 +341,11 @@ public class UpsEditor extends AppCompatActivity {
             contentValues.put(DatabaseHelper.UPS_SERVER_STATUS_COMMAND, statusCommandET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_IS_APC_NMC, isApcNmc);
             contentValues.put(DatabaseHelper.UPS_SERVER_EVENTS_LOCATION, eventsLocationET.getText().toString());
-            contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, loadUpsEventsSwitch.isChecked() ? "1" : "0");
+            contentValues.put(DatabaseHelper.UPS_LOAD_EVENTS, connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW) || loadUpsEventsSwitch.isChecked() ? "1" : "0");
             contentValues.put(DatabaseHelper.UPS_NODE_ID, nodeIdET.getText().toString());
             contentValues.put(DatabaseHelper.UPS_ENABLED, upsEnabledSwitch.isChecked() ? 1 : 0);
             contentValues.put(DatabaseHelper.UPS_USE_HTTPS, httpsEnabledSwitch.isChecked() ? 1 : 0);
-            contentValues.put(DatabaseHelper.UPS_DISPLAY_NAME, displayNameET.getText().toString());
+            contentValues.put(DatabaseHelper.UPS_DISPLAY_NAME, connectionType.equals(ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW) ? GOOGLE_REVIEW_DISPLAY_NAME : displayNameET.getText().toString());
             databaseHelper.insertUpdateUps(null, upsId, contentValues);
             Toast.makeText(UpsEditor.this, R.string.saved, Toast.LENGTH_SHORT).show();
             UpsEditor.this.finish();
@@ -359,6 +406,8 @@ public class UpsEditor extends AppCompatActivity {
             return ConnectionType.UPS_CONNECTION_TYPE_IPM;
         } else if (nutRB.isChecked()) {
             return ConnectionType.UPS_CONNECTION_TYPE_NUT;
+        } else if (googleReviewRB.isChecked()) {
+            return ConnectionType.UPS_CONNECTION_TYPE_GOOGLE_REVIEW;
         } else {
             return ConnectionType.UPS_CONNECTION_TYPE_NA;
         }
