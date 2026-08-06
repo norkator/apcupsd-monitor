@@ -8,8 +8,8 @@ android {
         applicationId = "com.nitramite.apcupsdmonitor"
         minSdk = 23
         targetSdk = 37
-        versionCode = 65
-        versionName = "1.28.0" // Use Semver
+        versionCode = 66
+        versionName = "1.28.1" // Use Semver
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
