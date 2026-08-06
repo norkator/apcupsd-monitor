@@ -1,12 +1,15 @@
 package com.nitramite.apcupsdmonitor;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import androidx.preference.PreferenceManager;
@@ -74,6 +77,7 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
     public static final int ACTIVITY_RESULT_NEW_UPS_ADDED = 1;
 
     private ActivityResultLauncher<Intent> preferencesLauncher;
+    private ActivityResultLauncher<String> localNetworkPermissionLauncher;
 
 
     @Override
@@ -109,6 +113,17 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        localNetworkPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        startConnectorTask();
+                    } else {
+                        Toast.makeText(this, R.string.local_network_permission_required, Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
 
         // Override thread policy
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -167,6 +182,11 @@ public class MainMenu extends AppCompatActivity implements ConnectorInterface, P
 
     // Get's UPS data
     private void startConnectorTask() {
+        if (Build.VERSION.SDK_INT >= 37
+                && checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK) != PackageManager.PERMISSION_GRANTED) {
+            localNetworkPermissionLauncher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK);
+            return;
+        }
         progressBar = findViewById(R.id.progressBar);
         progressBar.setScaleY(3f);
         progressBar.setVisibility(View.VISIBLE);
